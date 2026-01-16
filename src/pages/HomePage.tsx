@@ -435,7 +435,7 @@ export function HomePage() {
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-[10px] uppercase opacity-60 font-bold">Total Registered Users</span>
-                <span className="text-xs font-black">{totalUsers} / {MAX_USERS}</span>
+                <span className="text-xs font-black">{totalUsers}</span>
               </div>
               <div className="w-full bg-primary/10 h-1.5 overflow-hidden">
                 <div 
