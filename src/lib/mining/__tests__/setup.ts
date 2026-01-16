@@ -41,18 +41,20 @@ class MockWorker {
 // Global mocks
 beforeAll(() => {
   // Mock Worker constructor
-  global.Worker = MockWorker as any
-  
-  // Mock crypto.getRandomValues
-  global.crypto = {
+  vi.stubGlobal('Worker', MockWorker)
+
+  // Mock crypto.getRandomValues - extend existing crypto
+  const mockCrypto = {
+    ...globalThis.crypto,
     getRandomValues: (array: Uint8Array) => {
       for (let i = 0; i < array.length; i++) {
         array[i] = Math.floor(Math.random() * 256)
       }
       return array
     }
-  } as any
-  
+  }
+  vi.stubGlobal('crypto', mockCrypto)
+
   // Mock localStorage
   const localStorageMock = {
     getItem: vi.fn(),
@@ -60,7 +62,7 @@ beforeAll(() => {
     removeItem: vi.fn(),
     clear: vi.fn(),
   }
-  global.localStorage = localStorageMock as any
+  vi.stubGlobal('localStorage', localStorageMock)
 })
 
 afterEach(() => {
