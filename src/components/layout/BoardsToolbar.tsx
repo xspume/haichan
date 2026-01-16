@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import db, { publicDb } from '../../lib/db-client'
+import { publicDb } from '../../lib/db-client'
 import { requestCache } from '../../lib/request-cache'
 import { withRateLimit, isTransientError } from '../../lib/rate-limit-utils'
 import { subscribeToChannel } from '../../lib/realtime-manager'
@@ -38,17 +38,21 @@ export function BoardsToolbar() {
       // Fetch all boards and filter in memory to handle various expired formats (0, '0', null, etc.)
       const allBoardsRaw = await requestCache.getOrFetch<any[]>(
         'global-top-boards',
-        () => withRateLimit(() => publicDb.db.boards.list({
-          orderBy: { totalPow: 'desc' },
-          limit: 20
-        }), { maxRetries: 5, initialDelayMs: 200, timeoutMs: 45000 }),
-        isRetry ? 0 : 30000 
+        () => withRateLimit(
+          () => publicDb.db.boards.list({
+            // Toolbar should act like a quick directory, not just a "top boards" list.
+            // Sort by slug for predictability.
+            orderBy: { slug: 'asc' },
+            limit: 200,
+          }),
+          { maxRetries: 5, initialDelayMs: 200, timeoutMs: 45000 }
+        ),
+        isRetry ? 0 : 30000
       )
       
       // Filter expired boards in memory - handles 0, '0', null, undefined, false
       const allBoards = (allBoardsRaw || [])
         .filter(b => String(b.expired) !== '1')
-        .slice(0, 10)
       
       if (allBoards && allBoards.length > 0) {
         setBoards(allBoards)
@@ -72,7 +76,7 @@ export function BoardsToolbar() {
   }
 
   return (
-    <div className="flex items-center gap-1 text-[11px] font-mono border-x border-primary/20 px-3 h-8 bg-primary/5">
+    <div className="flex items-center gap-1 text-[11px] font-mono border-x border-primary/20 px-3 h-8 bg-primary/5 overflow-x-auto whitespace-nowrap custom-scrollbar">
       <span className="text-primary/60 font-bold uppercase tracking-tighter mr-1">boards:</span>
       <span className="text-muted-foreground">[</span>
       {boards.map((board, index) => (
