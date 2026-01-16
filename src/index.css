@@ -1,0 +1,1073 @@
+/* Font Families for Blog Theming + Serif for Aquatic 90s Aesthetic */
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Fira+Code:wght@300..700&family=IBM+Plex+Mono:ital,wght@0,100..700;1,100..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Slab:wght@100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=VT323&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Fredoka+One&family=Permanent+Marker&family=Righteous&family=Cabin+Sketch:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Haichan (Neon Green/Black) - Default */
+    
+    --background: 0 0% 0%; /* Black */
+    --foreground: 120 100% 50%; /* Neon Green */
+    
+    --card: 0 0% 5%;
+    --card-foreground: 120 100% 50%;
+    
+    --popover: 0 0% 5%;
+    --popover-foreground: 120 100% 50%;
+    
+    --primary: 120 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    
+    --secondary: 120 100% 20%;
+    --secondary-foreground: 120 100% 50%;
+    
+    --muted: 120 50% 10%;
+    --muted-foreground: 120 50% 40%;
+    
+    --accent: 120 100% 50%;
+    --accent-foreground: 0 0% 0%;
+    
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 0%;
+    
+    --border: 120 100% 30%;
+    --input: 0 0% 10%;
+    --ring: 120 100% 50%;
+    
+    --radius: 0px;
+    
+    --font-mono: 'arial', 'helvetica', sans-serif;
+    --font-serif: 'times new roman', serif;
+    
+    --shadow-3d: 4px 4px 0px 0px hsl(var(--primary));
+    --shadow-3d-sm: 2px 2px 0px 0px hsl(var(--primary));
+    --shadow-3d-lg: 8px 8px 0px 0px hsl(var(--primary));
+    
+    --sidebar-background: 0 0% 3%;
+    --sidebar-foreground: 120 100% 50%;
+    --sidebar-primary: 120 100% 50%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    
+    --chart-1: 142 72% 56%;
+    --chart-2: 160 87% 45%;
+    --chart-3: 0 88% 50%;
+    --chart-4: 120 100% 50%;
+    --chart-5: 50 100% 50%;
+  }
+
+  /* Yotsuba (Light/Orange) */
+  [data-theme="yotsuba"] {
+    --background: 35 30% 96%; /* Cream */
+    --foreground: 0 0% 10%; /* Dark Text */
+    
+    --card: 35 30% 90%; /* Slightly darker cream */
+    --card-foreground: 0 0% 10%;
+    
+    --popover: 35 30% 98%;
+    --popover-foreground: 0 0% 10%;
+    
+    --primary: 25 90% 50%; /* Orange */
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 35 30% 85%;
+    --secondary-foreground: 0 0% 10%;
+    
+    --muted: 35 10% 80%;
+    --muted-foreground: 0 0% 40%;
+    
+    --accent: 25 90% 50%;
+    --accent-foreground: 0 0% 100%;
+    
+    --border: 25 30% 80%;
+    --input: 35 30% 98%;
+    --ring: 25 90% 50%;
+    
+    --radius: 0.25rem;
+    
+    --sidebar-background: 35 30% 92%;
+    --sidebar-foreground: 0 0% 10%;
+  }
+
+  /* Yotsuba B (Blue/Grey) */
+  [data-theme="yotsuba-b"] {
+    --background: 210 10% 90%; /* Light Blue-Grey */
+    --foreground: 0 0% 10%;
+    
+    --card: 210 10% 85%;
+    --card-foreground: 0 0% 10%;
+    
+    --popover: 210 10% 95%;
+    --popover-foreground: 0 0% 10%;
+    
+    --primary: 220 60% 50%; /* Classic Blue */
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 210 10% 80%;
+    --secondary-foreground: 0 0% 10%;
+    
+    --muted: 210 5% 70%;
+    --muted-foreground: 0 0% 40%;
+    
+    --accent: 220 60% 50%;
+    --accent-foreground: 0 0% 100%;
+    
+    --border: 210 10% 75%;
+    --input: 210 10% 95%;
+    --ring: 220 60% 50%;
+    
+    --radius: 0.25rem;
+    
+    --sidebar-background: 210 10% 88%;
+    --sidebar-foreground: 0 0% 10%;
+  }
+
+  /* Burichan (Classic Blue) */
+  [data-theme="burichan"] {
+    --background: 220 20% 95%;
+    --foreground: 220 50% 15%;
+    --card: 220 20% 90%;
+    --card-foreground: 220 50% 15%;
+    --popover: 220 20% 98%;
+    --popover-foreground: 220 50% 15%;
+    --primary: 220 60% 40%;
+    --primary-foreground: 220 10% 98%;
+    --secondary: 220 30% 80%;
+    --secondary-foreground: 220 50% 15%;
+    --muted: 220 10% 85%;
+    --muted-foreground: 220 20% 40%;
+    --accent: 220 60% 40%;
+    --accent-foreground: 220 10% 98%;
+    --border: 220 30% 70%;
+    --input: 220 10% 98%;
+    --ring: 220 60% 40%;
+    --radius: 0.5rem;
+    --sidebar-background: 220 20% 92%;
+    --sidebar-foreground: 220 50% 15%;
+  }
+
+  /* Futaba (Classic Green) */
+  [data-theme="futaba"] {
+    --background: 100 20% 95%;
+    --foreground: 100 50% 15%;
+    --card: 100 20% 90%;
+    --card-foreground: 100 50% 15%;
+    --popover: 100 20% 98%;
+    --popover-foreground: 100 50% 15%;
+    --primary: 120 50% 30%;
+    --primary-foreground: 100 10% 98%;
+    --secondary: 100 30% 80%;
+    --secondary-foreground: 100 50% 15%;
+    --muted: 100 10% 85%;
+    --muted-foreground: 100 20% 40%;
+    --accent: 120 50% 30%;
+    --accent-foreground: 100 10% 98%;
+    --border: 100 30% 70%;
+    --input: 100 10% 98%;
+    --ring: 120 50% 30%;
+    --radius: 0.5rem;
+    --sidebar-background: 100 20% 92%;
+    --sidebar-foreground: 100 50% 15%;
+  }
+
+  /* Tomorrow (Slate Dark) */
+  [data-theme="tomorrow"] {
+    --background: 222 47% 11%;
+    --foreground: 213 31% 91%;
+    --card: 222 47% 8%;
+    --card-foreground: 213 31% 91%;
+    --popover: 222 47% 5%;
+    --popover-foreground: 213 31% 91%;
+    --primary: 210 40% 61%;
+    --primary-foreground: 222 47% 11%;
+    --secondary: 222 47% 20%;
+    --secondary-foreground: 213 31% 91%;
+    --muted: 222 47% 25%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 210 40% 61%;
+    --accent-foreground: 222 47% 11%;
+    --border: 222 47% 30%;
+    --input: 222 47% 15%;
+    --ring: 210 40% 61%;
+    --radius: 0.75rem;
+    --sidebar-background: 222 47% 9%;
+    --sidebar-foreground: 213 31% 91%;
+  }
+
+  /* Paper (Minimalist Light) */
+  [data-theme="paper"] {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 20%;
+    --card: 0 0% 98%;
+    --card-foreground: 0 0% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 20%;
+    --primary: 0 0% 0%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 94%;
+    --secondary-foreground: 0 0% 20%;
+    --muted: 0 0% 90%;
+    --muted-foreground: 0 0% 50%;
+    --accent: 0 0% 0%;
+    --accent-foreground: 0 0% 100%;
+    --border: 0 0% 85%;
+    --input: 0 0% 98%;
+    --ring: 0 0% 0%;
+    --radius: 1rem;
+    --sidebar-background: 0 0% 96%;
+    --sidebar-foreground: 0 0% 20%;
+  }
+
+  /* Retro (Amber/Sepia) */
+  [data-theme="retro"] {
+    --background: 35 40% 90%;
+    --foreground: 35 40% 15%;
+    --card: 35 40% 85%;
+    --card-foreground: 35 40% 15%;
+    --popover: 35 40% 92%;
+    --popover-foreground: 35 40% 15%;
+    --primary: 25 80% 40%;
+    --primary-foreground: 35 40% 95%;
+    --secondary: 35 30% 75%;
+    --secondary-foreground: 35 40% 15%;
+    --muted: 35 20% 80%;
+    --muted-foreground: 35 20% 40%;
+    --accent: 25 80% 40%;
+    --accent-foreground: 35 40% 95%;
+    --border: 35 30% 70%;
+    --input: 35 40% 92%;
+    --ring: 25 80% 40%;
+    --radius: 0.35rem;
+    --sidebar-background: 35 40% 88%;
+    --sidebar-foreground: 35 40% 15%;
+  }
+
+  /* Haichan (Neon Green/Black) */
+  [data-theme="haichan"] {
+    --background: 0 0% 0%; /* Black */
+    --foreground: 120 100% 50%; /* Neon Green */
+    
+    --card: 0 0% 5%;
+    --card-foreground: 120 100% 50%;
+    
+    --popover: 0 0% 5%;
+    --popover-foreground: 120 100% 50%;
+    
+    --primary: 120 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    
+    --secondary: 120 100% 20%;
+    --secondary-foreground: 120 100% 50%;
+    
+    --muted: 120 50% 10%;
+    --muted-foreground: 120 50% 40%;
+    
+    --accent: 120 100% 50%;
+    --accent-foreground: 0 0% 0%;
+    
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 0%;
+    
+    --border: 120 100% 30%;
+    --input: 0 0% 10%;
+    --ring: 120 100% 50%;
+    
+    --radius: 0px;
+    
+    --sidebar-background: 0 0% 3%;
+    --sidebar-foreground: 120 100% 50%;
+  }
+
+  /* Pink (Neon Pink/Black) */
+  [data-theme="pink"] {
+    --background: 0 0% 0%; /* Black */
+    --foreground: 300 100% 50%; /* Neon Pink */
+    
+    --card: 0 0% 5%;
+    --card-foreground: 300 100% 50%;
+    
+    --popover: 0 0% 5%;
+    --popover-foreground: 300 100% 50%;
+    
+    --primary: 300 100% 50%;
+    --primary-foreground: 0 0% 0%;
+    
+    --secondary: 300 100% 20%;
+    --secondary-foreground: 300 100% 50%;
+    
+    --muted: 300 50% 10%;
+    --muted-foreground: 300 50% 40%;
+    
+    --accent: 300 100% 50%;
+    --accent-foreground: 0 0% 0%;
+    
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 0%;
+    
+    --border: 300 100% 30%;
+    --input: 0 0% 10%;
+    --ring: 300 100% 50%;
+    
+    --radius: 0px;
+    
+    --sidebar-background: 0 0% 3%;
+    --sidebar-foreground: 300 100% 50%;
+  }
+}
+
+/* 4chan/Yotsuba Aesthetic */
+.post-reply {
+  display: inline-block;
+  min-width: 400px;
+  max-width: 100%;
+}
+
+.post-container {
+  display: block;
+}
+
+.post-header {
+  font-family: arial, helvetica, sans-serif;
+}
+
+.post-content {
+  font-family: arial, helvetica, sans-serif;
+  font-size: 14px;
+}
+
+.post-reply .post-content {
+  margin-top: 5px;
+}
+
+.quotelink {
+  color: #d00 !important;
+  text-decoration: none !important;
+}
+
+.quotelink:hover {
+  color: #ff0000 !important;
+}
+
+.greentext {
+  color: #789922 !important;
+}
+
+/* Yotsuba colors */
+:root {
+  --yotsuba-bg: 240 25% 90%; /* #f0e0d6 */
+  --yotsuba-border: 240 10% 80%;
+  --yotsuba-text: 0 0% 0%;
+  --yotsuba-link: 240 50% 40%;
+  --yotsuba-name: 150 75% 25%; /* #117743 */
+}
+
+/* ============================================
+   HAICHAN SIGNATURE LOGO - THEME COLOR + GREEN + PINK
+   THE singular aesthetic identity of Haichan.
+   Creatively blends THEME PRIMARY + NEON GREEN + HOT PINK!
+   Each theme gets its own flavor while keeping the signature.
+   ============================================ */
+
+/* Logo color variables - overridden per theme */
+:root {
+  --logo-color-1: #34345C;    /* Theme primary (Yotsuba B blue) */
+  --logo-color-2: #00FF00;    /* Neon Green */
+  --logo-color-3: #FF00FF;    /* Neon Pink/Magenta */
+  --logo-glow-1: rgba(52, 52, 92, 0.5);
+  --logo-glow-2: rgba(0, 255, 0, 0.5);
+  --logo-glow-3: rgba(255, 0, 255, 0.4);
+}
+
+/* Yotsuba (Orange) - Orange + Green + Pink */
+[data-theme="yotsuba"] {
+  --logo-color-1: #f07800;
+  --logo-glow-1: rgba(240, 120, 0, 0.5);
+}
+
+/* Yotsuba B (Blue) - Blue + Green + Pink */
+[data-theme="yotsuba-b"] {
+  --logo-color-1: #3366CC;
+  --logo-glow-1: rgba(51, 102, 204, 0.5);
+}
+
+/* Burichan (Deep Blue) - Deep Blue + Green + Pink */
+[data-theme="burichan"] {
+  --logo-color-1: #3c5a99;
+  --logo-glow-1: rgba(60, 90, 153, 0.5);
+}
+
+/* Futaba (Forest Green) - Forest + Neon Green + Pink */
+[data-theme="futaba"] {
+  --logo-color-1: #2a6a2a;
+  --logo-glow-1: rgba(42, 106, 42, 0.5);
+}
+
+/* Tomorrow (Slate Blue) - Slate + Green + Pink */
+[data-theme="tomorrow"] {
+  --logo-color-1: #5fa9ff;
+  --logo-glow-1: rgba(95, 169, 255, 0.5);
+}
+
+/* Paper (Pure Black) - Black + Green + Pink */
+[data-theme="paper"] {
+  --logo-color-1: #000000;
+  --logo-glow-1: rgba(0, 0, 0, 0.3);
+}
+
+/* Retro (Amber) - Amber + Green + Pink */
+[data-theme="retro"] {
+  --logo-color-1: #cc5200;
+  --logo-glow-1: rgba(204, 82, 0, 0.5);
+}
+
+/* Haichan (Neon Green dominant) - Extra green! */
+[data-theme="haichan"] {
+  --logo-color-1: #00FF00;
+  --logo-color-2: #39FF14;
+  --logo-color-3: #FF00FF;
+  --logo-glow-1: rgba(0, 255, 0, 0.6);
+  --logo-glow-2: rgba(57, 255, 20, 0.5);
+}
+
+/* Pink (Neon Pink dominant) - Extra pink! */
+[data-theme="pink"] {
+  --logo-color-1: #FF00FF;
+  --logo-color-2: #00FF00;
+  --logo-color-3: #FF1493;
+  --logo-glow-1: rgba(255, 0, 255, 0.6);
+  --logo-glow-3: rgba(255, 20, 147, 0.5);
+}
+
+.haichan-logo {
+  font-family: 'Impact', 'Arial Black', Tahoma, sans-serif;
+  font-weight: 900;
+  font-size: 28px;
+  letter-spacing: -1px;
+  text-transform: uppercase;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  
+  /* ========================================
+     🎨 BLACK & GREEN GRADIENT + PINK OUTLINE
+     ★★★ Haichan's new signature look ★★★
+     BLACK = Deep, mysterious base
+     NEON GREEN = Hacker energy
+     PINK OUTLINE = Rebel accent
+     ======================================== */
+  background: linear-gradient(
+    135deg,
+    /* BLACK DOMINATES */
+    #000000 0%,
+    #0a0a0a 15%,
+    /* Green accent flash */
+    #00FF00 25%,
+    #39FF14 35%,
+    /* Back to darkness */
+    #111111 45%,
+    #000000 55%,
+    /* Green surge */
+    #00FF00 65%,
+    #1a1a1a 75%,
+    /* Dark finish */
+    #000000 85%,
+    #00FF00 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  
+  /* Smooth diagonal flow animation */
+  animation: haichan-gradient-flow 3s ease-in-out infinite;
+  
+  /* Crisp text rendering */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  
+  /* Subtle green accent glow only */
+  paint-order: stroke fill;
+  filter: drop-shadow(0 0 6px #00FF0055);
+  
+  transition: filter 0.3s ease, transform 0.2s ease;
+}
+
+/* THE MAIN ANIMATION - Smooth diagonal flow across all colors */
+@keyframes haichan-gradient-flow {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+/* Alternative: pulsing color shift for hover */
+@keyframes haichan-gradient-pulse {
+  0%, 100% { 
+    background-position: 0% 50%; 
+    filter: 
+      drop-shadow(0 0 4px #00FF00)
+      drop-shadow(0 0 8px #FF00FF);
+  }
+  50% { 
+    background-position: 150% 50%; 
+    filter: 
+      drop-shadow(0 0 8px #FF00FF)
+      drop-shadow(0 0 12px #00FF00);
+  }
+}
+
+/* Hover: Enhanced green glow + faster scroll */
+.haichan-logo:hover {
+  animation: haichan-gradient-flow 1.5s linear infinite;
+  filter: drop-shadow(0 0 12px #00FF00AA);
+  cursor: pointer;
+  transform: scale(1.02);
+}
+
+/* Active/Click state - subtle pulse */
+.haichan-logo:active {
+  filter: drop-shadow(0 0 16px #00FF00);
+  transform: scale(0.98);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'arial', 'helvetica', sans-serif;
+    font-size: 13px;
+    line-height: 1.4;
+    position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    
+    /* Dynamic background image support */
+    background-image: var(--background-image, none);
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: var(--background-image, none);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Special handling for custom logo image */
+  html[style*="--logo-image"] .haichan-logo::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--logo-image);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 1;
+  }
+
+  html[style*="--logo-image"] .haichan-logo span {
+    opacity: 0;
+  }
+
+  html[style*="--logo-image"] .haichan-logo {
+    min-width: 150px;
+    min-height: 44px;
+  }
+
+  /* Standard borders */
+  button,
+  input,
+  textarea,
+  select {
+    @apply border border-border bg-white text-foreground;
+    border-radius: var(--radius);
+  }
+
+  .btn-haichan {
+    @apply border border-primary bg-transparent text-primary px-4 py-2 hover:bg-primary hover:text-white transition-colors;
+    border-radius: var(--radius);
+  }
+
+  /* Mining active indicator - subtle glow */
+  .mining-active {
+    box-shadow: 0 0 5px hsl(var(--primary));
+  }
+
+  /* Yotsuba-style post styling */
+  .post-container {
+    padding: 2px 4px;
+    margin: 4px 0;
+    font-size: 13px;
+    background-color: transparent;
+    border: none;
+    color: hsl(var(--foreground));
+    border-radius: 0;
+  }
+
+  .post-reply {
+    padding: 2px;
+    margin: 2px;
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border) / 0.3);
+    display: inline-block;
+    min-width: 400px;
+    max-width: 100%;
+    border-radius: 0;
+  }
+
+  [data-theme="bw"] .post-reply {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+  }
+
+  [data-theme="yotsuba"] .post-reply {
+    background-color: #f0e0d6;
+    border: 1px solid #d9bfb7;
+  }
+
+  [data-theme="yotsuba-b"] .post-reply {
+    background-color: #d6daf0;
+    border: 1px solid #b7c5d9;
+  }
+
+  .post-header {
+    font-size: 11px;
+    margin-bottom: 2px;
+    font-weight: normal;
+    font-family: 'arial', 'helvetica', sans-serif;
+  }
+
+  .post-content {
+    margin: 4px 8px;
+    line-height: 1.4;
+    font-size: 13px;
+    color: hsl(var(--foreground));
+  }
+
+
+  .post-number {
+    color: hsl(var(--foreground));
+    font-weight: normal;
+    text-decoration: none;
+  }
+
+  .post-number:hover {
+    text-decoration: underline;
+  }
+
+  .post-date {
+    color: hsl(var(--muted-foreground));
+    font-size: 9pt;
+  }
+
+  .post-username {
+    color: hsl(var(--primary));
+    font-weight: bold;
+    font-family: var(--font-serif), georgia, serif;
+  }
+
+  .post-tripcode {
+    color: hsl(var(--muted));
+    font-weight: normal;
+  }
+
+  /* 4chan-style navigation links */
+  .nav-link {
+    text-decoration: none;
+    color: #00FF00;
+    padding: 2px 8px;
+    display: inline-block;
+    border: 1px solid transparent;
+  }
+
+  .nav-link:hover {
+    border-color: #00FF00;
+    background-color: #00FF00;
+    color: #000000;
+  }
+
+  /* Thread title styling */
+  .thread-title {
+    font-weight: bold;
+    font-size: 11pt;
+    color: hsl(var(--foreground));
+    text-decoration: none;
+  }
+
+  .thread-title:hover {
+    text-decoration: underline;
+  }
+}
+
+@layer utilities {
+  /* Yellow cursor with 1px black border for text inputs */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="url"],
+  input[type="number"],
+  textarea,
+  [contenteditable="true"] {
+    caret-color: hsl(var(--primary));
+    caret-shape: block;
+  }
+
+  /* Focus state with yellow outline to simulate cursor border effect */
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  input[type="password"]:focus,
+  input[type="search"]:focus,
+  input[type="url"]:focus,
+  input[type="number"]:focus,
+  textarea:focus,
+  [contenteditable="true"]:focus {
+    outline: 1px solid hsl(var(--primary));
+    outline-offset: -1px;
+  }
+
+  /* Styling for text selection in input fields */
+  input[type="text"]::selection,
+  input[type="email"]::selection,
+  input[type="password"]::selection,
+  input[type="search"]::selection,
+  input[type="url"]::selection,
+  input[type="number"]::selection,
+  textarea::selection,
+  [contenteditable="true"]::selection {
+    background-color: hsl(var(--primary) / 0.3);
+    color: hsl(var(--primary-foreground));
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+    border: 1px solid hsl(var(--foreground));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--foreground));
+    border: 1px solid hsl(var(--background));
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary) / 0.8);
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* 3D Slender UI Components - Removed for Yotsuba Style */
+  .card-3d {
+    @apply border border-border bg-card;
+  }
+
+  .card-3d:hover {
+    /* No hover effect */
+  }
+
+  .card-3d:active {
+    /* No active effect */
+  }
+
+  .btn-3d {
+    @apply border border-primary bg-background text-primary px-2 py-0.5 text-xs font-bold hover:bg-primary hover:text-white transition-colors cursor-pointer;
+    box-shadow: var(--shadow-3d-sm);
+    transition: all 0.1s ease;
+  }
+
+  .btn-3d:hover {
+    @apply bg-primary text-background;
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px 0px hsl(var(--primary));
+  }
+
+  .btn-3d:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px 0px hsl(var(--primary));
+  }
+
+  /* Neon Pink 3D Stutter Effect */
+  @keyframes neon-stutter {
+    0% { transform: translate(0, 0) skew(0deg); text-shadow: 3px 3px 0 #FF00FF; }
+    2% { transform: translate(-2px, 1px) skew(-2deg); text-shadow: -3px 3px 0 #FF00FF; }
+    4% { transform: translate(2px, -1px) skew(2deg); text-shadow: 3px -3px 0 #FF00FF; }
+    6% { transform: translate(0, 2px) skew(0deg); text-shadow: -3px -3px 0 #FF00FF; }
+    8% { transform: translate(0, 0) skew(0deg); text-shadow: 3px 3px 0 #FF00FF; }
+    100% { transform: translate(0, 0) skew(0deg); text-shadow: 3px 3px 0 #FF00FF; }
+  }
+
+  .neon-pink-stutter {
+    color: #000000;
+    animation: neon-stutter 4s infinite steps(10);
+  }
+
+  .bg-scanline {
+    background: linear-gradient(
+      to bottom,
+      transparent 50%,
+      rgba(0, 0, 0, 0.1) 50%
+    );
+    background-size: 100% 4px;
+  }
+
+  .bg-grid-white {
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+}
+
+/* ============================================
+   ANAGLYPHIC 3D MODE (Red/Cyan Stereoscopic)
+   ============================================
+   Classic red/cyan 3D effect for viewing with
+   anaglyph glasses. Creates depth illusion by
+   offsetting color channels.
+   ============================================ */
+
+:root {
+  --anaglyph-offset: 3px;
+}
+
+/* Main container styling when 3D mode is active */
+.anaglyph-3d-mode {
+  /* Add subtle scanlines for retro CRT effect */
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.03) 2px,
+      rgba(0, 0, 0, 0.03) 4px
+    );
+}
+
+/* Apply anaglyphic effect to main content areas */
+.anaglyph-3d-mode .post-reply,
+.anaglyph-3d-mode .card-3d,
+.anaglyph-3d-mode [class*="Card"],
+.anaglyph-3d-mode article,
+.anaglyph-3d-mode .thread-container,
+.anaglyph-3d-mode .chat-message {
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+/* Create the red/cyan offset effect using pseudo-elements and text-shadow */
+.anaglyph-3d-mode .post-content,
+.anaglyph-3d-mode p:not(.no-3d),
+.anaglyph-3d-mode h1:not(.no-3d),
+.anaglyph-3d-mode h2:not(.no-3d),
+.anaglyph-3d-mode h3:not(.no-3d),
+.anaglyph-3d-mode h4:not(.no-3d),
+.anaglyph-3d-mode span:not(.no-3d):not([class*="icon"]),
+.anaglyph-3d-mode .thread-title,
+.anaglyph-3d-mode .post-username,
+.anaglyph-3d-mode label:not(.no-3d) {
+  text-shadow: 
+    calc(var(--anaglyph-offset) * -1) 0 0 rgba(255, 0, 0, 0.7),
+    var(--anaglyph-offset) 0 0 rgba(0, 255, 255, 0.7);
+  animation: anaglyph-flicker 0.1s infinite alternate;
+}
+
+/* Stronger effect for headings */
+.anaglyph-3d-mode h1,
+.anaglyph-3d-mode h2,
+.anaglyph-3d-mode .haichan-logo span {
+  text-shadow: 
+    calc(var(--anaglyph-offset) * -1.5) 0 0 rgba(255, 0, 0, 0.8),
+    calc(var(--anaglyph-offset) * 1.5) 0 0 rgba(0, 255, 255, 0.8);
+}
+
+/* Image anaglyphic effect using filters */
+.anaglyph-3d-mode img:not(.no-3d),
+.anaglyph-3d-mode video:not(.no-3d),
+.anaglyph-3d-mode canvas:not(.no-3d) {
+  position: relative;
+  filter: url(#anaglyph-filter);
+}
+
+/* Box shadow effect for cards and containers */
+.anaglyph-3d-mode .post-reply,
+.anaglyph-3d-mode [class*="Card"]:not(.no-3d),
+.anaglyph-3d-mode .card-3d,
+.anaglyph-3d-mode button:not(.no-3d),
+.anaglyph-3d-mode .btn-3d {
+  box-shadow: 
+    calc(var(--anaglyph-offset) * -1) 0 0 rgba(255, 0, 0, 0.3),
+    var(--anaglyph-offset) 0 0 rgba(0, 255, 255, 0.3),
+    var(--shadow-3d-sm);
+}
+
+/* Border effect for depth */
+.anaglyph-3d-mode .border,
+.anaglyph-3d-mode [class*="border-"] {
+  position: relative;
+}
+
+.anaglyph-3d-mode .border::before,
+.anaglyph-3d-mode .post-reply::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  transform: translateX(calc(var(--anaglyph-offset) * -0.5));
+  pointer-events: none;
+  z-index: -1;
+}
+
+.anaglyph-3d-mode .border::after,
+.anaglyph-3d-mode .post-reply::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 1px solid rgba(0, 255, 255, 0.4);
+  transform: translateX(calc(var(--anaglyph-offset) * 0.5));
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Subtle flicker animation for authentic retro feel */
+@keyframes anaglyph-flicker {
+  0% {
+    text-shadow: 
+      calc(var(--anaglyph-offset) * -1) 0 0 rgba(255, 0, 0, 0.7),
+      var(--anaglyph-offset) 0 0 rgba(0, 255, 255, 0.7);
+  }
+  100% {
+    text-shadow: 
+      calc(var(--anaglyph-offset) * -1.05) 0.5px 0 rgba(255, 0, 0, 0.65),
+      calc(var(--anaglyph-offset) * 1.05) -0.5px 0 rgba(0, 255, 255, 0.65);
+  }
+}
+
+/* Pulsing glow for interactive elements in 3D mode */
+@keyframes anaglyph-pulse {
+  0%, 100% {
+    box-shadow: 
+      calc(var(--anaglyph-offset) * -1) 0 0 rgba(255, 0, 0, 0.4),
+      var(--anaglyph-offset) 0 0 rgba(0, 255, 255, 0.4);
+  }
+  50% {
+    box-shadow: 
+      calc(var(--anaglyph-offset) * -1.5) 0 4px rgba(255, 0, 0, 0.6),
+      calc(var(--anaglyph-offset) * 1.5) 0 4px rgba(0, 255, 255, 0.6);
+  }
+}
+
+.anaglyph-3d-mode button:hover:not(.no-3d),
+.anaglyph-3d-mode .btn-3d:hover,
+.anaglyph-3d-mode a:hover:not(.no-3d) {
+  animation: anaglyph-pulse 0.5s ease-in-out infinite;
+}
+
+/* Icon styling - keep icons cleaner but still 3D */
+.anaglyph-3d-mode svg:not(.no-3d) {
+  filter: drop-shadow(calc(var(--anaglyph-offset) * -0.5) 0 0 rgba(255, 0, 0, 0.5))
+          drop-shadow(calc(var(--anaglyph-offset) * 0.5) 0 0 rgba(0, 255, 255, 0.5));
+}
+
+/* 3D mode indicator badge */
+.anaglyph-3d-badge {
+  position: fixed;
+  bottom: 80px;
+  right: 16px;
+  background: linear-gradient(90deg, rgba(255, 0, 0, 0.8), rgba(0, 255, 255, 0.8));
+  color: white;
+  font-size: 10px;
+  font-family: monospace;
+  font-weight: bold;
+  padding: 4px 8px;
+  border: 2px solid white;
+  z-index: 9999;
+  text-shadow: 1px 1px 0 black;
+  animation: anaglyph-badge-pulse 2s infinite;
+}
+
+@keyframes anaglyph-badge-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+/* Reduced motion preference - disable animations but keep effect */
+@media (prefers-reduced-motion: reduce) {
+  .anaglyph-3d-mode .post-content,
+  .anaglyph-3d-mode p:not(.no-3d),
+  .anaglyph-3d-mode h1:not(.no-3d),
+  .anaglyph-3d-mode h2:not(.no-3d),
+  .anaglyph-3d-mode h3:not(.no-3d),
+  .anaglyph-3d-mode span:not(.no-3d),
+  .anaglyph-3d-mode button:hover:not(.no-3d),
+  .anaglyph-3d-mode .btn-3d:hover,
+  .anaglyph-3d-mode a:hover:not(.no-3d),
+  .anaglyph-3d-badge {
+    animation: none;
+  }
+}
+
+/* Exclude certain elements from 3D effect */
+.no-3d,
+.no-3d * {
+  text-shadow: none !important;
+  filter: none !important;
+  box-shadow: none !important;
+}
+
+.anaglyph-3d-mode input,
+.anaglyph-3d-mode textarea,
+.anaglyph-3d-mode select {
+  text-shadow: none;
+}
+
+/* 3D toggle button styling */
+.btn-3d-toggle {
+  background: linear-gradient(90deg, #ff0000, #00ffff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bold;
+  border: 2px solid;
+  border-image: linear-gradient(90deg, #ff0000, #00ffff) 1;
+  transition: all 0.2s ease;
+}
+
+.btn-3d-toggle:hover {
+  transform: scale(1.05);
+  box-shadow: 
+    -2px 0 4px rgba(255, 0, 0, 0.5),
+    2px 0 4px rgba(0, 255, 255, 0.5);
+}
+
+.btn-3d-toggle.active {
+  background: linear-gradient(90deg, #00ffff, #ff0000);
+  -webkit-background-clip: text;
+  background-clip: text;
+}

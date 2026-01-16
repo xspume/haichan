@@ -1,0 +1,95 @@
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import { BookOpen, TrendingUp, User } from 'lucide-react'
+import { publicDb } from '../../lib/db-client'
+
+export function BlogView() {
+  const [blogs, setBlogs] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    loadBlogs()
+  }, []) // Load on mount - blogs are public
+
+  const loadBlogs = async () => {
+    try {
+      // Fetch ALL published blogs (content is public), sorted by PoW
+      const allBlogs = await publicDb.db.blogPosts.list({
+        where: { published: 1 },
+        orderBy: { totalPow: 'desc' },
+        limit: 5
+      })
+      setBlogs(allBlogs)
+    } catch (error) {
+      console.error('Failed to load blogs:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr)
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  }
+
+  return (
+    <div className="border-2 border-primary bg-card">
+      {/* Header */}
+      <div className="border-b-2 border-primary bg-primary text-primary-foreground px-3 py-1 font-mono text-sm font-bold">
+        RECENT BLOGS
+      </div>
+
+      {/* Blog List */}
+      <div className="p-3 space-y-3 font-mono text-xs">
+        {loading && (
+          <div className="text-center text-muted-foreground py-4">Loading blogs...</div>
+        )}
+
+        {!loading && blogs.length === 0 && (
+          <div className="text-center text-muted-foreground py-4">No blogs published yet</div>
+        )}
+
+        {blogs.map((blog) => (
+          <Link
+            key={blog.id}
+            to={`/blog/${blog.id}`}
+            className="block border-2 border-primary p-2 hover:bg-primary hover:text-primary-foreground transition-colors group"
+          >
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex-1 text-foreground">
+                {blog.blogName && (
+                  <div className="text-[10px] font-bold mb-1 uppercase tracking-wider text-muted-foreground group-hover:text-primary-foreground/70">
+                    {blog.blogName}
+                  </div>
+                )}
+                <div className="font-bold mb-1 line-clamp-1 group-hover:text-primary-foreground">{blog.title}</div>
+                <div className="flex items-center gap-1 text-muted-foreground group-hover:text-primary-foreground/70 text-[10px] mb-1">
+                  <User className="w-3 h-3" />
+                  <span>{blog.authorUsername || 'Anonymous'}</span>
+                </div>
+                <div className="text-muted-foreground group-hover:text-primary-foreground/80 line-clamp-2 mb-1">
+                  {blog.content.substring(0, 100)}...
+                </div>
+                <div className="text-muted-foreground group-hover:text-primary-foreground/70 text-[10px]">
+                  {formatDate(blog.createdAt)}
+                </div>
+              </div>
+              <div className="flex items-center gap-1 text-primary group-hover:text-primary-foreground">
+                <TrendingUp className="w-3 h-3" />
+                <span className="font-bold">{blog.totalPow || 0}</span>
+              </div>
+            </div>
+          </Link>
+        ))}
+
+        <Link
+          to="/blogs"
+          className="block text-center border-2 border-primary p-2 hover:bg-primary hover:text-primary-foreground transition-colors font-bold text-foreground group-hover:text-primary-foreground"
+        >
+          <BookOpen className="w-3 h-3 inline mr-1" />
+          VIEW ALL BLOGS →
+        </Link>
+      </div>
+    </div>
+  )
+}
