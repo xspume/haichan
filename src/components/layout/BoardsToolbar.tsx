@@ -43,9 +43,10 @@ export function BoardsToolbar() {
             // Toolbar should act like a quick directory, not just a "top boards" list.
             // Sort by slug for predictability.
             orderBy: { slug: 'asc' },
-            limit: 200,
+            limit: 120,
+            select: ['id', 'slug', 'name', 'expired']
           }),
-          { maxRetries: 5, initialDelayMs: 200, timeoutMs: 45000 }
+          { maxRetries: 5, initialDelayMs: 200, timeoutMs: 20000 }
         ),
         isRetry ? 0 : 30000
       )

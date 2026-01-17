@@ -16,16 +16,16 @@ export function MinePage() {
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-mono text-sm mb-6 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          BACK
+          Back
         </button>
 
         <div className="border-4 border-foreground bg-card text-card-foreground p-6 mb-6">
           <h1 className="text-2xl font-bold font-mono flex items-center gap-3">
             <Pickaxe className="w-6 h-6" />
-            MINING DASHBOARD
+            Mining Dashboard
           </h1>
           <p className="text-muted-foreground font-mono mt-2">
-            Mine SHA-256 proof-of-work to earn points and unlock features.
+            Verify actions to earn points and unlock features.
           </p>
         </div>
 
@@ -34,7 +34,7 @@ export function MinePage() {
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-mono flex items-center gap-2">
                 <Trophy className="w-4 h-4" />
-                TOTAL POW
+                Total Work
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -48,12 +48,12 @@ export function MinePage() {
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-mono flex items-center gap-2">
                 <Zap className="w-4 h-4" />
-                STATUS
+                Status
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-lg font-bold font-mono text-green-500">
-                ACTIVE
+                Active
               </div>
             </CardContent>
           </Card>
@@ -62,7 +62,7 @@ export function MinePage() {
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-mono flex items-center gap-2">
                 <Pickaxe className="w-4 h-4" />
-                PREFIX
+                Prefix
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -74,9 +74,9 @@ export function MinePage() {
         </div>
 
         <div className="border-4 border-foreground bg-card text-card-foreground p-6">
-          <h2 className="text-xl font-bold font-mono mb-4">POW POINT FORMULA</h2>
+          <h2 className="text-xl font-bold font-mono mb-4">PoW Formula</h2>
           <div className="font-mono text-sm space-y-2">
-            <p>Points = 15 x 4^(trailing_zeros)</p>
+            <p>Points = 15 x 4^(trailing zeros)</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
               <div className="p-3 border border-muted">
                 <div className="text-xs text-muted-foreground">21e8</div>

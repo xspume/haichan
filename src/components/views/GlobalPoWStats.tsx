@@ -72,7 +72,7 @@ export function GlobalPoWStats() {
 
   const loadStats = async () => {
     try {
-      console.log('[GlobalStats] Loading stats...')
+      // console.log('[GlobalStats] Loading stats...')
       
       const results = await Promise.allSettled([
         requestCache.getOrFetch(
@@ -83,7 +83,7 @@ export function GlobalPoWStats() {
               orderBy: { totalPowPoints: 'desc' },
               where: { totalPowPoints: { '>': 0 } }
             }),
-            { maxRetries: 5, initialDelayMs: 300 }
+            { maxRetries: 5, initialDelayMs: 300, timeoutMs: 20000 }
           ),
           CACHE_TTL
         ),
@@ -92,7 +92,7 @@ export function GlobalPoWStats() {
           'global-stats-user-count',
           () => withRateLimit(
             () => publicDb.db.users.count(),
-            { maxRetries: 5, initialDelayMs: 300 }
+            { maxRetries: 5, initialDelayMs: 300, timeoutMs: 20000 }
           ),
           60000 // Cache count longer
         ),
@@ -101,7 +101,7 @@ export function GlobalPoWStats() {
           'global-stats-thread-count',
           () => withRateLimit(
             () => publicDb.db.threads.count(),
-            { maxRetries: 5, initialDelayMs: 300 }
+            { maxRetries: 5, initialDelayMs: 300, timeoutMs: 20000 }
           ),
           30000
         ),
@@ -110,7 +110,7 @@ export function GlobalPoWStats() {
           'global-stats-post-count',
           () => withRateLimit(
             () => publicDb.db.posts.count(),
-            { maxRetries: 5, initialDelayMs: 300 }
+            { maxRetries: 5, initialDelayMs: 300, timeoutMs: 20000 }
           ),
           30000
         ),
@@ -120,15 +120,15 @@ export function GlobalPoWStats() {
           async () => {
             // If we can't get a sum directly, we might need a better way
             // For now, let's get top 100 users and sum them up as an estimate or just use a known stat
-            // INCREASED LIMIT to 200 for better accuracy
+            // INCREASED LIMIT to 120 for better accuracy
             const topUsers = await withRateLimit(
               () => publicDb.db.users.list({ 
-                limit: 200, 
+                limit: 120, 
                 orderBy: { totalPowPoints: 'desc' },
                 select: ['totalPowPoints'],
                 where: { totalPowPoints: { '>': 0 } }
               }),
-              { maxRetries: 5, initialDelayMs: 300 }
+              { maxRetries: 5, initialDelayMs: 300, timeoutMs: 20000 }
             ) as any[];
             const sum = topUsers.reduce((sum: number, u: any) => sum + (Number(u.totalPowPoints) || 0), 0);
             

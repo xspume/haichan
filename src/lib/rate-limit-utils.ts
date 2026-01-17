@@ -251,10 +251,21 @@ export function clearRateLimitQueue(): void {
 export function isTransientError(error: any): boolean {
   if (!error) return false
   
-  const errorMessage = String(error?.message || '').toLowerCase()
-  const errorName = String(error?.name || '').toLowerCase()
-  const errorCode = String(error?.code || '').toLowerCase()
-  const status = error?.status
+  const errorMessage = String(
+    error?.message ||
+    error?.value?.message ||
+    error?.value?.value?.message ||
+    error?.details ||
+    ''
+  ).toLowerCase()
+  const errorName = String(
+    error?.name ||
+    error?.value?.name ||
+    error?.value?.value?.name ||
+    ''
+  ).toLowerCase()
+  const errorCode = String(error?.code || error?.value?.code || '').toLowerCase()
+  const status = error?.status ?? error?.value?.status
   
   return (
     status === 429 ||
@@ -277,6 +288,7 @@ export function isTransientError(error: any): boolean {
     errorMessage.includes('throttle') ||
     errorMessage.includes('unavailable') ||
     errorMessage.includes('timeout') ||
+    errorMessage.includes('timed out') ||
     errorMessage.includes('failed to fetch')
   )
 }

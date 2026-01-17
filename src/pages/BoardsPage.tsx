@@ -70,11 +70,11 @@ export function BoardsPage() {
     
     initializeData()
     
-    // Polling fallback for boards data (10s interval)
+    // Polling fallback for boards data (30s interval)
     // Ensures board stats update even if realtime is unavailable
     const interval = setInterval(() => {
       loadBoards()
-    }, 10000)
+    }, 30000)
     
     return () => {
       unsubscribe?.()
@@ -100,9 +100,10 @@ export function BoardsPage() {
         () => withRateLimit(() => publicDb.db.boards.list({
           // IMPORTANT: directory should not default to a small page size.
           // Without an explicit limit, the SDK may return only the first page (often 10).
-          limit: 500,
-          orderBy: { totalPow: 'desc' }
-        }), { maxRetries: 5, initialDelayMs: 300, timeoutMs: 60000 }),
+          limit: 200,
+          orderBy: { totalPow: 'desc' },
+          select: ['id', 'name', 'slug', 'description', 'totalPow', 'expired']
+        }), { maxRetries: 5, initialDelayMs: 300, timeoutMs: 20000 }),
         isRetry ? 0 : 5000 
       )
       

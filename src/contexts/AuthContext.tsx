@@ -8,6 +8,7 @@ import { createContext, useContext, useEffect, useState, useCallback, ReactNode 
 import db from '../lib/db-client'
 import { AuthState, DbUser, LoginCredentials, RegisterPayload, AuthContextType } from '../types/auth'
 import { getSiteSettings, SiteSettings } from '../lib/site-settings'
+import { subscribeToChannel } from '../lib/realtime-manager'
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -70,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       
       try {
-        unsubscribeRealtime = await db.realtime.subscribe('global-stats-updates', (message: any) => {
+        unsubscribeRealtime = await subscribeToChannel('global-stats-updates', `auth-context-${userId}`, (message: any) => {
           if (!mounted) return;
           
           const payload = message.payload || message.data || message;

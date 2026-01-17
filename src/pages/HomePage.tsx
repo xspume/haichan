@@ -172,8 +172,9 @@ export function HomePage() {
         'global-top-boards',
         () => withRateLimit(() => publicDb.db.boards.list({
           orderBy: { totalPow: 'desc' },
-          limit: 20
-        }), { maxRetries: 5, initialDelayMs: 200, timeoutMs: 45000 }),
+          limit: 20,
+          select: ['id', 'name', 'slug', 'description', 'totalPow', 'expired']
+        }), { maxRetries: 5, initialDelayMs: 200, timeoutMs: 20000 }),
         isRetry ? 0 : 30000 
       )
       
@@ -268,8 +269,8 @@ export function HomePage() {
       // Fetch actual total user count from DB
       const count = await requestCache.getOrFetch<number>(
         'homepage-total-users',
-        () => withRateLimit(() => publicDb.db.users.count({}), { maxRetries: 3, initialDelayMs: 300 }),
-        60000 // Cache for 1 minute
+        () => withRateLimit(() => publicDb.db.users.count(), { maxRetries: 3, initialDelayMs: 300, timeoutMs: 20000 }),
+        300000 // Cache for 5 minutes
       )
       setTotalUsers(typeof count === 'number' ? count : 0)
     } catch (error: any) {
