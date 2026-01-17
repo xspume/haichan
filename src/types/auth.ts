@@ -15,6 +15,9 @@ export interface AuthUser {
   username?: string
   displayName?: string
   isAdmin?: string | number
+  hashleWins?: number
+  hashleScore?: number
+  hashleLosses?: number
   metadata?: Record<string, unknown>
 }
 
@@ -39,6 +42,8 @@ export interface DbUser {
   blogTheme?: string
   invitedBy?: string
   profileImageUrl?: string
+  metadata?: string
+  diamondLevel?: number
   [key: string]: unknown
 }
 

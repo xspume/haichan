@@ -15,7 +15,7 @@ interface ThemeLibraryProps {
 export const ThemeLibrary: React.FC<ThemeLibraryProps> = ({ refreshTrigger }) => {
   const [themes, setThemes] = useState<CustomTheme[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeThemeId, setActiveThemeId] = useState<string>(getStoredThemeInfo().theme);
+  const [activeThemeId, setActiveThemeId] = useState<string>(getStoredThemeInfo());
   const { authState } = useAuth();
   const user = authState.user;
 

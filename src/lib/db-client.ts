@@ -19,17 +19,18 @@ export const db = createClient({
 })
 
 /**
- * Public client
+ * Public client for global reads.
  *
- * IMPORTANT:
- * We intentionally DO NOT create a second Blink client instance here.
- * Multiple clients can race to initialize auth and inadvertently overwrite/clear
- * persisted tokens (resulting in “logged out after login” behavior).
+ * We use a separate client without auth to bypass automatic user_id filtering
+ * (RLS) when we want to see ALL records in a table that usually filters by user.
  *
- * For public reads, use this alias; the DB module is configured public in the
- * project's security policy, so global reads work without requiring auth.
+ * IMPORTANT: This client does not use storage to avoid racing with the main client's auth.
  */
-export const publicDb = db
+export const publicDb = createClient({
+  projectId: PROJECT_ID!,
+  publishableKey: import.meta.env.VITE_BLINK_PUBLISHABLE_KEY,
+  // No auth configured = no automatic user_id filtering on the client side
+})
 
 export const blink = db
 export default db

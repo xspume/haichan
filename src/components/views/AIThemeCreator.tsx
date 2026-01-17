@@ -215,7 +215,7 @@ export const AIThemeCreator: React.FC<AIThemeCreatorProps> = ({ onThemeSaved }) 
       await (blink.db as any).siteThemes.create({
         id: themeId,
         userId: user.id,
-        username: dbUser?.displayName || user.display_name || user.username || 'Anonymous',
+        username: dbUser?.displayName || user.displayName || user.username || 'Anonymous',
         name: generatedTheme.name,
         description: generatedTheme.description,
         colors: JSON.stringify(generatedTheme.colors),

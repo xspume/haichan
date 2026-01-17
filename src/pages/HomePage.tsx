@@ -131,11 +131,12 @@ export function HomePage() {
 
     // Parse metadata to check if user has seen the guide
     let metadata: UserMetadata = {}
-    try {
-      metadata = dbUser.metadata ? JSON.parse(dbUser.metadata) : {}
-    } catch (e) {
-      console.error('Failed to parse user metadata:', e)
-      metadata = {}
+    if (dbUser.metadata && typeof dbUser.metadata === 'string') {
+      try {
+        metadata = JSON.parse(dbUser.metadata)
+      } catch (e) {
+        console.error('Failed to parse user metadata:', e)
+      }
     }
     
     // Show guide only if user hasn't seen it before
