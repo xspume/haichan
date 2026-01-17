@@ -222,6 +222,25 @@ export function AuthPage() {
       console.log('[AuthPage] Final login attempt with email:', loginEmail)
       await db.auth.signInWithEmail(loginEmail, loginPassword)
 
+      // Wait for auth state to propagate before navigating
+      // This ensures MainLayout will see the authenticated state
+      console.log('[AuthPage] Waiting for auth state to propagate...')
+      let authReady = false
+      for (let i = 0; i < 20; i++) {
+        // Check if auth is now authenticated
+        if (db.auth.isAuthenticated()) {
+          authReady = true
+          break
+        }
+        await new Promise(resolve => setTimeout(resolve, 100))
+      }
+      
+      if (!authReady) {
+        console.warn('[AuthPage] Auth state did not propagate within timeout, navigating anyway')
+      } else {
+        console.log('[AuthPage] Auth state confirmed, proceeding with navigation')
+      }
+
       // We don't want to block navigation for backup generation
       // This part is a non-critical enhancement
       const generateBackup = async () => {
@@ -567,7 +586,24 @@ Generated: ${new Date().toISOString()}
           console.warn('Failed to download credential backup:', e)
         }
 
-        // 8. Show Success Message & Navigate
+        // 8. Wait for auth state to fully propagate
+        console.log('[AuthPage] Registration complete, waiting for auth state to propagate...')
+        let authReady = false
+        for (let i = 0; i < 20; i++) {
+          if (db.auth.isAuthenticated()) {
+            authReady = true
+            break
+          }
+          await new Promise(resolve => setTimeout(resolve, 100))
+        }
+        
+        if (!authReady) {
+          console.warn('[AuthPage] Auth state did not propagate within timeout, navigating anyway')
+        } else {
+          console.log('[AuthPage] Auth state confirmed, proceeding with navigation')
+        }
+
+        // 9. Show Success Message & Navigate
         toast.dismiss()
         toast.success('Registration successful! Credential backup downloaded.', { duration: 5000 })
 
