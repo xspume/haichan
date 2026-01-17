@@ -48,11 +48,11 @@ export function MiningOverlay() {
                 {isComplete ? <Zap className="w-6 h-6" /> : <Pickaxe className="w-6 h-6" />}
               </div>
               <div>
-                <h2 className="text-xl font-bold tracking-tighter uppercase leading-none">
-                  {isComplete ? "Success" : "Proof of Work"}
+                <h2 className="text-xl font-bold tracking-tight uppercase leading-none">
+                  {isComplete ? "Success" : "Working"}
                 </h2>
-                <p className="text-[10px] opacity-60 uppercase tracking-widest mt-1">
-                  {isComplete ? "Hash verified by local oracle" : `Mining ${targetType} ${dedicatedSession.targetId ? `#${dedicatedSession.targetId}` : ''}`}
+                <p className="text-[10px] opacity-60 uppercase tracking-wider mt-1">
+                  {isComplete ? "Verified" : `Mining ${targetType} ${dedicatedSession.targetId ? `#${dedicatedSession.targetId}` : ''}`}
                 </p>
               </div>
             </div>
@@ -81,7 +81,7 @@ export function MiningOverlay() {
                 style={{ width: `${progress}%` }}
               >
                 <span className={cn(
-                  "text-[10px] font-bold tracking-tighter transition-colors duration-500",
+                  "text-[10px] font-bold tracking-tight transition-colors duration-500",
                   isComplete ? "text-black" : "text-background"
                 )}>
                   {Math.floor(progress)}%
@@ -117,12 +117,12 @@ export function MiningOverlay() {
 
           <div className="text-center">
             {isComplete ? (
-              <p className="text-[11px] leading-relaxed text-[#00FF00] uppercase font-bold tracking-widest animate-bounce">
-                Cryptographic goal reached. Closing interface...
+              <p className="text-[11px] leading-relaxed text-[#00FF00] uppercase font-bold tracking-wider">
+                Work verified. Closing...
               </p>
             ) : (
               <p className="text-[11px] leading-relaxed text-primary/80 uppercase tracking-tight max-w-[90%] mx-auto italic">
-                Generating Bitcoin-aligned cryptographic evidence. This hardware is working to secure your action.
+                Generating proof of work to secure your action.
               </p>
             )}
           </div>
@@ -130,7 +130,7 @@ export function MiningOverlay() {
           {!isComplete && (
             <div className="flex items-center justify-center gap-2 pt-2 border-t border-primary/20">
               <Loader2 className="w-3 h-3 animate-spin text-primary" />
-              <span className="text-[10px] uppercase tracking-widest text-primary/60">Computing SHA-256...</span>
+              <span className="text-[10px] uppercase tracking-wider text-primary/60">Processing...</span>
             </div>
           )}
         </div>

@@ -130,28 +130,28 @@ export function BottomToolbar() {
       {/* Navigation Links (4chan style clickbar) */}
       <div className="flex items-center gap-2 md:gap-3 shrink-0">
         <Link to="/" className="hover:bg-primary hover:text-background px-1 transition-colors font-bold flex items-center gap-1">
-          <span className="hidden sm:inline">[Home]</span>
-          <span className="sm:hidden">[H]</span>
+          <span className="hidden sm:inline">Home</span>
+          <span className="sm:hidden">H</span>
         </Link>
         <Link to="/boards" className="hover:bg-primary hover:text-background px-1 transition-colors font-bold flex items-center gap-1">
-          <span className="hidden sm:inline">[Boards]</span>
-          <span className="sm:hidden">[B]</span>
+          <span className="hidden sm:inline">Boards</span>
+          <span className="sm:hidden">B</span>
         </Link>
         <Link to="/mine" className="hover:bg-primary hover:text-background px-1 transition-colors font-bold flex items-center gap-1">
-          <span className="hidden sm:inline">[Mine]</span>
-          <span className="sm:hidden">[M]</span>
+          <span className="hidden sm:inline">Mine</span>
+          <span className="sm:hidden">M</span>
         </Link>
         <Link to="/chat" className="hover:bg-primary hover:text-background px-1 transition-colors font-bold flex items-center gap-1">
-          <span className="hidden sm:inline">[Chat]</span>
-          <span className="sm:hidden">[C]</span>
+          <span className="hidden sm:inline">Chat</span>
+          <span className="sm:hidden">C</span>
         </Link>
         <Link to="/settings" className="hover:bg-primary hover:text-background px-1 transition-colors font-bold flex items-center gap-1">
-          <span className="hidden sm:inline">[Options]</span>
-          <span className="sm:hidden">[O]</span>
+          <span className="hidden sm:inline">Options</span>
+          <span className="sm:hidden">O</span>
         </Link>
          <Link to="/themes" className="hover:bg-primary hover:text-background px-1 transition-colors font-bold flex items-center gap-1">
-          <span className="hidden sm:inline">[Themes]</span>
-          <span className="sm:hidden">[T]</span>
+          <span className="hidden sm:inline">Themes</span>
+          <span className="sm:hidden">T</span>
         </Link>
       </div>
 
@@ -186,12 +186,11 @@ export function BottomToolbar() {
 
         <div className="w-px h-3 bg-primary/30 hidden md:block shrink-0" />
 
-        {/* Session Points */}
         <div 
           className="flex items-center gap-1 font-bold whitespace-nowrap shrink-0"
           title={`Session Points: ${stats.sessionPoints}`}
         >
-          <span>PTS:{stats.sessionPoints}</span>
+          <span>Points: {stats.sessionPoints}</span>
         </div>
 
         {/* Extra stats hidden on mobile */}

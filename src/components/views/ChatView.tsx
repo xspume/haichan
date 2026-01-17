@@ -102,11 +102,11 @@ export function ChatView() {
     <div className="border-2 border-black bg-white">
       {/* Header */}
       <div className="border-b-2 border-black bg-black text-white px-3 py-1 font-mono text-sm font-bold flex justify-between items-center">
-        <span>GLOBAL CHAT</span>
+        <span>Global Chat</span>
         <div className="flex items-center gap-2">
           <Zap size={12} className={hasValidPoW ? 'text-green-400' : 'animate-pulse text-gray-400'} />
           <span className="text-[10px] uppercase font-normal">
-            {hasValidPoW ? 'PoW Ready' : 'Mining...'}
+            {hasValidPoW ? 'Ready' : 'Processing...'}
           </span>
         </div>
       </div>
@@ -115,7 +115,7 @@ export function ChatView() {
       <div className="h-[300px] overflow-y-auto p-3 space-y-2 font-mono text-xs">
         {messages.map((msg) => (
           <div key={msg.id} className="leading-tight">
-            <span className="text-gray-600">[{formatTime(msg.timestamp)}]</span>{' '}
+            <span className="text-gray-600">{formatTime(msg.timestamp)}</span>{' '}
             <span className="font-bold flex items-center gap-0.5">
               {msg.username}
               <BadgesInline user={msg.user} className="inline-flex ml-0.5" />

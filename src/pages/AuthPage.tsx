@@ -631,22 +631,22 @@ Generated: ${new Date().toISOString()}
       <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="text-center space-y-2">
           <h1 className="text-5xl font-bold tracking-tighter haichan-logo">HAICHAN</h1>
-          <p className="text-xs text-primary/60 uppercase tracking-[0.2em]">Proof-of-Work Imageboard v2.0</p>
+          <p className="text-xs text-primary/60 uppercase tracking-wider">Secure Imageboard</p>
         </div>
 
         <div className="card-3d p-1 bg-primary">
           <div className="bg-background p-6">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-3 mb-8 bg-primary/10 p-1 rounded-none border border-primary/30">
-                <TabsTrigger value="login" className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-background text-[10px] uppercase tracking-widest font-bold">
+                <TabsTrigger value="login" className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-background text-[10px] uppercase font-bold">
                   <LogIn className="w-3 h-3 mr-2" />
                   Login
                 </TabsTrigger>
-                <TabsTrigger value="register" className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-background text-[10px] uppercase tracking-widest font-bold">
+                <TabsTrigger value="register" className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-background text-[10px] uppercase font-bold">
                   <UserPlus className="w-3 h-3 mr-2" />
                   Join
                 </TabsTrigger>
-                <TabsTrigger value="lurk" className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-background text-[10px] uppercase tracking-widest font-bold">
+                <TabsTrigger value="lurk" className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-background text-[10px] uppercase font-bold">
                   👻 Lurk
                 </TabsTrigger>
               </TabsList>
@@ -655,14 +655,14 @@ Generated: ${new Date().toISOString()}
               <TabsContent value="login" className="animate-in fade-in duration-300">
                 <form onSubmit={handleUsernameLogin} className="space-y-6">
                   {usernameError && (
-                    <div className="p-3 bg-red-950/30 border border-red-500/50 text-red-500 text-[10px] font-bold uppercase tracking-wider animate-pulse">
-                      [ Error: {usernameError} ]
+                    <div className="p-3 bg-red-950/30 border border-red-500/50 text-red-500 text-[10px] font-bold uppercase tracking-wider">
+                      Error: {usernameError}
                     </div>
                   )}
 
                   {resolvedEmail && (
                     <div className="p-2 bg-primary/10 border border-primary/30 text-primary/70 text-[9px] font-mono">
-                      [ Resolved ID: {resolvedEmail.slice(0, 3)}...{resolvedEmail.split('@')[1]} ]
+                      Account: {resolvedEmail.slice(0, 3)}...{resolvedEmail.split('@')[1]}
                     </div>
                   )}
 
@@ -685,25 +685,25 @@ Generated: ${new Date().toISOString()}
 
                   {!useBitcoinAuth ? (
                     <div className="space-y-2">
-                      <Label htmlFor="username" className="text-[10px] uppercase tracking-[0.2em] opacity-70">Username</Label>
+                      <Label htmlFor="username" className="text-[10px] uppercase tracking-wider opacity-70">Username</Label>
                       <Input
                         id="username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        placeholder="ENTER_NICKNAME"
+                        placeholder="Username or Email"
                         className="rounded-none border-primary/50 focus:border-primary bg-primary/5 text-primary placeholder:text-primary/20 h-10"
                         required={!useBitcoinAuth}
                       />
                     </div>
                   ) : (
                     <div className="space-y-2">
-                      <Label htmlFor="privateKey" className="text-[10px] uppercase tracking-[0.2em] opacity-70">Bitcoin Private Key (WIF)</Label>
+                      <Label htmlFor="privateKey" className="text-[10px] uppercase tracking-wider opacity-70">Bitcoin Private Key (WIF)</Label>
                       <Input
                         id="privateKey"
                         type="password"
                         value={privateKeyInput}
                         onChange={(e) => setPrivateKeyInput(e.target.value)}
-                        placeholder="L5..."
+                        placeholder="Private Key"
                         className="rounded-none border-primary/50 focus:border-primary bg-primary/5 text-primary placeholder:text-primary/20 h-10"
                         required={useBitcoinAuth}
                       />
@@ -714,13 +714,13 @@ Generated: ${new Date().toISOString()}
                   )}
 
                   <div className="space-y-2">
-                    <Label htmlFor="password" className="text-[10px] uppercase tracking-[0.2em] opacity-70">Access Code</Label>
+                    <Label htmlFor="password" className="text-[10px] uppercase tracking-wider opacity-70">Password</Label>
                     <Input
                       id="password"
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="********"
+                      placeholder="Password"
                       className="rounded-none border-primary/50 focus:border-primary bg-primary/5 text-primary placeholder:text-primary/20 h-10"
                       required
                     />
@@ -731,7 +731,7 @@ Generated: ${new Date().toISOString()}
                     className="w-full btn-3d h-12 text-sm" 
                     disabled={loading}
                   >
-                    {loading ? 'AUTHENTICATING...' : 'ESTABLISH CONNECTION'}
+                    {loading ? 'Logging in...' : 'Login'}
                   </Button>
                 </form>
               </TabsContent>
@@ -747,7 +747,7 @@ Generated: ${new Date().toISOString()}
 
                   {siteSettings?.isInviteOnly !== false && (
                     <div>
-                      <Label htmlFor="inviteCode" className="text-[10px] uppercase tracking-[0.2em] opacity-70">INVITE CODE</Label>
+                      <Label htmlFor="inviteCode" className="text-[10px] uppercase tracking-wider opacity-70">Invite Code</Label>
                       <div className="relative">
                         <Input
                           id="inviteCode"
@@ -755,7 +755,7 @@ Generated: ${new Date().toISOString()}
                           value={inviteCode}
                           onChange={(e) => handleInviteCodeChange(e.target.value)}
                           className="rounded-none border-primary/50 focus:border-primary bg-primary/5 text-primary placeholder:text-primary/20 h-10 uppercase pr-10"
-                          placeholder="HC-XXXX-XXXX-XXXX"
+                          placeholder="Invite Code"
                           required
                           disabled={loading}
                         />
@@ -763,59 +763,58 @@ Generated: ${new Date().toISOString()}
                       </div>
                       {inviteCodeError && (
                         <p className="text-red-500 text-[10px] mt-1 font-bold tracking-wider">
-                          [ ERROR: {inviteCodeError} ]
+                          Error: {inviteCodeError}
                         </p>
                       )}
                       {publicInviteMessage && !inviteCodeError && (
-                        <p className="text-blue-500 text-[10px] mt-1 font-bold tracking-wider animate-pulse">
-                          [ INFO: {publicInviteMessage} ]
+                        <p className="text-blue-500 text-[10px] mt-1 font-bold tracking-wider">
+                          Info: {publicInviteMessage}
                         </p>
                       )}
                     </div>
                   )}
 
                   <div>
-                    <Label htmlFor="reg-username" className="text-[10px] uppercase tracking-[0.2em] opacity-70">USERNAME</Label>
+                    <Label htmlFor="reg-username" className="text-[10px] uppercase tracking-wider opacity-70">Username</Label>
                     <Input
                       id="reg-username"
                       type="text"
                       value={registerUsername}
                       onChange={(e) => handleRegisterUsernameChange(e.target.value)}
                       className={`rounded-none border-primary/50 focus:border-primary bg-primary/5 text-primary placeholder:text-primary/20 h-10 ${registerUsernameError ? 'border-red-500' : ''}`}
-                      placeholder="SATOSHI2024"
+                      placeholder="Username"
                       minLength={MIN_USERNAME_LENGTH}
                       maxLength={MAX_USERNAME_LENGTH}
                       required
                     />
                     {registerUsernameError && (
-                      <p className="text-xs text-red-500 mt-1 font-mono">[ ERROR: {registerUsernameError} ]</p>
+                      <p className="text-xs text-red-500 mt-1 font-mono">Error: {registerUsernameError}</p>
                     )}
                     {!registerUsernameError && registerUsername.length >= MIN_USERNAME_LENGTH && (
-                      <p className="text-xs text-green-500 mt-1 font-mono">[ VALID ]</p>
+                      <p className="text-xs text-green-500 mt-1 font-mono">Valid</p>
                     )}
                     <p className="text-xs text-primary/50 mt-1 font-mono">{registerUsername.length}/{MAX_USERNAME_LENGTH} characters</p>
                   </div>
 
                   <div>
-                    <Label htmlFor="registerEmail" className="text-[10px] uppercase tracking-[0.2em] opacity-70">EMAIL *</Label>
+                    <Label htmlFor="registerEmail" className="text-[10px] uppercase tracking-wider opacity-70">Email</Label>
                     <Input id="registerEmail" type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="rounded-none border-primary/50 focus:border-primary bg-primary/5 text-primary placeholder:text-primary/20 h-10" required />
                   </div>
 
                   <div>
-                    <Label htmlFor="registerPassword" className="text-[10px] uppercase tracking-[0.2em] opacity-70">PASSWORD *</Label>
+                    <Label htmlFor="registerPassword" className="text-[10px] uppercase tracking-wider opacity-70">Password</Label>
                     <Input id="registerPassword" type="password" value={registerPassword} onChange={(e) => setRegisterPassword(e.target.value)} className="rounded-none border-primary/50 focus:border-primary bg-primary/5 text-primary placeholder:text-primary/20 h-10" minLength={8} required />
                   </div>
 
                   <div className="border-2 border-dashed p-4 rounded border-primary/30">
                     <div className="flex items-center justify-between mb-3">
-                      <Label className="text-[10px] uppercase tracking-[0.2em] opacity-70">BITCOIN IDENTITY (MANDATORY)</Label>
+                      <Label className="text-[10px] uppercase tracking-wider opacity-70">Bitcoin Identity</Label>
                     </div>
 
                     {!generatedKeys ? (
                       <div className="text-center py-4">
                         <p className="text-xs text-primary/50 font-mono mb-3">
-                          User identity is tied to mined Bitcoin addresses.<br/>
-                          You must generate and secure a keypair to continue.
+                          User identity is tied to mined Bitcoin addresses.
                         </p>
                         <Button
                           type="button"
@@ -831,9 +830,9 @@ Generated: ${new Date().toISOString()}
                     ) : (
                       <div className="space-y-3">
                         <div className="bg-primary/5 p-3 rounded border border-primary/30">
-                          <p className="text-xs font-mono text-primary/50 mb-1">Bitcoin Address (Legacy):</p>
+                          <p className="text-xs font-mono text-primary/50 mb-1">Bitcoin Address:</p>
                           <p className="text-xs font-mono break-all text-primary">{generatedKeys.address}</p>
-                          <p className="text-xs text-green-500 mt-1 font-mono">✓ {getBitcoinAddressType(generatedKeys.address)}</p>
+                          <p className="text-xs text-green-500 mt-1 font-mono">{getBitcoinAddressType(generatedKeys.address)}</p>
                         </div>
 
                         <div className="bg-primary/5 p-3 rounded border border-primary/30">
@@ -844,22 +843,22 @@ Generated: ${new Date().toISOString()}
                             <p className="text-xs font-mono text-primary/50">••••••••••••••••••••</p>
                           )}
                           <Button type="button" onClick={() => setShowPrivateKey(!showPrivateKey)} variant="ghost" size="sm" className="mt-2 font-mono text-xs">
-                            {showPrivateKey ? 'HIDE' : 'SHOW'}
+                            {showPrivateKey ? 'Hide' : 'Show'}
                           </Button>
                         </div>
 
                         <Button type="button" onClick={handleDownloadPrivateKey} variant={hasDownloadedKey ? 'secondary' : 'default'} className="w-full font-mono rounded-none">
                           <Download className="w-4 h-4 mr-2" />
-                          {hasDownloadedKey ? '✓ KEY DOWNLOADED' : 'DOWNLOAD PRIVATE KEY'}
+                          {hasDownloadedKey ? 'Key Downloaded' : 'Download Private Key'}
                         </Button>
 
-                        <p className="text-xs text-amber-500 font-mono border-l-2 border-amber-500 pl-2">⚠️ Download and secure your private key before registering! This key is your unique cryptographic ID.</p>
+                        <p className="text-xs text-amber-500 font-mono border-l-2 border-amber-500 pl-2">Security: Download and secure your private key before registering. This key is your unique cryptographic ID.</p>
                       </div>
                     )}
                   </div>
 
                   <Button type="submit" className="w-full btn-3d h-12 text-sm" disabled={loading || !generatedKeys || !hasDownloadedKey}>
-                    {loading ? 'REGISTERING...' : 'INITIATE PROTOCOL'}
+                    {loading ? 'Registering...' : 'Register'}
                   </Button>
                 </form>
               </TabsContent>

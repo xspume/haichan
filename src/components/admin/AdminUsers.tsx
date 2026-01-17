@@ -12,7 +12,7 @@ export function AdminUsers({ allUsers, setDeleteDialog }: AdminUsersProps) {
   return (
     <Card className="border-4 border-foreground">
       <CardHeader className="bg-card text-card-foreground border-b-4 border-foreground">
-        <CardTitle className="font-mono text-sm">USER MANAGEMENT</CardTitle>
+        <CardTitle className="font-mono text-sm">User Management</CardTitle>
         <CardDescription className="font-mono text-xs text-muted-foreground mt-1">
           Monitor and manage registered users
         </CardDescription>
@@ -22,11 +22,11 @@ export function AdminUsers({ allUsers, setDeleteDialog }: AdminUsersProps) {
           <table className="w-full font-mono text-xs">
             <thead className="bg-foreground text-background">
               <tr>
-                <th className="p-3 text-left">USERNAME</th>
+                <th className="p-3 text-left">Username</th>
                 <th className="p-3 text-left">ID</th>
-                <th className="p-3 text-left">POW</th>
-                <th className="p-3 text-left">ROLE</th>
-                <th className="p-3 text-center">ACTIONS</th>
+                <th className="p-3 text-left">PoW</th>
+                <th className="p-3 text-left">Role</th>
+                <th className="p-3 text-center">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y-2 divide-foreground">
@@ -37,9 +37,9 @@ export function AdminUsers({ allUsers, setDeleteDialog }: AdminUsersProps) {
                   <td className="p-3">{(Number(user.totalPowPoints) || 0).toLocaleString()}</td>
                   <td className="p-3">
                     {Number(user.isAdmin) > 0 ? (
-                      <Badge className="bg-foreground text-background font-mono text-[10px]">ADMIN</Badge>
+                      <Badge className="bg-foreground text-background font-mono text-[10px]">Admin</Badge>
                     ) : (
-                      <Badge variant="outline" className="font-mono text-[10px]">USER</Badge>
+                      <Badge variant="outline" className="font-mono text-[10px]">User</Badge>
                     )}
                   </td>
                   <td className="p-3 text-center">

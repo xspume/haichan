@@ -92,7 +92,7 @@ export const PostItem = React.memo(function PostItem({
           No.{post.post_number || post.postNumber}
         </span>
         
-        <span className="text-muted-foreground opacity-30 text-[9px] ml-1">[{formatHashAge(post.createdAt)}]</span>
+        <span className="text-muted-foreground opacity-30 text-[9px] ml-1">{formatHashAge(post.createdAt)}</span>
         
         <div className="flex items-center gap-1 ml-1 opacity-70">
           <DifficultyBandBadge points={post.totalPow || 0} className="scale-75 origin-left" />

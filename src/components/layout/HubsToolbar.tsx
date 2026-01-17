@@ -6,13 +6,13 @@ export function HubsToolbar() {
   const location = useLocation()
   
   const hubs = [
-    { to: "/chat", icon: <MessageSquare className="w-3 h-3" />, label: "chat" },
-    { to: "/blogs", icon: <BookOpen className="w-3 h-3" />, label: "blogs" },
-    { to: "/games", icon: <Zap className="w-3 h-3" />, label: "games" },
-    { to: "/canvas", icon: <Palette className="w-3 h-3" />, label: "canvas" },
-    { to: "/images", icon: <Image className="w-3 h-3" />, label: "images" },
-    { to: "/work-ledger", icon: <TrendingUp className="w-3 h-3" />, label: "ledger" },
-    { to: "/thesis", icon: <Scroll className="w-3 h-3" />, label: "thesis" },
+    { to: "/chat", icon: <MessageSquare className="w-3 h-3" />, label: "Chat" },
+    { to: "/blogs", icon: <BookOpen className="w-3 h-3" />, label: "Blogs" },
+    { to: "/games", icon: <Zap className="w-3 h-3" />, label: "Games" },
+    { to: "/canvas", icon: <Palette className="w-3 h-3" />, label: "Canvas" },
+    { to: "/images", icon: <Image className="w-3 h-3" />, label: "Images" },
+    { to: "/work-ledger", icon: <TrendingUp className="w-3 h-3" />, label: "Ledger" },
+    { to: "/thesis", icon: <Scroll className="w-3 h-3" />, label: "Thesis" },
   ]
 
   return (

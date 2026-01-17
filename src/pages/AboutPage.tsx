@@ -5,18 +5,18 @@ export function AboutPage() {
   const events = [
     {
       date: '2026-01-15',
-      title: 'Spam Wave Mitigation',
-      description: 'Systemic 2^18 padded difficulty implemented to counteract automated low-effort flooding. Median thread effort spiked by 4.2x.'
+      title: 'Anti-Spam Measures',
+      description: 'Implemented advanced difficulty scaling to prevent automated flooding. Quality of content has significantly improved.'
     },
     {
       date: '2026-01-03',
-      title: 'Protocol Initialization',
-      description: 'Haichan V0.3 online. Proof-of-work gating active for all write operations. Initial calibration thread established.'
+      title: 'Official Launch',
+      description: 'Haichan V0.3 is now live. All posting and threads are secured by computational verification.'
     },
     {
       date: '2025-12-31',
-      title: 'Diamond Tier Calibration',
-      description: 'Thresholds for legendary status adjusted based on global network hash rate. Persistence of memory verified.'
+      title: 'Reputation Updates',
+      description: 'Adjusted reward tiers based on community participation. User history is now more effectively recognized.'
     }
   ]
 
@@ -46,36 +46,35 @@ export function AboutPage() {
 
           <TabsContent value="manifesto" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="space-y-4">
-              <h2 className="text-xl font-black uppercase bg-foreground text-background inline-block px-2">What This Is Not</h2>
+              <h2 className="text-xl font-black uppercase bg-foreground text-background inline-block px-2">Core Principles</h2>
               <ul className="space-y-2 text-sm leading-relaxed">
                 <li className="flex gap-4">
                   <span className="font-bold">01</span>
-                  <span><span className="font-black">No social graphs.</span> We do not care who follows you. Relationships are transient; only the work remains.</span>
+                  <span><span className="font-black">No following.</span> We focus on content rather than social connections. Only the work remains.</span>
                 </li>
                 <li className="flex gap-4">
                   <span className="font-bold">02</span>
-                  <span><span className="font-black">No karma.</span> Your past deeds do not grant you future rights. Every post must pay the current market price in computation.</span>
+                  <span><span className="font-black">No vanity points.</span> Your past deeds do not grant you future rights. Every post is validated through current effort.</span>
                 </li>
                 <li className="flex gap-4">
                   <span className="font-bold">03</span>
-                  <span><span className="font-black">No ad impressions.</span> Your attention is not our product. Your computational power is our protocol's oxygen.</span>
+                  <span><span className="font-black">No advertising.</span> Your attention is not our product. We prioritize user contribution over data collection.</span>
                 </li>
                 <li className="flex gap-4">
                   <span className="font-bold">04</span>
-                  <span><span className="font-black">No onboarding paths.</span> There is no "user journey." There is only a barrier of entry. If you cannot mine, you cannot speak.</span>
+                  <span><span className="font-black">Verification required.</span> There is a barrier to entry to ensure quality. If you cannot verify, you cannot post.</span>
                 </li>
               </ul>
             </div>
 
             <div className="space-y-4">
-              <h2 className="text-xl font-black uppercase bg-foreground text-background inline-block px-2">The Doctrine</h2>
+              <h2 className="text-xl font-black uppercase bg-foreground text-background inline-block px-2">The Mission</h2>
               <p className="text-sm leading-relaxed">
-                Haichan is not marketing. It is protocol governance via energy expenditure.
-                We prioritize <span className="font-black italic underline">Economics over Policy</span>.
-                Content moderation is handled by the rising difficulty of attention.
+                Haichan is an experiment in community self-governance.
+                We believe in effort as a filter for high-quality discussion.
               </p>
               <p className="text-sm leading-relaxed italic border-l-4 border-foreground pl-4">
-                "Expression is costly. Reading is cheap. Silence is default."
+                "Expression has value. Quality is preferred over quantity."
               </p>
             </div>
           </TabsContent>
@@ -101,15 +100,15 @@ export function AboutPage() {
             <div className="space-y-6">
               <div className="space-y-2">
                 <h3 className="font-black uppercase text-lg border-b border-foreground/20 pb-1">How do I post?</h3>
-                <p className="text-sm text-foreground/80">You must solve a cryptographic puzzle (Proof of Work) before your content is accepted. Your CPU will do this work automatically when you click post.</p>
+                <p className="text-sm text-foreground/80">You must solve a verification puzzle (Proof of Work) before your content is accepted. Your computer will do this automatically when you click post.</p>
               </div>
               <div className="space-y-2">
-                <h3 className="font-black uppercase text-lg border-b border-foreground/20 pb-1">What is 21e8?</h3>
-                <p className="text-sm text-foreground/80">21e8 is a specific prefix (representing the Bitcoin total supply 21 million and the "8" from its hash) that signifies high-effort computation. It is the barrier of entry for Haichan.</p>
+                <h3 className="font-black uppercase text-lg border-b border-foreground/20 pb-1">What is Proof of Work?</h3>
+                <p className="text-sm text-foreground/80">Proof of Work is a way to ensure that posts are made by real people rather than bots. It requires a small amount of computational effort to validate each action.</p>
               </div>
               <div className="space-y-2">
-                <h3 className="font-black uppercase text-lg border-b border-foreground/20 pb-1">Is this Bitcoin?</h3>
-                <p className="text-sm text-foreground/80">No, it uses the same SHA-256 algorithm but the points earned are protocol-specific. However, user identities are tied to public keys that can correspond to Bitcoin addresses.</p>
+                <h3 className="font-black uppercase text-lg border-b border-foreground/20 pb-1">Is this related to Bitcoin?</h3>
+                <p className="text-sm text-foreground/80">It uses similar cryptographic principles to Bitcoin for verification and identity, but it is a separate system dedicated to community discussion.</p>
               </div>
             </div>
           </TabsContent>

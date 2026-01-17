@@ -167,8 +167,8 @@ export function GlobalPoWStats() {
   return (
     <div className="card-3d bg-background overflow-hidden">
       {/* Header */}
-      <div className="bg-primary text-background px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest flex items-center justify-between">
-        <span>Global Statistics Ledger</span>
+      <div className="bg-primary text-background px-3 py-1 font-mono text-[10px] font-bold uppercase flex items-center justify-between">
+        <span>Global Statistics</span>
         <Activity className="w-3 h-3" />
       </div>
 
@@ -178,7 +178,7 @@ export function GlobalPoWStats() {
           <div className="border border-primary/20 bg-primary/5 p-2 space-y-1">
             <div className="flex items-center gap-1 opacity-60">
               <TrendingUp className="w-2.5 h-2.5" />
-              <span className="uppercase font-bold">Total Work Verified</span>
+              <span className="uppercase font-bold">Total Work</span>
             </div>
             <div className="text-base font-black tracking-tighter text-primary">{stats.totalPoW.toLocaleString()}</div>
           </div>
@@ -186,7 +186,7 @@ export function GlobalPoWStats() {
           <div className="border border-primary/20 bg-primary/5 p-2 space-y-1">
             <div className="flex items-center gap-1 opacity-60">
               <Users className="w-2.5 h-2.5" />
-              <span className="uppercase font-bold">Active Users</span>
+              <span className="uppercase font-bold">Total Users</span>
             </div>
             <div className="text-base font-black tracking-tighter text-primary">{stats.totalUsers}</div>
           </div>
@@ -194,7 +194,7 @@ export function GlobalPoWStats() {
           <div className="border border-primary/20 bg-primary/5 p-2 space-y-1">
             <div className="flex items-center gap-1 opacity-60">
               <Zap className="w-2.5 h-2.5" />
-              <span className="uppercase font-bold">Total Threads</span>
+              <span className="uppercase font-bold">Threads</span>
             </div>
             <div className="text-base font-black tracking-tighter text-primary">{stats.totalThreads}</div>
           </div>
@@ -202,7 +202,7 @@ export function GlobalPoWStats() {
           <div className="border border-primary/20 bg-primary/5 p-2 space-y-1">
             <div className="flex items-center gap-1 opacity-60">
               <Award className="w-2.5 h-2.5" />
-              <span className="uppercase font-bold">Total Posts</span>
+              <span className="uppercase font-bold">Posts</span>
             </div>
             <div className="text-base font-black tracking-tighter text-primary">{stats.totalPosts}</div>
           </div>
@@ -210,14 +210,14 @@ export function GlobalPoWStats() {
 
         {/* Top Miners */}
         <div className="space-y-2">
-          <div className="text-[10px] uppercase font-bold text-primary opacity-60 tracking-widest border-b border-primary/20 pb-1">
-            Top Contributing Miners
+          <div className="text-[10px] uppercase font-bold text-primary opacity-60 border-b border-primary/20 pb-1">
+            Top Contributors
           </div>
           <div className="space-y-1 font-mono text-[10px]">
             {stats.topMiners.map((miner, index) => (
               <div key={miner.id} className="flex items-center justify-between group py-0.5">
                 <span className="flex items-center gap-2">
-                  <span className="opacity-40">0{index + 1}</span>
+                  <span className="opacity-40">{index + 1}</span>
                   <span className="font-bold group-hover:text-primary transition-colors cursor-pointer">
                     {formatBrandName(miner.username) || 'Anonymous'}
                   </span>
@@ -227,8 +227,8 @@ export function GlobalPoWStats() {
               </div>
             ))}
             {stats.topMiners.length === 0 && (
-              <div className="text-center text-primary/30 py-2 text-[9px] uppercase tracking-widest italic">
-                Loading statistics...
+              <div className="text-center text-primary/30 py-2 text-[9px] uppercase italic">
+                Updating statistics...
               </div>
             )}
           </div>

@@ -134,8 +134,8 @@ export function BoardsPage() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center font-mono">
-          <div className="text-2xl mb-2">LOADING...</div>
-          <div className="text-gray-500">Fetching boards</div>
+          <div className="text-2xl mb-2">LOADING</div>
+          <div className="text-gray-500">Please wait...</div>
         </div>
       </div>
     )
@@ -147,16 +147,16 @@ export function BoardsPage() {
       <div className="container mx-auto p-3 max-w-7xl">
         <div className="mb-6 border-b-2 border-primary pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h1 className="text-4xl font-black uppercase tracking-tighter flex items-center gap-3">
+            <h1 className="text-4xl font-black uppercase tracking-tight flex items-center gap-3">
               <TrendingUp className="w-8 h-8 text-primary" />
-              Boards Directory
+              Boards
             </h1>
-            <p className="text-[10px] uppercase tracking-widest opacity-60 mt-1">
-              Navigate through computational hubs. Ranking determined by cumulative PoW.
+            <p className="text-[10px] uppercase tracking-wider opacity-60 mt-1">
+              Active boards ranked by cumulative work.
             </p>
           </div>
-          <Link to="/boards/create" className="btn-3d text-xs px-4 py-2 bg-primary text-background font-bold uppercase tracking-widest">
-            [Create New Hub]
+          <Link to="/boards/create" className="btn-3d text-xs px-4 py-2 bg-primary text-background font-bold uppercase tracking-wider">
+            Create Board
           </Link>
         </div>
 
@@ -166,12 +166,12 @@ export function BoardsPage() {
             {/* Boards Section - 4chan style */}
             <div className="border border-foreground">
               <div className="border-b border-foreground bg-muted px-2 py-1 font-bold text-xs">
-                Boards
+                Boards List
               </div>
               <div className="p-3">
                 {error && (
                   <div className="p-3 mb-3 border-2 border-red-500 bg-red-500/10 text-red-500 text-[10px] font-mono text-center uppercase font-bold">
-                    [Error]: {error}
+                    Error: {error}
                   </div>
                 )}
                 
@@ -209,24 +209,24 @@ export function BoardsPage() {
                 ) : (
                   <div className="text-center py-16 space-y-6">
                     <div className="space-y-2">
-                      <div className="text-sm uppercase font-bold tracking-widest text-primary">
-                        [VIEW DIRECTORY]
+                      <div className="text-sm uppercase font-bold tracking-wider text-primary">
+                        Directory
                       </div>
                       <div className="text-xs uppercase tracking-wide text-muted-foreground">
-                        THE INDEX IS EMPTY
+                        The index is empty
                       </div>
                     </div>
                     <div className="border-t border-b border-foreground/20 py-4 mx-auto max-w-xs">
                       <p className="text-[10px] text-muted-foreground uppercase tracking-wider leading-relaxed">
-                        No active computational hubs found.<br />
-                        Be the first to forge a new board.
+                        No active boards found.<br />
+                        Create one to get started.
                       </p>
                     </div>
                     <Link 
                       to="/boards/create" 
                       className="inline-block text-xs font-bold text-primary hover:bg-primary hover:text-background px-4 py-2 border-2 border-primary transition-all uppercase tracking-wide"
                     >
-                      [Create First Board]
+                      Create Board
                     </Link>
                   </div>
                 )}

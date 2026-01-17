@@ -285,8 +285,8 @@ export function HomePage() {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center font-mono">
-          <div className="text-2xl mb-2">▓▓▓▓▓▓▓▓</div>
-          <div className="text-sm">LOADING...</div>
+          <div className="text-2xl mb-2">LOADING</div>
+          <div className="text-sm">Please wait...</div>
         </div>
       </div>
     )
@@ -297,13 +297,13 @@ export function HomePage() {
     <div className="bg-background text-foreground min-h-screen font-mono">
       {/* Quick Actions Bar - no duplicate header */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-primary/20 pb-3">
-        <p className="text-[10px] uppercase tracking-[0.3em] opacity-60">Proof-of-Work Imageboard</p>
+        <p className="text-[10px] uppercase tracking-wider opacity-60">Secure Imageboard</p>
         <div className="flex gap-2">
           <Link to="/mine" className="btn-3d text-[10px] px-3 py-1">
-            [start_mining]
+            Start Mining
           </Link>
           <Link to="/chat" className="btn-3d text-[10px] px-3 py-1">
-            [global_chat]
+            Global Chat
           </Link>
         </div>
       </div>
@@ -318,29 +318,29 @@ export function HomePage() {
             <div className="absolute top-0 right-0 p-2 opacity-5">
               <Zap size={120} className="text-primary" />
             </div>
-            <h2 className="text-xl font-bold mb-4 uppercase tracking-widest text-primary flex items-center gap-2">
+            <h2 className="text-xl font-bold mb-4 uppercase tracking-wider text-primary flex items-center gap-2">
               <Sparkles className="w-5 h-5" />
-              Computational Meritocracy
+              Community Meritocracy
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-3">
                 <p className="text-xs leading-relaxed text-primary/80">
-                  Haichan is a proof-of-work based imageboard where every action requires computational energy. 
-                  We replace algorithmic bias with cryptographic cost.
+                  Haichan is an imageboard where participation is balanced by computational effort. 
+                  We prioritize quality and commitment through verification.
                 </p>
                 <div className="p-3 bg-primary/5 border border-primary/20">
-                  <div className="text-[10px] uppercase font-bold text-primary mb-1">Hashing Algorithm</div>
+                  <div className="text-[10px] uppercase font-bold text-primary mb-1">Hashing Protocol</div>
                   <div className="text-xs font-bold font-mono">SHA-256 (PREFIX: 21e8)</div>
                 </div>
               </div>
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-xs">
-                  <div className="w-1.5 h-1.5 bg-primary animate-pulse" />
-                  <span className="font-bold">HOVER-TO-MINE</span>
+                  <div className="w-1.5 h-1.5 bg-primary" />
+                  <span className="font-bold">MERIT-BASED RANKING</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs">
-                  <div className="w-1.5 h-1.5 bg-primary animate-pulse" />
-                  <span className="font-bold">DIAMOND REPUTATION</span>
+                  <div className="w-1.5 h-1.5 bg-primary" />
+                  <span className="font-bold">VERIFIED REPUTATION</span>
                 </div>
 
               </div>
@@ -350,12 +350,12 @@ export function HomePage() {
           {/* Boards Grid */}
           <div className="space-y-4 pt-4">
             <div className="flex items-center justify-between border-b-2 border-primary pb-2 mb-4 bg-primary/5 px-2">
-              <h3 className="text-sm font-black uppercase tracking-[0.2em] flex items-center gap-2">
+              <h3 className="text-sm font-black uppercase tracking-wider flex items-center gap-2">
                 <LayoutGrid className="w-4 h-4 text-primary" />
-                Index of Active Boards
+                Index of Boards
               </h3>
-              <Link to="/boards" className="text-[10px] font-bold text-primary hover:bg-primary hover:text-background px-2 py-0.5 border border-primary transition-all uppercase tracking-tighter">
-                [View Directory]
+              <Link to="/boards" className="text-[10px] font-bold text-primary hover:bg-primary hover:text-background px-2 py-0.5 border border-primary transition-all uppercase tracking-tight">
+                View Directory
               </Link>
             </div>
             
@@ -392,12 +392,12 @@ export function HomePage() {
                       <LayoutGrid size={24} />
                     </div>
                     <div className="space-y-1">
-                      <div className="text-sm font-black uppercase tracking-[0.2em] text-primary">
-                        The Index is Empty
+                      <div className="text-sm font-black uppercase tracking-wider text-primary">
+                        No Boards Found
                       </div>
                       <p className="text-[10px] uppercase opacity-60 max-w-xs mx-auto leading-relaxed">
-                        No active computational hubs found. 
-                        Be the first to forge a new board.
+                        No active boards found. 
+                        Create one to get started.
                       </p>
                     </div>
                   </div>
@@ -405,17 +405,17 @@ export function HomePage() {
                   <div className="flex flex-wrap justify-center gap-3 pt-2">
                     <Link 
                       to="/boards/create" 
-                      className="btn-3d text-xs px-6 py-2 bg-primary text-background font-black uppercase tracking-widest"
+                      className="btn-3d text-xs px-6 py-2 bg-primary text-background font-black uppercase tracking-wider"
                     >
-                      [Create First Board]
+                      Create Board
                     </Link>
                     
                     {(authState.user?.username === 'jcb' || Number(authState.user?.isAdmin) > 0) && (
                       <Link 
                         to="/seed" 
-                        className="text-[10px] font-bold text-primary/60 hover:text-primary hover:bg-primary/10 px-4 py-2 border border-primary/20 transition-all uppercase tracking-tighter"
+                        className="text-[10px] font-bold text-primary/60 hover:text-primary hover:bg-primary/10 px-4 py-2 border border-primary/20 transition-all uppercase tracking-tight"
                       >
-                        [Run System Seed]
+                        System Seed
                       </Link>
                     )}
                   </div>

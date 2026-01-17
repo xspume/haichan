@@ -10,7 +10,7 @@ export function AdminTools({ loadAllData }: AdminToolsProps) {
   return (
     <Card className="border-4 border-foreground">
       <CardHeader className="bg-card text-card-foreground border-b-4 border-foreground">
-        <CardTitle className="font-mono text-sm">SYSTEM TOOLS</CardTitle>
+        <CardTitle className="font-mono text-sm">System Tools</CardTitle>
         <CardDescription className="font-mono text-xs text-muted-foreground mt-1">
           Maintenance and diagnostic utilities
         </CardDescription>
@@ -19,7 +19,7 @@ export function AdminTools({ loadAllData }: AdminToolsProps) {
         <div className="border-2 border-yellow-500/50 bg-yellow-500/5 p-4 flex gap-4">
           <AlertCircle className="w-6 h-6 text-yellow-500 flex-shrink-0" />
           <div className="font-mono">
-            <h4 className="font-bold text-sm text-yellow-500">DANGER ZONE</h4>
+            <h4 className="font-bold text-sm text-yellow-500">Danger Zone</h4>
             <p className="text-xs mt-1 text-muted-foreground">These tools can modify or delete large amounts of data. Use with caution.</p>
           </div>
         </div>
@@ -33,7 +33,7 @@ export function AdminTools({ loadAllData }: AdminToolsProps) {
             <div className="text-left w-full">
               <div className="font-bold flex items-center gap-2">
                 <RefreshCw className="w-4 h-4" />
-                FORCE DATA SYNC
+                Force Data Sync
               </div>
               <div className="text-xs text-muted-foreground mt-1">Re-fetch all statistics and status from DB</div>
             </div>
@@ -47,7 +47,7 @@ export function AdminTools({ loadAllData }: AdminToolsProps) {
             <div className="text-left w-full">
               <div className="font-bold flex items-center gap-2 text-destructive">
                 <Database className="w-4 h-4" />
-                FLUSH EXPIRED CONTENT
+                Flush Expired Content
               </div>
               <div className="text-xs text-muted-foreground mt-1">Permenantly delete threads marked as expired</div>
             </div>

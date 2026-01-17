@@ -41,7 +41,7 @@ export function MiningIndicator() {
       <div className="bg-card text-card-foreground px-3 py-2 flex items-center justify-between border-b-4 border-foreground">
         <div className="flex items-center gap-2">
           <Zap className="w-4 h-4 animate-pulse" />
-          <span className="font-black text-sm">⚡ PROOF OF WORK ⚡</span>
+          <span className="font-black text-sm text-primary">Verification</span>
         </div>
         <div className="flex gap-1">
           <button
@@ -67,7 +67,7 @@ export function MiningIndicator() {
           <>
             {/* Prominent Timer */}
             <div className="mb-4 border-4 border-foreground bg-card text-card-foreground p-2 text-center">
-              <div className="text-xs font-bold mb-1">ESTIMATED TIME</div>
+              <div className="text-xs font-bold mb-1">Estimated Time</div>
               <div className="text-3xl font-black font-mono">
                 {remainingTime}s
               </div>
@@ -82,7 +82,7 @@ export function MiningIndicator() {
                 <div className="flex items-center gap-2 mb-1">
                   <div className={`w-2 h-2 ${backgroundSession.currentProgress?.powerMode === 'lurk' ? 'bg-blue-400' : 'bg-green-400'} rounded-full animate-pulse`} />
                   <span className={`font-bold ${backgroundSession.currentProgress?.powerMode === 'lurk' ? 'text-blue-400' : 'text-green-400'}`}>
-                    {backgroundSession.currentProgress?.powerMode === 'lurk' ? 'LURK MODE (Background)' : 'RUNOFF (Background)'}
+                    {backgroundSession.currentProgress?.powerMode === 'lurk' ? 'Lurk Mode' : 'Background Work'}
                   </span>
                 </div>
                 <div className="text-[9px] text-gray-400 mb-1">
@@ -117,7 +117,7 @@ export function MiningIndicator() {
                 <div className="flex items-center gap-2 mb-1">
                   <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
                   <span className="font-bold text-blue-400">
-                    MOUSEOVER ({mouseoverSession.targetType})
+                    Focused Work ({mouseoverSession.targetType})
                   </span>
                 </div>
                 <div className="text-[9px] text-gray-400 mb-1">
@@ -144,7 +144,7 @@ export function MiningIndicator() {
                 <div className="flex items-center gap-2 mb-1">
                   <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse" />
                   <span className="font-bold text-yellow-400">
-                    DEDICATED ({dedicatedSession.targetType})
+                    Priority Work ({dedicatedSession.targetType})
                   </span>
                 </div>
                 <div className="text-[9px] text-gray-400 mb-1">

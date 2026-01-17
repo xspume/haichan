@@ -78,7 +78,6 @@ export function BoardsToolbar() {
   return (
     <div className="flex items-center gap-1 text-[11px] font-mono border-x border-primary/20 px-3 h-8 bg-primary/5 overflow-x-auto whitespace-nowrap custom-scrollbar">
       <span className="text-primary/60 font-bold uppercase tracking-tighter mr-1">boards:</span>
-      <span className="text-muted-foreground">[</span>
       {boards.map((board, index) => (
         <span key={board.id} className="flex items-center">
           <Link 
@@ -91,10 +90,9 @@ export function BoardsToolbar() {
           {index < boards.length - 1 && <span className="text-muted-foreground/30">/</span>}
         </span>
       ))}
-      <span className="text-muted-foreground">]</span>
       
       <Link to="/boards" className="ml-2 hover:underline text-[10px] text-primary/60 uppercase font-bold tracking-tighter">
-        [All]
+        View All
       </Link>
     </div>
   )

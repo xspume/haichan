@@ -19,7 +19,7 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
   return (
     <Card className="border-4 border-foreground">
       <CardHeader className="bg-card text-card-foreground border-b-4 border-foreground">
-        <CardTitle className="font-mono text-sm">SYSTEM OVERVIEW</CardTitle>
+        <CardTitle className="font-mono text-sm">System Overview</CardTitle>
         <CardDescription className="font-mono text-xs text-muted-foreground mt-1">
           Quick actions and system information
         </CardDescription>
@@ -32,7 +32,7 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
             className="font-mono border-2 border-foreground h-auto py-4"
           >
             <div className="text-left w-full">
-              <div className="font-bold">DATABASE SEED</div>
+              <div className="font-bold">Database Seed</div>
               <div className="text-xs text-muted-foreground mt-1">Initialize test data and boards</div>
             </div>
           </Button>
@@ -42,14 +42,14 @@ export function AdminOverview({ stats }: AdminOverviewProps) {
             className="font-mono border-2 border-foreground h-auto py-4"
           >
             <div className="text-left w-full">
-              <div className="font-bold">IMAGE LIBRARY</div>
+              <div className="font-bold">Image Library</div>
               <div className="text-xs text-muted-foreground mt-1">Manage uploaded images</div>
             </div>
           </Button>
         </div>
 
         <div className="bg-muted border-2 border-foreground p-4 font-mono text-sm">
-          <p className="font-bold mb-3 text-base">📊 SYSTEM STATISTICS:</p>
+          <p className="font-bold mb-3 text-base">📊 System Statistics</p>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <ul className="space-y-2 text-muted-foreground text-xs">

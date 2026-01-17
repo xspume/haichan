@@ -158,8 +158,8 @@ export function MainLayout() {
 
       {/* Global Banners */}
       {siteSettings?.maintenanceMode && (
-        <div className="bg-red-600 text-white text-[10px] py-1 text-center font-bold tracking-widest border-b border-black z-[60]">
-          [ SYSTEM MAINTENANCE MODE ACTIVE - READ ONLY FOR NON-ADMINS ]
+        <div className="bg-red-600 text-white text-[10px] py-1 text-center font-bold tracking-wider border-b border-black z-[60]">
+          SYSTEM MAINTENANCE MODE ACTIVE - READ ONLY FOR NON-ADMINS
         </div>
       )}
       
@@ -252,7 +252,7 @@ export function MainLayout() {
             </div>
           ) : (
             <Link to="/auth" className="btn-3d text-[10px] py-1">
-              [login]
+              Login
             </Link>
           )}
 
@@ -276,13 +276,13 @@ export function MainLayout() {
                 className="flex items-center gap-3 px-3 py-2 text-xs hover:bg-primary hover:text-background transition-colors border border-transparent hover:border-primary group"
               >
                 <span className="text-primary group-hover:text-background transition-colors">{item.icon}</span>
-                <span className="uppercase tracking-widest">{item.label}</span>
+                <span className="uppercase tracking-wider">{item.label}</span>
               </Link>
             ))}
             
             {user && (
               <div className="pt-4 mt-4 border-t border-primary/20">
-                <div className="px-3 py-1 text-[10px] text-muted-foreground uppercase tracking-widest mb-2">My Account</div>
+                <div className="px-3 py-1 text-[10px] text-muted-foreground uppercase tracking-wider mb-2">My Account</div>
                 <div className="px-3 py-2 border-2 border-primary bg-background shadow-3d-sm mb-4">
                   <div className="flex items-center justify-between text-[10px] mb-1">
                     <span className="opacity-60">POWER</span>
@@ -314,7 +314,7 @@ export function MainLayout() {
                   className="flex items-center gap-4 px-4 py-3 text-sm border-2 border-primary hover:bg-primary hover:text-background transition-all shadow-3d-sm"
                 >
                   {item.icon}
-                  <span className="uppercase font-bold tracking-widest">{item.label}</span>
+                  <span className="uppercase font-bold tracking-wider">{item.label}</span>
                 </Link>
               ))}
               
@@ -322,7 +322,7 @@ export function MainLayout() {
                 <Link 
                   to="/auth" 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-4 px-4 py-3 text-sm border-2 border-primary bg-primary text-background font-bold uppercase tracking-widest"
+                  className="flex items-center gap-4 px-4 py-3 text-sm border-2 border-primary bg-primary text-background font-bold uppercase tracking-wider"
                 >
                   <LogIn className="w-4 h-4" />
                   Login / Register

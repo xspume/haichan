@@ -29,7 +29,7 @@ export function AdminInvites({
       <CardHeader className="bg-card text-card-foreground border-b-4 border-foreground">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="font-mono text-sm">INVITE CODE MANAGEMENT</CardTitle>
+            <CardTitle className="font-mono text-sm">Invite Code Management</CardTitle>
             <CardDescription className="font-mono text-xs text-muted-foreground mt-1">
               Current Epoch: <span className="font-bold text-foreground">#{currentEpoch}</span> • Admin codes refresh every epoch
             </CardDescription>
@@ -39,7 +39,7 @@ export function AdminInvites({
             disabled={generating || username !== 'jcb'}
             className="bg-foreground text-background hover:bg-muted font-mono"
           >
-            {generating ? 'GENERATING...' : 'GENERATE EPOCH CODES'}
+            {generating ? 'Generating...' : 'Generate Epoch Codes'}
           </Button>
         </div>
       </CardHeader>
@@ -48,7 +48,7 @@ export function AdminInvites({
           <div>
             <h3 className="font-mono font-bold text-sm mb-4 flex items-center gap-2 text-green-500">
               <Zap className="w-4 h-4" />
-              AVAILABLE CODES ({unusedCodes.length})
+              Available Codes ({unusedCodes.length})
             </h3>
             <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
               {unusedCodes.length === 0 ? (
@@ -86,7 +86,7 @@ export function AdminInvites({
           <div>
             <h3 className="font-mono font-bold text-sm mb-4 flex items-center gap-2 text-muted-foreground">
               <Check className="w-4 h-4" />
-              USED CODES ({usedCodes.length})
+              Used Codes ({usedCodes.length})
             </h3>
             <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2">
               {usedCodes.length === 0 ? (
@@ -102,7 +102,7 @@ export function AdminInvites({
                         Used by: {code.usedBy || 'Unknown'}
                       </p>
                     </div>
-                    <Badge variant="outline" className="font-mono text-[10px] uppercase">USED</Badge>
+                    <Badge variant="outline" className="font-mono text-[10px] uppercase">Used</Badge>
                   </div>
                 ))
               )}

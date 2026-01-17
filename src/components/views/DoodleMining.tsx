@@ -891,8 +891,8 @@ export function DoodleMining({ onImageGenerated, showMining = true, initialImage
         <div className="flex items-center justify-between mb-2 flex-wrap gap-2">
           <h3 className="font-mono font-bold text-sm md:text-lg flex items-center gap-2 flex-shrink-0">
             <Paintbrush className="w-4 h-4 md:w-5 md:h-5" />
-            <span className="hidden sm:inline">DOODLE MINING</span>
-            <span className="sm:hidden">DOODLE</span>
+            <span className="hidden sm:inline">Doodle Canvas</span>
+            <span className="sm:hidden">Doodle</span>
           </h3>
           <div className="flex gap-1 md:gap-2">
             <Button

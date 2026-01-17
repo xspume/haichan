@@ -95,13 +95,13 @@ export function Announcements() {
   return (
     <div className="card-3d p-4 bg-primary/5 border-primary/20 relative overflow-hidden">
       <div className="flex items-center justify-between mb-4 border-b border-primary/20 pb-2">
-        <h3 className="text-xs font-bold uppercase tracking-widest flex items-center gap-2">
+        <h3 className="text-xs font-bold uppercase tracking-wider flex items-center gap-2">
           <Megaphone className="w-3 h-3 text-[#FFD700]" />
-          System Announcements
+          Announcements
         </h3>
         {isAdmin && (
           <div className="text-[10px] text-primary bg-primary/10 px-2 py-0.5 border border-primary/30">
-            ADMIN_ACCESS
+            Admin Access
           </div>
         )}
       </div>
@@ -109,8 +109,8 @@ export function Announcements() {
       <div className="space-y-4">
         {announcements.length === 0 && isAdmin && (
           <div className="text-center py-8 border-2 border-dashed border-primary/20 opacity-50">
-            <p className="text-[10px] uppercase font-bold tracking-widest">No active announcements</p>
-            <p className="text-[8px] opacity-60 mt-1">POST A NEW ONE BELOW TO INITIALIZE</p>
+            <p className="text-[10px] uppercase font-bold tracking-wider">No active announcements</p>
+            <p className="text-[8px] opacity-60 mt-1">Post a new one below</p>
           </div>
         )}
 
@@ -146,7 +146,7 @@ export function Announcements() {
               disabled={isPosting || !newAnnouncement.trim()}
               className="btn-3d w-full py-1 text-[10px] flex items-center justify-center gap-2"
             >
-              {isPosting ? 'POSTING...' : <><Plus size={12} /> CREATE_ANNOUNCEMENT</>}
+              {isPosting ? 'Posting...' : <><Plus size={12} /> Create Announcement</>}
             </button>
           </div>
         )}

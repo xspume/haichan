@@ -58,8 +58,8 @@ const ThreadCard = memo(function ThreadCard({
           </div>
           {(thread.totalPow || 0) < 20 && (
             <div className="absolute inset-0 flex items-center justify-center bg-background/40 backdrop-blur-[2px]">
-              <div className="bg-background text-primary text-[8px] font-black uppercase tracking-widest px-2 py-1 border border-primary animate-pulse">
-                LOW_ENERGY_BUFFER
+              <div className="bg-background text-primary text-[8px] font-black uppercase tracking-wider px-2 py-1 border border-primary animate-pulse">
+                Verification Required
               </div>
             </div>
           )}
@@ -86,16 +86,16 @@ const ThreadCard = memo(function ThreadCard({
           {truncate(thread.content, 100)}
         </p>
 
-        <div className="pt-1.5 border-t border-border/10 flex items-center justify-between text-[9px] font-bold uppercase tracking-widest">
+        <div className="pt-1.5 border-t border-border/10 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider">
           <div className="flex items-center gap-1.5 opacity-60 overflow-hidden">
             <span className="truncate text-[#117743]">{thread.username || 'Anonymous'}</span>
           </div>
           <div className="flex items-center gap-2 text-primary/70 tabular-nums">
             <span className="flex items-center gap-0.5">
-              R:{replyCount}
+              Replies: {replyCount}
             </span>
             <span className="flex items-center gap-0.5 font-black">
-              W:{thread.totalPow || 0}
+              Work: {thread.totalPow || 0}
             </span>
           </div>
         </div>

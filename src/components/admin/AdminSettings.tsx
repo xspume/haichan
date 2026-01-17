@@ -22,7 +22,7 @@ export function AdminSettings({ siteSettings, savingSettings, handleUpdateSettin
       <CardHeader className="bg-black text-white border-b-4 border-black">
         <CardTitle className="font-mono text-sm flex items-center gap-2">
           <Globe className="w-5 h-5" />
-          GLOBAL SITE SETTINGS
+          Global Site Settings
         </CardTitle>
         <CardDescription className="font-mono text-xs text-gray-300 mt-1">
           Control system-wide difficulty, access, and personality
@@ -35,12 +35,12 @@ export function AdminSettings({ siteSettings, savingSettings, handleUpdateSettin
             <div className="border-2 border-foreground p-4 bg-muted/50 rounded-lg">
               <h3 className="font-mono font-bold text-sm mb-4 flex items-center gap-2">
                 <Shield className="w-4 h-4" />
-                SECURITY & ACCESS
+                Security & Access
               </h3>
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="font-mono font-bold">INVITE-ONLY MODE</Label>
+                    <Label className="font-mono font-bold">Invite-Only Mode</Label>
                     <p className="text-xs text-muted-foreground font-mono">Require invite code for registration</p>
                   </div>
                   <Switch
@@ -51,7 +51,7 @@ export function AdminSettings({ siteSettings, savingSettings, handleUpdateSettin
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="font-mono font-bold">MAINTENANCE MODE</Label>
+                    <Label className="font-mono font-bold">Maintenance Mode</Label>
                     <p className="text-xs text-muted-foreground font-mono">Disable all actions for non-admins</p>
                   </div>
                   <Switch
@@ -66,11 +66,11 @@ export function AdminSettings({ siteSettings, savingSettings, handleUpdateSettin
             <div className="border-2 border-foreground p-4 bg-muted/50 rounded-lg">
               <h3 className="font-mono font-bold text-sm mb-4 flex items-center gap-2">
                 <Zap className="w-4 h-4" />
-                POW PARAMETERS
+                PoW Parameters
               </h3>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label className="font-mono text-xs">DIFFICULTY MULTIPLIER</Label>
+                  <Label className="font-mono text-xs">Difficulty Multiplier</Label>
                   <div className="flex gap-2">
                     <Input
                       type="number"
@@ -85,7 +85,7 @@ export function AdminSettings({ siteSettings, savingSettings, handleUpdateSettin
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label className="font-mono text-xs">DIAMOND BOOST</Label>
+                  <Label className="font-mono text-xs">Diamond Boost</Label>
                   <div className="flex gap-2">
                     <Input
                       type="number"
@@ -108,11 +108,11 @@ export function AdminSettings({ siteSettings, savingSettings, handleUpdateSettin
             <div className="border-2 border-foreground p-4 bg-muted/50 rounded-lg">
               <h3 className="font-mono font-bold text-sm mb-4 flex items-center gap-2">
                 <MessageSquare className="w-4 h-4" />
-                TALKY BOT PERSONALITY
+                Talky Bot Personality
               </h3>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label className="font-mono text-xs">CURRENT PERSONALITY</Label>
+                  <Label className="font-mono text-xs">Current Personality</Label>
                   <Select
                     value={siteSettings.talkyPersonality}
                     onValueChange={(value) => handleUpdateSettings({ talkyPersonality: value })}
@@ -134,11 +134,11 @@ export function AdminSettings({ siteSettings, savingSettings, handleUpdateSettin
             <div className="border-2 border-foreground p-4 bg-muted/50 rounded-lg">
               <h3 className="font-mono font-bold text-sm mb-4 flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
-                CONTENT MANAGEMENT
+                Content Management
               </h3>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label className="font-mono text-xs">PRUNING THRESHOLD (DAYS)</Label>
+                  <Label className="font-mono text-xs">Pruning Threshold (Days)</Label>
                   <Input
                     type="number"
                     min="1"
@@ -155,10 +155,10 @@ export function AdminSettings({ siteSettings, savingSettings, handleUpdateSettin
             <div className="border-2 border-foreground p-4 bg-muted/50 rounded-lg">
               <h3 className="font-mono font-bold text-sm mb-4 flex items-center gap-2">
                 <LayoutGrid className="w-4 h-4" />
-                SITE BROADCAST
+                Site Broadcast
               </h3>
               <div className="space-y-2">
-                <Label className="font-mono text-xs">MESSAGE OF THE DAY (MOTD)</Label>
+                <Label className="font-mono text-xs">Message of the Day (MOTD)</Label>
                 <Textarea
                   placeholder="Enter broadcast message..."
                   value={siteSettings.motd}

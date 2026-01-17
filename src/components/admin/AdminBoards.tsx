@@ -16,7 +16,7 @@ export function AdminBoards({ boards, setDeleteDialog }: AdminBoardsProps) {
       <CardHeader className="bg-card text-card-foreground border-b-4 border-foreground">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="font-mono text-sm">BOARD MANAGEMENT</CardTitle>
+            <CardTitle className="font-mono text-sm">Board Management</CardTitle>
             <CardDescription className="font-mono text-xs text-muted-foreground mt-1">
               Create and manage discussion boards
             </CardDescription>
@@ -26,7 +26,7 @@ export function AdminBoards({ boards, setDeleteDialog }: AdminBoardsProps) {
             className="bg-foreground text-background hover:bg-muted font-mono"
           >
             <Plus className="w-4 h-4 mr-2" />
-            CREATE NEW BOARD
+            Create New Board
           </Button>
         </div>
       </CardHeader>
@@ -38,7 +38,7 @@ export function AdminBoards({ boards, setDeleteDialog }: AdminBoardsProps) {
                 <h4 className="font-mono font-bold text-sm">/{board.slug}/ - {board.name}</h4>
                 <p className="text-[10px] font-mono text-muted-foreground mt-1 line-clamp-1">{board.description}</p>
                 <div className="flex items-center gap-4 mt-2 font-mono text-[10px] text-muted-foreground">
-                  <span>POW: {board.totalPow?.toLocaleString() || 0}</span>
+                  <span>PoW: {board.totalPow?.toLocaleString() || 0}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2">

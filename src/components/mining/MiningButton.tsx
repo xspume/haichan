@@ -57,12 +57,12 @@ export function MiningButton({
       {isMiningThis ? (
         <>
           <StopCircle className="w-3 h-3 mr-1" />
-          MINING
+          Mining
         </>
       ) : (
         <>
           <Zap className="w-3 h-3 mr-1" />
-          MINE
+          Mine
         </>
       )}
     </Button>
