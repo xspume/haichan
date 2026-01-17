@@ -5,14 +5,18 @@ interface MiningProgressBadgeProps {
   hashRate?: number
   className?: string
   showHashRate?: boolean
+  show?: boolean
 }
 
 export function MiningProgressBadge({
   points = 0,
   hashRate = 0,
   className,
-  showHashRate = true
+  showHashRate = true,
+  show = true
 }: MiningProgressBadgeProps) {
+  if (!show) return null
+
   const formatHashRate = (rate: number) => {
     if (rate >= 1000000) return `${(rate / 1000000).toFixed(1)}MH/s`
     if (rate >= 1000) return `${(rate / 1000).toFixed(1)}KH/s`

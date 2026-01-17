@@ -7,6 +7,12 @@ export interface SiteSettings {
   maintenanceMode: boolean
   registrationOpen: boolean
   inviteRequired: boolean
+  isInviteOnly?: boolean
+  difficultyMultiplier?: number
+  diamondBoost?: number
+  talkyPersonality?: string
+  pruningThresholdDays?: number
+  motd?: string
   minPowForPost: number
   minPowForThread: number
   minPowForBoard: number
@@ -25,6 +31,12 @@ const DEFAULT_SETTINGS: SiteSettings = {
   maintenanceMode: false,
   registrationOpen: true,
   inviteRequired: true,
+  isInviteOnly: true,
+  difficultyMultiplier: 1.0,
+  diamondBoost: 1.0,
+  talkyPersonality: 'helpful',
+  pruningThresholdDays: 30,
+  motd: '',
   minPowForPost: 15,
   minPowForThread: 15,
   minPowForBoard: 240,

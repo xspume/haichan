@@ -49,14 +49,14 @@ const ThreadCard = memo(function ThreadCard({
       {/* Thread Image */}
       {thread.imageUrl && (
         <div className="w-full aspect-square border-b border-border/20 overflow-hidden bg-white flex items-center justify-center relative">
-          <div className={cn("w-full h-full transition-all duration-700", (thread.totalPow || 0) < 50 ? 'blur-md opacity-50 grayscale' : 'group-hover:scale-105')}>
+          <div className={cn("w-full h-full transition-all duration-700", (thread.totalPow || 0) < 20 ? 'blur-md opacity-50 grayscale' : 'group-hover:scale-105')}>
             <img
               src={thread.imageUrl}
               alt={thread.title}
               className="w-full h-full object-cover"
             />
           </div>
-          {(thread.totalPow || 0) < 50 && (
+          {(thread.totalPow || 0) < 20 && (
             <div className="absolute inset-0 flex items-center justify-center bg-background/40 backdrop-blur-[2px]">
               <div className="bg-background text-primary text-[8px] font-black uppercase tracking-widest px-2 py-1 border border-primary animate-pulse">
                 LOW_ENERGY_BUFFER

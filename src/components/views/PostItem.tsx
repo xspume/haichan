@@ -20,6 +20,7 @@ interface PostItemProps {
   dedicatedSession: any
   isAdmin: boolean | undefined
   canDelete: boolean | null
+  targetType?: 'thread' | 'post'
   onPostNumberClick: (postNumber: string | number) => void
   onToggleMining: (e: React.MouseEvent, targetType: 'thread' | 'post', targetId: string) => void
   onModPost: (postId: string, reason: string) => void
@@ -31,12 +32,13 @@ export const PostItem = React.memo(function PostItem({
   dedicatedSession,
   isAdmin,
   canDelete,
+  targetType = 'post',
   onPostNumberClick,
   onToggleMining,
   onModPost,
   onDeletePost
 }: PostItemProps) {
-  const isPostMining = dedicatedSession?.targetId === post.id && dedicatedSession?.targetType === 'post'
+  const isPostMining = dedicatedSession?.targetId === post.id && dedicatedSession?.targetType === targetType
   
   const richText = React.useMemo(() => processRichText(post.content), [post.content])
 
@@ -129,7 +131,7 @@ export const PostItem = React.memo(function PostItem({
       <div className="flex gap-4">
         {post.imageUrl && (
           <div className="relative group shrink-0 mb-1">
-            <div className={getEffectivePow(post.totalPow || 0, post.id, 'post') < 20 ? 'blur-sm grayscale transition-all duration-500' : ''}>
+            <div className={getEffectivePow(post.totalPow || 0, post.id, targetType) < 20 ? 'blur-sm grayscale transition-all duration-500' : ''}>
               <a href={post.imageUrl} target="_blank" rel="noopener noreferrer">
                 <img
                   src={post.imageUrl}
@@ -138,10 +140,10 @@ export const PostItem = React.memo(function PostItem({
                 />
               </a>
             </div>
-            {getEffectivePow(post.totalPow || 0, post.id, 'post') < 20 && (
+            {getEffectivePow(post.totalPow || 0, post.id, targetType) < 20 && (
               <div 
                 className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/20 cursor-pointer z-10"
-                onClick={(e) => onToggleMining(e, 'post', post.id)}
+                onClick={(e) => onToggleMining(e, targetType, post.id)}
               >
                 <div className={`
                   text-[9px] font-mono px-1 py-0.5 border flex items-center gap-1
@@ -172,9 +174,9 @@ export const PostItem = React.memo(function PostItem({
           </div>
           
           <div className="flex gap-2 text-[9px] items-center text-muted-foreground opacity-50 group">
-            <span className="font-mono text-primary/70">POW: {getEffectivePow(post.totalPow || 0, post.id, 'post')}</span>
+            <span className="font-mono text-primary/70">POW: {getEffectivePow(post.totalPow || 0, post.id, targetType)}</span>
             <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <MiningButton targetType="post" targetId={post.id} size="sm" className="h-4 px-1.5 text-[8px] bg-primary/20 hover:bg-primary/40 text-primary border-none rounded-none" />
+              <MiningButton targetType={targetType} targetId={post.id} size="sm" className="h-4 px-1.5 text-[8px] bg-primary/20 hover:bg-primary/40 text-primary border-none rounded-none" />
             </div>
           </div>
         </div>
