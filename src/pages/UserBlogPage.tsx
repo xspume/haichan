@@ -27,7 +27,7 @@ export function UserBlogPage() {
 
           // Load their blog posts
           const userPosts = await publicDb.db.blogPosts.list({
-            where: { authorId: users[0].id, published: true },
+            where: { userId: users[0].id, published: true },
             limit: 50
           })
           setPosts(userPosts || [])

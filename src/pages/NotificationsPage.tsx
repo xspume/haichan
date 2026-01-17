@@ -62,19 +62,19 @@ export function NotificationsPage() {
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-mono text-sm mb-6 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          BACK
+          Back
         </button>
 
         <div className="border-4 border-foreground bg-card text-card-foreground p-6 mb-6">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold font-mono flex items-center gap-3">
               <Bell className="w-6 h-6" />
-              NOTIFICATIONS
+              Notifications
             </h1>
             {notifications.some(n => !n.read) && (
               <Button onClick={markAllRead} variant="outline" size="sm" className="font-mono">
                 <Check className="w-4 h-4 mr-2" />
-                MARK ALL READ
+                Mark all read
               </Button>
             )}
           </div>

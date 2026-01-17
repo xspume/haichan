@@ -34,7 +34,7 @@ export function WorkLedgerPage() {
     return (
       <div className="bg-background text-foreground min-h-screen flex items-center justify-center">
         <div className="text-center font-mono">
-          <div className="text-2xl mb-2 animate-pulse">LOADING...</div>
+          <div className="text-2xl mb-2 animate-pulse">LOADING</div>
         </div>
       </div>
     )
@@ -48,13 +48,13 @@ export function WorkLedgerPage() {
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-mono text-sm mb-6 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          BACK
+          Back
         </button>
 
         <div className="border-4 border-foreground bg-card text-card-foreground p-6 mb-6">
           <h1 className="text-2xl font-bold font-mono flex items-center gap-3">
             <FileText className="w-6 h-6" />
-            WORK LEDGER
+            Work Ledger
           </h1>
           <p className="text-muted-foreground font-mono mt-2">
             Your proof-of-work history and contributions.

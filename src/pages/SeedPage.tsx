@@ -32,12 +32,12 @@ export default function SeedPage() {
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-mono text-sm mb-6 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          BACK TO HOME
+          Back to Home
         </button>
 
         <div className="border-4 border-foreground bg-card text-card-foreground p-6 text-center">
           <Database className="w-16 h-16 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold font-mono mb-4">SEED DATABASE</h1>
+          <h1 className="text-2xl font-bold font-mono mb-4">Seed Database</h1>
           <p className="text-muted-foreground font-mono mb-6 text-sm">
             Initialize the database with default boards and configuration.
           </p>
@@ -45,7 +45,7 @@ export default function SeedPage() {
           {completed ? (
             <div className="flex items-center justify-center gap-2 text-green-500 font-mono">
               <CheckCircle className="w-5 h-5" />
-              SEED COMPLETE
+              Seed Complete
             </div>
           ) : (
             <Button
@@ -53,7 +53,7 @@ export default function SeedPage() {
               disabled={seeding}
               className="w-full font-mono"
             >
-              {seeding ? 'SEEDING...' : 'SEED DATABASE'}
+              {seeding ? 'Seeding...' : 'Seed Database'}
             </Button>
           )}
         </div>

@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
-import { createClient } from "npm:@blinkdotnew/sdk@^0.18.7";
+import { createClient } from "npm:@blinkdotnew/sdk@^2.3.5";
 import { createHash } from "https://deno.land/std@0.177.0/node/crypto.ts";
 
 const corsHeaders = {

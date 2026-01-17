@@ -12,54 +12,46 @@ export function ThesisPage() {
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground font-mono text-sm mb-6 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          BACK
+          Back
         </button>
 
         <div className="border-4 border-foreground bg-card text-card-foreground p-6">
           <h1 className="text-3xl font-bold font-mono flex items-center gap-3 mb-6">
             <FileText className="w-8 h-8" />
-            HAICHAN THESIS
+            Haichan Thesis
           </h1>
 
           <div className="prose prose-invert max-w-none font-mono text-sm space-y-6">
             <section>
-              <h2 className="text-xl font-bold border-b border-muted pb-2 mb-4">ABSTRACT</h2>
+              <h2 className="text-xl font-bold border-b border-muted pb-2 mb-4">Abstract</h2>
               <p className="text-muted-foreground leading-relaxed">
-                Haichan is a proof-of-work mediated imageboard that combines the permissionless
-                nature of cryptocurrency with traditional forum-style communication. By requiring
-                SHA-256 mining for all user actions, we create a system where participation has
-                inherent computational cost, deterring spam and abuse while establishing a
-                meritocratic hierarchy based on contributed work.
+                Haichan is an imageboard that uses proof-of-work to verify user actions.
+                By requiring a small amount of verification for all posts, we create a system where participation is intentional, 
+                deterring spam while establishing a reputation system based on effort.
               </p>
             </section>
 
             <section>
-              <h2 className="text-xl font-bold border-b border-muted pb-2 mb-4">21E8 PREFIX</h2>
+              <h2 className="text-xl font-bold border-b border-muted pb-2 mb-4">Verification Prefix</h2>
               <p className="text-muted-foreground leading-relaxed">
-                All valid proof-of-work on Haichan must produce SHA-256 hashes beginning with
-                the prefix "21e8". This prefix was chosen for its significance in physics
-                (referencing the E8 Lie group and theories of everything) and its aesthetic
-                qualities in hexadecimal representation.
+                All valid work on Haichan must produce hashes beginning with
+                a specific prefix. This serves as a barrier to entry, ensuring that each post has a verifiable cost.
               </p>
             </section>
 
             <section>
-              <h2 className="text-xl font-bold border-b border-muted pb-2 mb-4">IDENTITY SYSTEM</h2>
+              <h2 className="text-xl font-bold border-b border-muted pb-2 mb-4">Identity System</h2>
               <p className="text-muted-foreground leading-relaxed">
-                User identity is cryptographically tied to Bitcoin addresses via secp256k1
-                elliptic curve cryptography. This creates a pseudonymous yet accountable
-                identity system where reputation is earned through cumulative proof-of-work
-                rather than arbitrary social metrics.
+                User identity is tied to cryptographic addresses. This creates a secure
+                identity system where reputation is earned through participation rather than social metrics.
               </p>
             </section>
 
             <section>
-              <h2 className="text-xl font-bold border-b border-muted pb-2 mb-4">TRANCHE SYSTEM</h2>
+              <h2 className="text-xl font-bold border-b border-muted pb-2 mb-4">Community Growth</h2>
               <p className="text-muted-foreground leading-relaxed">
-                Haichan operates with a 256-user cap per tranche and invite-gated registration.
-                This creates scarcity and ensures that early participants have a stake in
-                maintaining community quality. Each tranche represents a cohort of users who
-                joined during a specific expansion epoch.
+                Haichan uses an invite-gated registration system to manage community growth.
+                This ensures that participants have a stake in maintaining community quality.
               </p>
             </section>
           </div>

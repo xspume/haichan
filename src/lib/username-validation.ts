@@ -3,6 +3,7 @@ import { MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH } from './constants'
 export interface ValidationResult {
   valid: boolean
   error?: string
+  message?: string
 }
 
 /**

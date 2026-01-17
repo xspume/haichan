@@ -26,8 +26,10 @@ const channels = new Map<string, ChannelState>()
  */
 async function isUserAuthenticated(): Promise<boolean> {
   try {
-    const isAuth = db.auth.isAuthenticated()
-    return isAuth
+    // isAuthenticated() alone can be optimistic; require a valid token to avoid noisy WS failures.
+    if (!db.auth.isAuthenticated()) return false
+    const token = await db.auth.getValidToken().catch(() => null)
+    return typeof token === 'string' && token.length > 20
   } catch {
     return false
   }

@@ -47,8 +47,32 @@ export function formatNumber(num: number | string): string {
 }
 
 /**
- * Delay execution for specified milliseconds
+ * Get flag emoji for a country code
  */
-export function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms))
+export function getFlagEmoji(countryCode: string): string {
+  if (!countryCode || countryCode.length !== 2) return ''
+  const codePoints = countryCode
+    .toUpperCase()
+    .split('')
+    .map(char => 127397 + char.charCodeAt(0))
+  return String.fromCodePoint(...codePoints)
+}
+
+/**
+ * Guess country code from timezone or language
+ */
+export function guessCountryCode(): string {
+  try {
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    if (timezone.includes('America/')) return 'US'
+    if (timezone.includes('Europe/London')) return 'GB'
+    if (timezone.includes('Europe/')) return 'EU'
+    if (timezone.includes('Asia/Tokyo')) return 'JP'
+    
+    const lang = navigator.language
+    if (lang.includes('-')) return lang.split('-')[1].toUpperCase()
+    return ''
+  } catch {
+    return ''
+  }
 }
