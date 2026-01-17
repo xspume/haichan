@@ -23,8 +23,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isDbLoading, setIsDbLoading] = useState(false)
   const [isAuthLoading, setIsAuthLoading] = useState(true)
 
-  // Combined loading state: true if either auth is loading OR we are currently fetching db user
-  const loading = isAuthLoading || isDbLoading
+  // Main loading state should only reflect auth status to prevent UI hang on DB lookup
+  // components can check dbUser or isDbLoading specifically if they need it
+  const loading = isAuthLoading
+
+  // Safety timeout: force loading to false after 4 seconds if SDK hangs
+  useEffect(() => {
+    if (!isAuthLoading) return
+    
+    const timeout = setTimeout(() => {
+      console.warn('[AuthContext] Auth loading safety timeout reached. Forcing isAuthLoading to false.')
+      setIsAuthLoading(false)
+      setAuthState(prev => ({ ...prev, isLoading: false }))
+    }, 10000)
+
+    return () => clearTimeout(timeout)
+  }, [isAuthLoading])
+
+  // Second safety timeout for isDbLoading in case database query hangs
+  useEffect(() => {
+    if (!isDbLoading) return
+    
+    const timeout = setTimeout(() => {
+      console.warn('[AuthContext] DB user loading safety timeout reached. Forcing isDbLoading to false.')
+      setIsDbLoading(false)
+    }, 5000) // 5s for DB lookup is plenty
+
+    return () => clearTimeout(timeout)
+  }, [isDbLoading])
 
   // Single subscription to auth state - runs only once
   useEffect(() => {
@@ -34,23 +60,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     console.log('[AuthContext] Subscribing to auth state changes')
     
-    // Safety timeout: force loading to false after 4 seconds if SDK hangs
-    const safetyTimeout = setTimeout(() => {
-      if (mounted && isAuthLoading) {
-        console.warn('[AuthContext] Auth loading safety timeout reached. Forcing isLoading to false.')
-        setIsAuthLoading(false)
-        setAuthState(prev => ({ ...prev, isLoading: false }))
-      }
-    }, 10000) // Increased to 10s for better resilience on slow connections
-
-    // Second safety timeout for isDbLoading in case database query hangs
-    const dbSafetyTimeout = setTimeout(() => {
-      if (mounted && isDbLoading) {
-        console.warn('[AuthContext] DB user loading safety timeout reached. Forcing isDbLoading to false.')
-        setIsDbLoading(false)
-      }
-    }, 8000)
-
     // Setup real-time listener for PoW updates to keep local dbUser in sync
     // NOTE: Only set up after authentication is confirmed (realtime requires JWT)
     let unsubscribeRealtime: (() => void) | null = null;
@@ -100,18 +109,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       setIsAuthLoading(state.isLoading)
       
-      // If we got a real state update, we can clear the safety timeout
-      if (!state.isLoading) {
-        clearTimeout(safetyTimeout)
-      }
-
       // Load full user data if authenticated
       if (state.user?.id) {
         currentUserId = state.user.id
         loadDbUser(state.user.id, () => {
-          const isStillRelevant = mounted && currentUserId === state.user?.id
-          if (!isStillRelevant) clearTimeout(dbSafetyTimeout)
-          return isStillRelevant
+          return mounted && currentUserId === state.user?.id
         })
         // Setup realtime subscription now that user is authenticated
         setupRealtime(state.user.id)
@@ -119,7 +121,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         currentUserId = null
         setDbUser(null)
         setIsDbLoading(false)
-        clearTimeout(dbSafetyTimeout)
         // Cleanup realtime when user logs out
         if (unsubscribeRealtime) {
           unsubscribeRealtime()
@@ -132,8 +133,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       console.log('[AuthContext] Unsubscribing from auth state changes')
       mounted = false
-      clearTimeout(safetyTimeout)
-      clearTimeout(dbSafetyTimeout)
       unsubscribe()
       if (unsubscribeRealtime) unsubscribeRealtime()
     }
@@ -252,6 +251,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     authState,
     dbUser,
     loading,
+    isAuthLoading,
+    isDbLoading,
     siteSettings,
     refreshSettings,
     signIn,

@@ -68,6 +68,8 @@ export interface AuthContextType {
   authState: AuthState
   dbUser: DbUser | null
   loading: boolean
+  isAuthLoading: boolean
+  isDbLoading: boolean
   siteSettings: import('../lib/site-settings').SiteSettings | null
   refreshSettings: () => Promise<void>
   signIn: (email: string, password: string) => Promise<void>

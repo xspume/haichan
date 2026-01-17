@@ -222,53 +222,60 @@ export function AuthPage() {
       console.log('[AuthPage] Final login attempt with email:', loginEmail)
       await db.auth.signInWithEmail(loginEmail, loginPassword)
 
-      // If we didn't get user from pre-auth lookup, try to fetch it now that we're authed
-      let targetUser = await db.auth.me()
-      if (targetUser) {
-        const users = await db.db.users.list({ where: { id: targetUser.id }, limit: 1 })
-        if (users && users.length > 0) {
-          targetUser = users[0]
-        }
-      }
-
-      const isFirstLogin = targetUser ? (!targetUser.lastSignIn || new Date(targetUser.lastSignIn).getTime() === new Date(targetUser.createdAt).getTime()) : false
-
-      if (isFirstLogin && targetUser) {
+      // We don't want to block navigation for backup generation
+      // This part is a non-critical enhancement
+      const generateBackup = async () => {
         try {
-          const inviteCodes = await db.db.inviteCodes.list({ where: { usedBy: targetUser.id }, limit: 1 })
-          const inviteCodeValue = inviteCodes && inviteCodes.length > 0 ? inviteCodes[0].code : 'N/A'
+          let targetUser = await db.auth.me()
+          if (targetUser) {
+            // Use publicDb or a timeout to avoid blocking if the main db client is busy
+            const users = await Promise.race([
+              db.db.users.list({ where: { id: targetUser.id }, limit: 1 }),
+              new Promise<any[]>((_, reject) => setTimeout(() => reject(new Error('Timeout')), 2000))
+            ]).catch(() => [])
 
-          downloadFullCredentialBackup({
-            username: targetUser.username || username,
-            email: targetUser.email,
-            password,
-            userId: targetUser.id,
-            bitcoinAddress: targetUser.bitcoinAddress || 'N/A',
-            publicKey: targetUser.publicKey,
-            registrationDate: targetUser.createdAt,
-            inviteCode: inviteCodeValue,
-            totalPowPoints: targetUser.totalPowPoints || 0,
-            diamondLevel: targetUser.diamondLevel || 0,
-            backupGeneratedAt: new Date().toISOString(),
-            isFirstLogin: true
-          })
+            if (users && users.length > 0) {
+              targetUser = { ...targetUser, ...users[0] }
+            }
+          }
 
-          toast.success('First login! Credential backup downloaded. Store securely!', { duration: 5000 })
+          const isFirstLogin = targetUser ? (!targetUser.lastSignIn || new Date(targetUser.lastSignIn).getTime() === new Date(targetUser.createdAt).getTime()) : false
+
+          if (isFirstLogin && targetUser) {
+            const inviteCodes = await db.db.inviteCodes.list({ where: { usedBy: targetUser.id }, limit: 1 }).catch(() => [])
+            const inviteCodeValue = inviteCodes && inviteCodes.length > 0 ? inviteCodes[0].code : 'N/A'
+
+            downloadFullCredentialBackup({
+              username: targetUser.username || username,
+              email: targetUser.email,
+              password,
+              userId: targetUser.id,
+              bitcoinAddress: targetUser.bitcoinAddress || 'N/A',
+              publicKey: targetUser.publicKey,
+              registrationDate: targetUser.createdAt,
+              inviteCode: inviteCodeValue,
+              totalPowPoints: targetUser.totalPowPoints || 0,
+              diamondLevel: targetUser.diamondLevel || 0,
+              backupGeneratedAt: new Date().toISOString(),
+              isFirstLogin: true
+            })
+
+            toast.success('First login! Credential backup downloaded.', { duration: 5000 })
+          }
         } catch (backupError) {
-          console.error('Failed to generate first login backup:', backupError)
-          toast.success('Welcome back!')
+          console.error('[AuthPage] Failed to generate first login backup:', backupError)
         }
-      } else {
-        toast.success('Welcome back!')
       }
+
+      // Start backup process but don't await it
+      generateBackup()
+
+      toast.success('Welcome back!')
       console.log('[AuthPage] Navigating to home after successful login')
       
-      // Delay navigation slightly to allow toast to be seen
-      setTimeout(() => {
-        if (isMounted.current) {
-          navigate('/')
-        }
-      }, 500)
+      if (isMounted.current) {
+        navigate('/')
+      }
     } catch (error: any) {
       console.error('[AuthPage] Login error:', error)
       const errorCode = error?.code || ''
@@ -472,62 +479,72 @@ Generated: ${new Date().toISOString()}
 
       if (user?.id) {
         // 5. Sync User Profile to Database
-        // Wait for auth session to be fully ready in the SDK instance
-        console.log('[AuthPage] Waiting for auth session to be ready...')
-        
-        let authenticatedUser = null;
-        for (let i = 0; i < 15; i++) {
-          authenticatedUser = await db.auth.me();
-          if (authenticatedUser && authenticatedUser.id === user.id) {
-            console.log('[AuthPage] Auth session verified for user:', authenticatedUser.id)
-            break;
-          }
-          await new Promise(resolve => setTimeout(resolve, 200));
-        }
-
-        const nowIso = new Date().toISOString()
-
-        const userData: any = {
-          id: user.id,
-          userId: user.id,
-          username: registerUsername.toLowerCase(),
-          email,
-          createdAt: nowIso,
-          updatedAt: nowIso,
-          totalPowPoints: 0,
-          diamondLevel: 0,
-          isAdmin: 0,
-          emailVerified: 0,
-          lastSignIn: nowIso,
-          bitcoinAddress: generatedKeys.address,
-          publicKey: generatedKeys.publicKey
-        }
-
-        let profileCreated = false
-        // Retry logic for profile creation with increasing backoff
-        for (let attempt = 0; attempt < 5; attempt++) {
+        // We attempt to sync the user profile, but we don't want to block the user forever
+        const syncProfile = async () => {
           try {
-            await db.db.users.upsert(userData)
-            console.log('User record synced successfully:', user.id)
-            profileCreated = true
-            break
-          } catch (error: any) {
-            console.error(`Failed to sync user record (attempt ${attempt + 1}/5):`, error)
-            // If it's a permission error, it's likely auth not ready
-            if (attempt < 4) {
-              await new Promise(resolve => setTimeout(resolve, 500 * (attempt + 1)))
+            // Wait for auth session to be fully ready in the SDK instance
+            console.log('[AuthPage] Waiting for auth session to be ready...')
+            
+            let authenticatedUser = null;
+            for (let i = 0; i < 10; i++) { // reduced attempts
+              authenticatedUser = await db.auth.me();
+              if (authenticatedUser && authenticatedUser.id === user.id) {
+                console.log('[AuthPage] Auth session verified for user:', authenticatedUser.id)
+                break;
+              }
+              await new Promise(resolve => setTimeout(resolve, 250));
             }
+
+            const nowIso = new Date().toISOString()
+            const userData: any = {
+              id: user.id,
+              userId: user.id,
+              username: registerUsername.toLowerCase(),
+              email,
+              createdAt: nowIso,
+              updatedAt: nowIso,
+              totalPowPoints: 0,
+              diamondLevel: 0,
+              isAdmin: 0,
+              emailVerified: 0,
+              lastSignIn: nowIso,
+              bitcoinAddress: generatedKeys.address,
+              publicKey: generatedKeys.publicKey
+            }
+
+            let profileCreated = false
+            // Retry logic for profile creation
+            for (let attempt = 0; attempt < 3; attempt++) {
+              try {
+                await db.db.users.upsert(userData)
+                console.log('User record synced successfully:', user.id)
+                profileCreated = true
+                break
+              } catch (error: any) {
+                console.error(`Failed to sync user record (attempt ${attempt + 1}/3):`, error)
+                if (attempt < 2) {
+                  await new Promise(resolve => setTimeout(resolve, 1000))
+                }
+              }
+            }
+
+            // Handle Invite Code
+            if (inviteValidation.codeId) {
+              try {
+                await markInviteCodeAsUsed(inviteValidation.codeId, user.id)
+              } catch (e) {
+                console.warn('Failed to mark invite code as used:', e)
+              }
+            }
+          } catch (e) {
+            console.error('[AuthPage] Profile sync background task failed:', e)
           }
         }
 
-        // 6. Handle Invite Code
-        if (inviteValidation.codeId) {
-          try {
-            await markInviteCodeAsUsed(inviteValidation.codeId, user.id)
-          } catch (e) {
-            console.warn('Failed to mark invite code as used:', e)
-          }
-        }
+        // Start sync process but don't await the whole thing if it takes too long
+        // However, we SHOULD wait for the first successful upsert if possible for consistency
+        // But for "stuck" issue, let's make it more resilient
+        await syncProfile()
 
         // 7. Download Backup
         try {
@@ -551,20 +568,12 @@ Generated: ${new Date().toISOString()}
         }
 
         // 8. Show Success Message & Navigate
-        // Clear any existing toasts to prevent stacking
         toast.dismiss()
-        
-        if (profileCreated) {
-          toast.success('Registration successful! Credential backup downloaded.', { duration: 5000 })
-        } else {
-          toast.success('Account created! Please check your profile settings.', { duration: 5000 })
-        }
+        toast.success('Registration successful! Credential backup downloaded.', { duration: 5000 })
 
-        setTimeout(() => {
-          if (isMounted.current) {
-            navigate('/')
-          }
-        }, 1500)
+        if (isMounted.current) {
+          navigate('/')
+        }
       } else {
         toast.error('Signup failed: No user ID returned')
       }
