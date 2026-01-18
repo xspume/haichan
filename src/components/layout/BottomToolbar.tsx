@@ -197,11 +197,11 @@ export function BottomToolbar() {
         <div className="hidden lg:flex items-center gap-3 shrink-0">
            <div className="w-px h-3 bg-primary/30" />
            <div 
-            className="flex items-center gap-1 text-muted-foreground whitespace-nowrap" 
-            title={`Online Users: ${stats.onlineUsers}`}
+            className="flex items-center gap-1 text-primary whitespace-nowrap" 
+            title={`Human Presence: ${stats.onlineUsers} online`}
           >
-            <Users className="w-2.5 h-2.5" />
-            <span>{stats.onlineUsers}</span>
+            <Users className="w-2.5 h-2.5 animate-pulse" />
+            <span className="font-bold tracking-tighter">HUMAN PULSE: {stats.onlineUsers}</span>
           </div>
         </div>
 

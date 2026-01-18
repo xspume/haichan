@@ -189,10 +189,10 @@ export function MainLayout() {
           <button
             onClick={toggle3D}
             className={cn(
-              "p-1.5 transition-all duration-200 border no-3d",
+              "p-1.5 transition-all duration-200 border no-3d bg-white shadow-3d-sm",
               is3DEnabled
-                ? "btn-3d-toggle active border-transparent"
-                : "border-primary/50 hover:border-primary text-primary hover:bg-primary/10"
+                ? "btn-3d-toggle active border-primary"
+                : "border-primary hover:border-primary/80 text-black hover:bg-gray-100"
             )}
             title={is3DEnabled ? "Disable 3D Mode" : "Enable 3D Mode (Red/Cyan Glasses)"}
           >

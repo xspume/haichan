@@ -1,10 +1,10 @@
 import { invokeFunction } from '../../lib/functions-utils'
 import { useState, useEffect, useRef } from 'react'
-import { Send, Users as UsersIcon, Bot, Plus, UserPlus, Zap } from 'lucide-react'
+import { Send, Users as UsersIcon, Bot, Plus, UserPlus, Zap, Lock } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog'
-import db from '../../lib/db-client'
-import { useNavigate } from 'react-router-dom'
+import db, { publicDb } from '../../lib/db-client'
+import { useNavigate, Link } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { formatBrandName } from '../../lib/utils'
 import { requestCache } from '../../lib/request-cache'
@@ -16,14 +16,25 @@ import { MiningManager } from '../../lib/mining/MiningManager'
 import { getPoWValidationData } from '../../lib/pow-validation'
 
 // Extracted ChatInput component to prevent re-renders of the main list
-const ChatInput = ({ onSend, disabled, hasValidPoW, dedicatedSession, difficulty }: { 
+const ChatInput = ({ onSend, disabled, hasValidPoW, dedicatedSession, difficulty, isAuthenticated }: { 
   onSend: (msg: string) => void, 
   disabled: boolean,
   hasValidPoW: boolean,
   dedicatedSession: boolean,
-  difficulty: { prefix: string, points: number }
+  difficulty: { prefix: string, points: number },
+  isAuthenticated: boolean
 }) => {
   const [message, setMessage] = useState('')
+
+  if (!isAuthenticated) {
+    return (
+      <div className="border-t-2 border-foreground p-4 bg-primary/5 flex flex-col items-center justify-center gap-2 text-center">
+        <Lock className="w-4 h-4 opacity-40" />
+        <p className="text-[10px] uppercase font-bold tracking-widest opacity-60">Authentication Required to Speak</p>
+        <Link to="/auth" className="text-[10px] font-black text-primary hover:underline uppercase">Login or Register</Link>
+      </div>
+    )
+  }
 
   const handleSend = () => {
     if (message.trim()) {
@@ -105,7 +116,7 @@ const CACHE_TTL = 15000;
 const MESSAGE_REFRESH_INTERVAL = 60000;
 
 export function RealtimeChat() {
-  const { authState, dbUser } = useAuth()
+  const { authState, dbUser, isAuthenticated } = useAuth()
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([])
   const user = dbUser || authState.user
@@ -136,8 +147,8 @@ export function RealtimeChat() {
 
   const initializeMemory = async () => {
     try {
-      const memories = await db.db.chatMemory.list({ limit: 1 })
-      if (memories && memories.length === 0) {
+      const memories = await publicDb.db.chatMemory.list({ limit: 1 })
+      if (memories && memories.length === 0 && isAuthenticated && user?.isAdmin) {
         await db.db.chatMemory.create({
           id: `init-${Date.now()}`,
           memoryType: 'system',
@@ -152,8 +163,8 @@ export function RealtimeChat() {
 
   const initializeChatStats = async () => {
     try {
-      const stats = await db.db.chatStats.list({ limit: 1 })
-      if (!stats || stats.length === 0) {
+      const stats = await publicDb.db.chatStats.list({ limit: 1 })
+      if ((!stats || stats.length === 0) && isAuthenticated && user?.isAdmin) {
         await db.db.chatStats.create({
           id: 'singleton',
           totalUsers: 0,
@@ -164,16 +175,17 @@ export function RealtimeChat() {
   }
 
   useEffect(() => {
-    if (!user?.id) return
-
     loadMessages()
     loadOnlineUsers()
-    updateActivity()
+    
+    if (isAuthenticated && user?.id) {
+      updateActivity()
 
-    // Start background mining for chat
-    console.log('[RealtimeChat] Starting dedicated mining for chat messages...')
-    miningManagerRef.current.startDedicatedMining('global', 'global', CHAT_DIFFICULTY.points, CHAT_DIFFICULTY.prefix)
-      .catch(err => console.error('[RealtimeChat] Mining error:', err))
+      // Start background mining for chat
+      console.log('[RealtimeChat] Starting dedicated mining for chat messages...')
+      miningManagerRef.current.startDedicatedMining('global', 'global', CHAT_DIFFICULTY.points, CHAT_DIFFICULTY.prefix)
+        .catch(err => console.error('[RealtimeChat] Mining error:', err))
+    }
 
     const unsubscribeChat = db.realtime.subscribe(REALTIME_CHANNEL, (message: any) => {
       if (message.type === 'message') {
@@ -181,7 +193,7 @@ export function RealtimeChat() {
           if (prev.some(m => m.id === message.data.id)) return prev
           
           // Play sound if mentioned or if it's a new message and we want sound
-          const isMentioned = message.data.content.includes(`@${user?.username}`) || message.data.content.includes('@talky')
+          const isMentioned = isAuthenticated && user?.username && message.data.content.includes(`@${user.username}`) || message.data.content.includes('@talky')
           if (isMentioned && message.data.userId !== user?.id) {
             playPingSound()
           }
@@ -218,9 +230,11 @@ export function RealtimeChat() {
       removeActivity()
       
       // Stop mining on unmount
-      miningManagerRef.current.stopDedicatedMining()
+      if (isAuthenticated) {
+        miningManagerRef.current.stopDedicatedMining()
+      }
     }
-  }, [user?.id])
+  }, [user?.id, isAuthenticated])
 
   const unmountUnsubscribe = (unsub: any) => {
     if (typeof unsub === 'function') unsub();
@@ -234,10 +248,11 @@ export function RealtimeChat() {
     try {
       const msgs = await requestCache.getOrFetch<ChatMessage[]>(
         `chat-messages-${limit}`,
-        () => db.db.chatMessages.list({ where: { userId: user!.id }, orderBy: { createdAt: 'desc' }, limit }),
+        // FETCH ALL MESSAGES using publicDb
+        () => publicDb.db.chatMessages.list({ orderBy: { createdAt: 'desc' }, limit }),
         CACHE_TTL
       )
-      const sortedMessages = [...msgs].reverse()
+      const sortedMessages = [...(msgs || [])].reverse()
       setMessages(sortedMessages)
     } catch (error) {}
   }
@@ -247,15 +262,16 @@ export function RealtimeChat() {
       const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000).toISOString()
       const active = await requestCache.getOrFetch<OnlineUser[]>(
         'chat-online-users',
-        () => db.db.chatActivity.list({ where: { userId: user!.id, lastActivity: { '>': twoMinutesAgo } } }),
+        // FETCH ALL ONLINE USERS using publicDb
+        () => publicDb.db.chatActivity.list({ where: { lastActivity: { '>': twoMinutesAgo } } }),
         CACHE_TTL
       )
-      setOnlineUsers(active)
+      setOnlineUsers(active || [])
     } catch (error) {}
   }
 
   const updateActivity = async () => {
-    if (!user) return
+    if (!isAuthenticated || !user) return
     try {
       const username = formatBrandName(user.username || user.displayName || 'Anonymous')
       const existing = await db.db.chatActivity.list({ where: { userId: user.id }, limit: 1 })
@@ -274,7 +290,7 @@ export function RealtimeChat() {
   }
 
   const removeActivity = async () => {
-    if (!user) return
+    if (!isAuthenticated || !user) return
     try {
       const existing = await db.db.chatActivity.list({ where: { userId: user.id }, limit: 1 })
       if (existing && existing.length > 0) await db.db.chatActivity.delete(existing[0].id)
@@ -283,8 +299,10 @@ export function RealtimeChat() {
 
   const checkInactivity = () => {
     if (Date.now() - lastActivityRef.current >= INACTIVITY_TIMEOUT) {
-      toast.error('Redirecting due to inactivity...')
-      navigate('/')
+      if (isAuthenticated) {
+        toast.error('Redirecting due to inactivity...')
+        navigate('/')
+      }
     }
   }
 
@@ -297,7 +315,7 @@ export function RealtimeChat() {
   }
 
   const invokeTalky = async (context: string) => {
-    if (!user) return;
+    if (!isAuthenticated || !user) return;
     try {
       const actualUsername = formatBrandName(user.username || user.displayName || 'Anonymous');
       const { data, error } = await invokeFunction('talky-bot', { 
@@ -351,7 +369,7 @@ export function RealtimeChat() {
   }
 
   const handleFeedTalky = async (prompt: string) => {
-    if (!user) return
+    if (!isAuthenticated || !user) return
     toast.loading('Feeding Talky...', { id: 'feed-talky' })
     try {
       const { data, error } = await invokeFunction('talky-bot', { 
@@ -370,7 +388,7 @@ export function RealtimeChat() {
   }
 
   const loadUserProfile = async () => {
-    if (!user) return;
+    if (!isAuthenticated || !user) return;
     try {
       const actualUsername = formatBrandName(user.username || user.displayName || 'Anonymous');
       const { data, error } = await invokeFunction('talky-bot', { 
@@ -384,7 +402,7 @@ export function RealtimeChat() {
   }
 
   const sendMessage = async (content: string) => {
-    if (!content.trim() || !user) return
+    if (!content.trim() || !isAuthenticated || !user) return
     
     // Enforce PoW
     if (!hasValidPoW) {
@@ -442,10 +460,6 @@ export function RealtimeChat() {
     }
   }
 
-  if (!user) {
-    return <div className="h-full flex items-center justify-center font-mono">Loading chat...</div>
-  }
-
   return (
     <>
       <div className="h-full flex border-2 border-foreground">
@@ -459,7 +473,7 @@ export function RealtimeChat() {
           <div className="flex-1 overflow-y-auto p-3 space-y-2">
             {messages.map((msg) => {
               const isBot = Number(msg.isBot) > 0
-              const isSelf = msg.userId === user.id
+              const isSelf = isAuthenticated && msg.userId === user?.id
               return (
                 <div key={msg.id} className={`border border-foreground p-2 ${isBot ? 'bg-muted border-2' : isSelf ? 'bg-foreground text-background' : 'bg-background'}`}>
                   <div className="flex items-baseline justify-between mb-1">
@@ -473,14 +487,20 @@ export function RealtimeChat() {
                 </div>
               )
             })}
+            {messages.length === 0 && (
+              <div className="h-full flex items-center justify-center text-xs opacity-30 font-mono uppercase tracking-widest">
+                No signals detected...
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
           <ChatInput 
             onSend={sendMessage} 
-            disabled={!user} 
+            disabled={!isAuthenticated} 
             hasValidPoW={hasValidPoW}
             dedicatedSession={!!dedicatedSession}
             difficulty={CHAT_DIFFICULTY}
+            isAuthenticated={isAuthenticated}
           />
         </div>
         <div className="w-48 border-l-2 border-foreground flex flex-col">
@@ -495,6 +515,9 @@ export function RealtimeChat() {
                 <span className="font-mono text-xs truncate">{u.username}</span>
               </div>
             ))}
+            {onlineUsers.length === 0 && (
+              <div className="p-2 text-[10px] opacity-30 uppercase font-mono">Alone in darkness</div>
+            )}
           </div>
         </div>
       </div>

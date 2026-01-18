@@ -631,7 +631,7 @@ Generated: ${new Date().toISOString()}
       <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="text-center space-y-2">
           <h1 className="text-5xl font-bold tracking-tighter haichan-logo">HAICHAN</h1>
-          <p className="text-xs text-primary/60 uppercase tracking-wider">Secure Imageboard</p>
+          <p className="text-xs text-primary/60 uppercase tracking-wider">Human Consensus Experiment</p>
         </div>
 
         <div className="card-3d p-1 bg-primary">

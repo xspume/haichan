@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Zap, Database, Lock, Trophy, MessageSquare, BookOpen, Sparkles, TrendingUp, LayoutGrid } from 'lucide-react'
+import { Zap, Database, Lock, Trophy, MessageSquare, BookOpen, Sparkles, TrendingUp, LayoutGrid, Users } from 'lucide-react'
 import db, { publicDb } from '../lib/db-client'
 import { GlobalPoWStats } from '../components/views/GlobalPoWStats'
 import { PostersList } from '../components/views/PostersList'
@@ -298,7 +298,7 @@ export function HomePage() {
     <div className="bg-background text-foreground min-h-screen font-mono">
       {/* Quick Actions Bar - no duplicate header */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-primary/20 pb-3">
-        <p className="text-[10px] uppercase tracking-wider opacity-60">Secure Imageboard</p>
+        <p className="text-[10px] uppercase tracking-wider opacity-60">The Entropy Harvest</p>
         <div className="flex gap-2">
           <Link to="/mine" className="btn-3d text-[10px] px-3 py-1">
             Start Mining
@@ -321,13 +321,14 @@ export function HomePage() {
             </div>
             <h2 className="text-xl font-bold mb-4 uppercase tracking-wider text-primary flex items-center gap-2">
               <Sparkles className="w-5 h-5" />
-              Community Meritocracy
+              The Human Consensus
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-3">
                 <p className="text-xs leading-relaxed text-primary/80">
-                  Haichan is an imageboard where participation is balanced by computational effort. 
-                  We prioritize quality and commitment through verification.
+                  Haichan is a collective intelligence experiment. 
+                  Every byte here is paid for with the heat of a processor. 
+                  Humanity is the proof.
                 </p>
                 <div className="p-3 bg-primary/5 border border-primary/20">
                   <div className="text-[10px] uppercase font-bold text-primary mb-1">Hashing Protocol</div>
@@ -429,10 +430,10 @@ export function HomePage() {
         {/* Right Column - System Stats */}
         <div className="lg:col-span-4 space-y-6">
           {/* Site Statistics */}
-          <div className="card-3d p-4 bg-primary/5">
+          <div className="card-3d p-4 bg-primary/5 border-l-4 border-primary">
             <h3 className="text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2 border-b border-primary/20 pb-2">
               <Database className="w-3 h-3" />
-              Site Statistics
+              Human Consensus Stats
             </h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
@@ -466,6 +467,22 @@ export function HomePage() {
           </div>
 
           <GlobalPoWStats />
+          
+          {/* Weird Human Element */}
+          <div className="card-3d p-4 border-2 border-primary bg-primary/5 relative group overflow-hidden">
+            <div className="absolute -bottom-4 -right-4 opacity-5 group-hover:opacity-10 transition-opacity">
+              <Users size={80} />
+            </div>
+            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-2 text-primary">Status: Breathing</h4>
+            <p className="text-[11px] leading-relaxed opacity-70 italic font-serif">
+              "Every hash is a heart beat. Every post is a breath in the machine. We are the ghosts in the silicon, carving our names into the entropy."
+            </p>
+            <div className="mt-4 flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-primary animate-ping" />
+              <span className="text-[9px] font-bold uppercase tracking-widest">Existence Verified</span>
+            </div>
+          </div>
+
           <HashleLeaderboard />
           <PostersList />
         </div>
