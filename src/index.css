@@ -587,11 +587,15 @@
   }
 
   /* Standard borders */
-  button,
+  button {
+    @apply border border-border bg-transparent text-foreground;
+    border-radius: var(--radius);
+  }
+
   input,
   textarea,
   select {
-    @apply border border-border bg-white text-foreground;
+    @apply border border-border bg-background text-foreground;
     border-radius: var(--radius);
   }
 
