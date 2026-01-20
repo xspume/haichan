@@ -5,6 +5,7 @@ import { Textarea } from '../ui/textarea'
 import { Input } from '../ui/input'
 import { Card } from '../ui/card'
 import { Label } from '../ui/label'
+import { Checkbox } from '../ui/checkbox'
 import { parseTripcode, generateTripcode } from '../../lib/tripcode'
 import { isValidImageForBoard, getImageValidationError } from '../../lib/image-validation'
 import { saveToImageLibrary } from '../../lib/image-library'
@@ -37,6 +38,7 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [postAnonymously, setPostAnonymously] = useState(false)
   const { authState, siteSettings } = useAuth()
   
   // Mining state
@@ -136,10 +138,10 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
     setLoading(true)
     try {
       const user = authState.user
-      const finalUsername = user.username || 'Anonymous'
+      const finalUsername = postAnonymously ? 'Anonymous' : (user.username || 'Anonymous')
       
       let tripcode = ''
-      if (nameField) {
+      if (nameField && !postAnonymously) {
         const { password, isSecure } = parseTripcode(nameField)
         if (password) {
           tripcode = await generateTripcode(password, isSecure)
@@ -316,6 +318,21 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
             placeholder="Comment"
             className="w-full text-[12px] min-h-[80px] bg-background border border-border/20 p-1 focus:outline-none focus:border-primary resize-none"
           />
+
+          <div className="flex items-center gap-2 text-[10px]">
+            <Checkbox 
+              id="qr-anonymous" 
+              checked={postAnonymously}
+              onCheckedChange={(checked) => setPostAnonymously(checked === true)}
+              className="h-3 w-3 border border-border/20"
+            />
+            <Label
+              htmlFor="qr-anonymous"
+              className="text-[10px] cursor-pointer"
+            >
+              POST ANON
+            </Label>
+          </div>
 
           <div className="flex items-center gap-2">
              <label htmlFor="qr-image" className="cursor-pointer border border-border/20 p-1 bg-background hover:bg-muted">
