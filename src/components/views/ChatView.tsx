@@ -99,7 +99,7 @@ export function ChatView() {
   }
 
   return (
-    <div className="border-2 border-black bg-white">
+    <div className="border-2 border-black bg-background">
       {/* Header */}
       <div className="border-b-2 border-black bg-black text-white px-3 py-1 font-mono text-sm font-bold flex justify-between items-center">
         <span>Global Chat</span>

@@ -136,7 +136,7 @@ export const PostItem = React.memo(function PostItem({
                 <img
                   src={post.imageUrl}
                   alt="Post"
-                  className="max-w-[150px] max-h-[150px] border border-border shadow-sm bg-white"
+                  className="max-w-[150px] max-h-[150px] border border-border shadow-sm bg-muted"
                 />
               </a>
             </div>

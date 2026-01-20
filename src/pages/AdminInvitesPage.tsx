@@ -98,7 +98,7 @@ export function AdminInvitesPage() {
   }
 
   return (
-    <div className="bg-white text-black min-h-screen">
+    <div className="bg-background text-foreground min-h-screen">
       <div className="container mx-auto p-4 max-w-4xl">
         <div className="border-4 border-black bg-black text-white p-3 mb-4">
           <div className="flex items-center justify-between">
@@ -112,7 +112,7 @@ export function AdminInvitesPage() {
               <Button
                 onClick={handleGenerateCodes}
                 disabled={generating}
-                className="bg-white text-black hover:bg-gray-200 font-mono font-bold"
+                className="bg-muted text-foreground hover:bg-muted/80 font-mono font-bold"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 {generating ? 'GENERATING...' : 'GENERATE CODES'}

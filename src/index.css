@@ -200,25 +200,25 @@
 
   /* Paper (Minimalist Light) */
   [data-theme="paper"] {
-    --background: 0 0% 100%;
+    --background: 0 0% 95%;
     --foreground: 0 0% 20%;
-    --card: 0 0% 98%;
+    --card: 0 0% 90%;
     --card-foreground: 0 0% 20%;
-    --popover: 0 0% 100%;
+    --popover: 0 0% 92%;
     --popover-foreground: 0 0% 20%;
     --primary: 0 0% 0%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 94%;
+    --primary-foreground: 0 0% 95%;
+    --secondary: 0 0% 85%;
     --secondary-foreground: 0 0% 20%;
-    --muted: 0 0% 90%;
+    --muted: 0 0% 80%;
     --muted-foreground: 0 0% 50%;
     --accent: 0 0% 0%;
-    --accent-foreground: 0 0% 100%;
-    --border: 0 0% 85%;
-    --input: 0 0% 98%;
+    --accent-foreground: 0 0% 95%;
+    --border: 0 0% 75%;
+    --input: 0 0% 90%;
     --ring: 0 0% 0%;
     --radius: 1rem;
-    --sidebar-background: 0 0% 96%;
+    --sidebar-background: 0 0% 88%;
     --sidebar-foreground: 0 0% 20%;
   }
 

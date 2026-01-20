@@ -46,7 +46,7 @@ export function PostPreview({ post, position }: PostPreviewProps) {
                <img 
                  src={post.imageUrl} 
                  alt="Preview" 
-                 className="max-w-[100px] max-h-[100px] border border-border bg-white" 
+                 className="max-w-[100px] max-h-[100px] border border-border bg-muted" 
                />
             </div>
           )}

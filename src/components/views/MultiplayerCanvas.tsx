@@ -1539,7 +1539,7 @@ export function MultiplayerCanvas() {
 
         {/* Canvas Area */}
         <main className="flex-1 bg-primary/5 relative flex items-center justify-center overflow-hidden p-4">
-          <div className="relative shadow-3d-lg border-4 border-primary bg-white">
+          <div className="relative shadow-3d-lg border-4 border-primary bg-muted">
             <canvas
               ref={canvasRef}
               onMouseDown={startDrawing}

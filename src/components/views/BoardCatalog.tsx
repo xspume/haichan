@@ -48,7 +48,7 @@ const ThreadCard = memo(function ThreadCard({
     >
       {/* Thread Image */}
       {thread.imageUrl && (
-        <div className="w-full aspect-square border-b border-border/20 overflow-hidden bg-white flex items-center justify-center relative">
+        <div className="w-full aspect-square border-b border-border/20 overflow-hidden bg-muted flex items-center justify-center relative">
           <div className={cn("w-full h-full transition-all duration-700", (thread.totalPow || 0) < 20 ? 'blur-md opacity-50 grayscale' : 'group-hover:scale-105')}>
             <img
               src={thread.imageUrl}
