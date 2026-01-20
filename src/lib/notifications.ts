@@ -1,4 +1,4 @@
-import db from './db-client'
+import db, { publicDb } from './db-client'
 
 export async function createNotificationsForPost(
   content: string, 
@@ -15,8 +15,8 @@ export async function createNotificationsForPost(
     // 2. Fetch thread posts to resolve numbers
     // In a real production app, we would query specifically for these numbers
     // But for now, fetching thread posts is acceptable
-    const threadPosts = await db.db.posts.list({ where: { threadId } })
-    const threads = await db.db.threads.list({ where: { id: threadId } })
+    const threadPosts = await publicDb.db.posts.list({ where: { threadId } })
+    const threads = await publicDb.db.threads.list({ where: { id: threadId } })
     const threadOp = threads.length > 0 ? threads[0] : null
     
     const notifiedUserIds = new Set<string>()

@@ -1,4 +1,4 @@
-import db from '../db-client'
+import db, { publicDb } from '../db-client'
 import { invokeFunction } from '../functions-utils'
 
 export interface MiningResult {
@@ -326,12 +326,12 @@ export class MiningEngine {
         // 2. Broadcast to specific channels based on target type
         if (targetInfo.type === 'thread' && targetInfo.id) {
           // Get board slug for thread
-          const threads = await db.db.threads.list({
+          const threads = await publicDb.db.threads.list({
             where: { id: targetInfo.id },
             limit: 1
           })
           if (threads.length > 0) {
-            const boards = await db.db.boards.list({
+            const boards = await publicDb.db.boards.list({
               where: { id: threads[0].boardId },
               limit: 1
             })
@@ -345,17 +345,17 @@ export class MiningEngine {
           }
         } else if (targetInfo.type === 'post' && targetInfo.id) {
           // Get post -> thread -> board
-          const posts = await db.db.posts.list({
+          const posts = await publicDb.db.posts.list({
             where: { id: targetInfo.id },
             limit: 1
           })
           if (posts.length > 0) {
-            const threads = await db.db.threads.list({
+            const threads = await publicDb.db.threads.list({
               where: { id: posts[0].threadId },
               limit: 1
             })
             if (threads.length > 0) {
-              const boards = await db.db.boards.list({
+              const boards = await publicDb.db.boards.list({
                 where: { id: threads[0].boardId },
                 limit: 1
               })

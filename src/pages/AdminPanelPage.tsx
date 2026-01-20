@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Textarea } from '../components/ui/textarea'
 import { Label } from '../components/ui/label'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '../components/ui/alert-dialog'
-import db from '../lib/db-client'
+import db, { publicDb } from '../lib/db-client'
 import { useAuth } from '../contexts/AuthContext'
 import toast from 'react-hot-toast'
 import { getUserInviteCodes, grantEpochInviteCodes, getCurrentEpoch } from '../lib/invite-codes'
@@ -76,10 +76,10 @@ export function AdminPanelPage() {
         // Load all data after auth check succeeds
         try {
           const [users, threads, posts, boardsList] = await Promise.all([
-            db.db.users.list({ limit: 1000 }),
-            db.db.threads.list({ limit: 1000 }),
-            db.db.posts.list({ limit: 1000 }),
-            db.db.boards.list({ limit: 100 })
+            publicDb.db.users.list({ limit: 1000 }),
+            publicDb.db.threads.list({ limit: 1000 }),
+            publicDb.db.posts.list({ limit: 1000 }),
+            publicDb.db.boards.list({ limit: 100 })
           ])
 
           if (!isMounted) return
@@ -157,10 +157,10 @@ export function AdminPanelPage() {
   const loadAllData = useCallback(async () => {
     try {
       const [users, threads, posts, boardsList] = await Promise.all([
-        db.db.users.list({ limit: 1000 }),
-        db.db.threads.list({ limit: 1000 }),
-        db.db.posts.list({ limit: 1000 }),
-        db.db.boards.list({ limit: 100 })
+        publicDb.db.users.list({ limit: 1000 }),
+        publicDb.db.threads.list({ limit: 1000 }),
+        publicDb.db.posts.list({ limit: 1000 }),
+        publicDb.db.boards.list({ limit: 100 })
       ])
 
       const totalPow = users.reduce((sum, u) => sum + (Number(u.totalPowPoints) || 0), 0)
@@ -240,7 +240,7 @@ export function AdminPanelPage() {
             const boardId = deleteDialog.id
 
             // Cascade delete: posts -> threads -> board
-            const threads = await db.db.threads.list({ where: { boardId }, limit: 1000 })
+            const threads = await publicDb.db.threads.list({ where: { boardId }, limit: 1000 })
             for (const t of threads) {
               await db.db.posts.deleteMany({ where: { threadId: t.id } })
               await db.db.threads.delete(t.id)

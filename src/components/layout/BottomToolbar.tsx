@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Zap, Users, Clock, Cpu } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import db from '../../lib/db-client'
+import { publicDb } from '../../lib/db-client'
 import { MiningManager } from '../../lib/mining/MiningManager'
 import { requestCache } from '../../lib/request-cache'
 import { cn } from '../../lib/utils'
@@ -31,7 +31,7 @@ export function BottomToolbar() {
         // Note: We fetch all users for global PoW calculation, but could be optimized
         const users = await requestCache.getOrFetch<any[]>(
           'users-stats',
-          () => db.db.users.list({ limit: 100 }),
+          () => publicDb.db.users.list({ limit: 100 }),
           10000
         )
         // Reset failure counter on success
