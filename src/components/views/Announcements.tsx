@@ -16,7 +16,6 @@ interface Announcement {
 
 export function Announcements() {
   const { dbUser } = useAuth()
-  const currentUserId = dbUser?.id
   const [announcements, setAnnouncements] = useState<Announcement[]>([])
   const [newAnnouncement, setNewAnnouncement] = useState('')
   const [isPosting, setIsPosting] = useState(false)
@@ -31,15 +30,11 @@ export function Announcements() {
 
   const loadAnnouncements = async () => {
     try {
-      if (!currentUserId) {
-        setAnnouncements([])
-        return
-      }
+      // Announcements are global (typically posted by admins). Never scope by current user.
       const data = await requestCache.getOrFetch<Announcement[]>(
         'announcements-list',
         () => withRateLimit(
           () => publicDb.db.announcements.list({
-            where: { userId: currentUserId },
             orderBy: { createdAt: 'desc' },
             limit: 5
           }),

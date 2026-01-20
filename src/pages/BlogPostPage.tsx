@@ -11,7 +11,7 @@ import { useAuth } from '../contexts/AuthContext'
 
 export function BlogPostPage() {
   const { id } = useParams<{ id: string }>()
-  const { authState } = useAuth()
+  const { authState, dbUser } = useAuth()
   const [blog, setBlog] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
@@ -33,21 +33,33 @@ export function BlogPostPage() {
 
   const loadBlog = async () => {
     try {
-      if (!authState.user?.id) {
-        toast.error('Please sign in to view your blog posts')
-        navigate('/auth/login')
-        return
-      }
+      if (!id) return
+
+      // Blog posts are public by default.
+      // If a post is unpublished, only the owner (or admin) may view it.
       const allBlogs = await publicDb.db.blogPosts.list({
-        where: { id, userId: authState.user.id }
+        where: { id },
+        limit: 1
       })
-      
-      if (allBlogs.length > 0) {
-        setBlog(allBlogs[0])
-      } else {
+
+      if (!allBlogs || allBlogs.length === 0) {
         toast.error('Blog post not found')
         navigate('/blogs')
+        return
       }
+
+      const found = allBlogs[0]
+      const isPublished = Number(found.published) > 0
+      const isOwner = !!authState.user?.id && found.userId === authState.user.id
+      const isAdmin = Number(dbUser?.isAdmin) > 0
+
+      if (!isPublished && !isOwner && !isAdmin) {
+        toast.error('This blog post is not published')
+        navigate('/blogs')
+        return
+      }
+
+      setBlog(found)
     } catch (error) {
       console.error('Failed to load blog:', error)
       toast.error('Failed to load blog post')

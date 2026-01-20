@@ -78,8 +78,8 @@ export function ChatRoomsPage() {
       })
       setMyRooms(userRooms)
 
-      // Load public rooms
-      const publicRooms = await db.db.chatRooms.list({
+      // Load public rooms (MUST use publicDb so authenticated users still see the global directory)
+      const publicRooms = await publicDb.db.chatRooms.list({
         where: { isPublic: 1 },
         orderBy: { createdAt: 'desc' },
         limit: 50
