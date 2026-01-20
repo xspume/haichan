@@ -14,7 +14,7 @@ import { useMining } from '../../hooks/use-mining'
 import { MiningManager } from '../../lib/mining/MiningManager'
 import { invokeFunction } from '../../lib/functions-utils'
 import { calculateThreadDifficulty, isThreadLocked } from '../../lib/pow-config'
-import db from '../../lib/db-client'
+import db, { publicDb } from '../../lib/db-client'
 import toast from 'react-hot-toast'
 import { useAuth } from '../../contexts/AuthContext'
 import { createNotificationsForPost } from '../../lib/notifications'
@@ -63,11 +63,11 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
     // Determine difficulty
     const initMining = async () => {
        try {
-         const threads = await db.db.threads.list({ where: { id: threadId } })
+         const threads = await publicDb.db.threads.list({ where: { id: threadId } })
          if (threads.length === 0) return
          const thread = threads[0]
-         
-         const replyCount = await db.db.posts.count({ where: { threadId } })
+
+         const replyCount = await publicDb.db.posts.count({ where: { threadId } })
          const difficulty = calculateThreadDifficulty(
            replyCount, 
            thread.createdAt, 
@@ -181,7 +181,7 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
       if (replyTo) {
         try {
           const isNumeric = /^\d+$/.test(replyTo)
-          const parent = await db.db.posts.list({
+          const parent = await publicDb.db.posts.list({
             where: isNumeric
               ? { threadId, postNumber: Number(replyTo) }
               : { id: replyTo },
@@ -197,7 +197,7 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
 
       // Update thread metadata for lists/sorting
       try {
-        const threads = await db.db.threads.list({ where: { id: threadId }, limit: 1 })
+        const threads = await publicDb.db.threads.list({ where: { id: threadId }, limit: 1 })
         const current = threads?.[0]
         await db.db.threads.update(threadId, {
           replyCount: (Number(current?.replyCount) || 0) + 1,
