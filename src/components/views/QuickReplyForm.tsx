@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
-import { X, Minimize2, Maximize2, Image as ImageIcon, Send, Loader2 } from 'lucide-react'
+import { X, Minimize2, Maximize2, Image as ImageIcon, Send, Loader2, Palette } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
 import { Input } from '../ui/input'
 import { Card } from '../ui/card'
 import { Label } from '../ui/label'
 import { Checkbox } from '../ui/checkbox'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog'
+import { DoodleMining } from './DoodleMining'
 import { parseTripcode, generateTripcode } from '../../lib/tripcode'
 import { isValidImageForBoard, getImageValidationError } from '../../lib/image-validation'
 import { saveToImageLibrary } from '../../lib/image-library'
@@ -35,10 +37,11 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
   const [minimized, setMinimized] = useState(initialMinimized)
   const [content, setContent] = useState('')
   const [nameField, setNameField] = useState('')
-  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imageFile, setImageFile] = useState<File | Blob | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [postAnonymously, setPostAnonymously] = useState(false)
+  const [showCanvas, setShowCanvas] = useState(false)
   const { authState, siteSettings } = useAuth()
   
   // Mining state
@@ -47,6 +50,7 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
   const { dedicatedSession } = useMining()
   const miningManagerRef = useRef(MiningManager.getInstance())
   const isSubmittingRef = useRef(false) // Prevent double submissions
+  const fileInputRef = useRef<HTMLInputElement>(null)
   
   // Initialize
   useEffect(() => {
@@ -109,6 +113,19 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
     }
   }
 
+  const handleCanvasImage = (imageUrl: string) => {
+    setImagePreview(imageUrl)
+    
+    // Convert base64 to blob for uploading
+    const fetchRes = fetch(imageUrl)
+    fetchRes.then(res => res.blob()).then(blob => {
+      setImageFile(blob)
+    })
+    
+    setShowCanvas(false)
+    toast.success('Canvas image applied!')
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -123,6 +140,13 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
       isSubmittingRef.current = false
       return
     }
+
+    if (!imageFile) {
+      toast.error('Image is mandatory for replies')
+      isSubmittingRef.current = false
+      return
+    }
+
     if (!authState.user) {
       toast.error('Login required')
       isSubmittingRef.current = false
@@ -150,7 +174,7 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
 
       let publicUrl = null
       if (imageFile) {
-        const extension = imageFile.name.split('.').pop()
+        const extension = imageFile instanceof File ? imageFile.name.split('.').pop() : 'png'
         const randomId = Math.random().toString(36).substring(2, 15)
         const uploadResult = await db.storage.upload(
           imageFile,
@@ -158,7 +182,7 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
           { upsert: true }
         )
         publicUrl = uploadResult.publicUrl
-        await saveToImageLibrary(publicUrl, imageFile.name, imageFile.size, user.id)
+        await saveToImageLibrary(publicUrl, imageFile instanceof File ? imageFile.name : 'canvas-upload.png', imageFile.size, user.id)
       }
 
       // Capture PoW data BEFORE it's consumed by fetchPostNumberWithPoW
@@ -319,31 +343,63 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
             className="w-full text-[12px] min-h-[80px] bg-background border border-border/20 p-1 focus:outline-none focus:border-primary resize-none"
           />
 
-          <div className="flex items-center gap-2 text-[10px]">
-            <Checkbox 
-              id="qr-anonymous" 
-              checked={postAnonymously}
-              onCheckedChange={(checked) => setPostAnonymously(checked === true)}
-              className="h-3 w-3 border border-border/20"
-            />
-            <Label
-              htmlFor="qr-anonymous"
-              className="text-[10px] cursor-pointer"
-            >
-              POST ANON
-            </Label>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 text-[10px]">
+              <Checkbox 
+                id="qr-anonymous" 
+                checked={postAnonymously}
+                onCheckedChange={(checked) => setPostAnonymously(checked === true)}
+                className="h-3 w-3 border border-border/20"
+              />
+              <Label
+                htmlFor="qr-anonymous"
+                className="text-[10px] cursor-pointer"
+              >
+                POST ANON
+              </Label>
+            </div>
+            
+            {!hasValidPoW && (
+              <div className="flex items-center gap-1 text-[9px] text-primary animate-pulse">
+                <Loader2 className="w-2 h-2 animate-spin" />
+                MINING PoW...
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-2">
-             <label htmlFor="qr-image" className="cursor-pointer border border-border/20 p-1 bg-background hover:bg-muted">
-               <ImageIcon className="w-3 h-3" />
-             </label>
-             <input 
-               id="qr-image" 
-               type="file" 
-               className="hidden" 
-               onChange={handleImageChange}
-             />
+             <div className="flex gap-1">
+               <label htmlFor="qr-image" className="cursor-pointer border border-border/20 p-1 bg-background hover:bg-muted" title="Upload Image">
+                 <ImageIcon className="w-3 h-3" />
+               </label>
+               <input 
+                 ref={fileInputRef}
+                 id="qr-image" 
+                 type="file" 
+                 className="hidden" 
+                 onChange={handleImageChange}
+               />
+
+               <Dialog open={showCanvas} onOpenChange={setShowCanvas}>
+                 <DialogTrigger asChild>
+                   <button type="button" className="cursor-pointer border border-border/20 p-1 bg-background hover:bg-muted" title="Draw Image">
+                     <Palette className="w-3 h-3" />
+                   </button>
+                 </DialogTrigger>
+                 <DialogContent className="max-w-[95vw] w-[800px] h-[90vh] p-0 overflow-hidden border-4 border-foreground rounded-none bg-background shadow-3d">
+                   <DialogHeader className="p-4 border-b-2 border-foreground bg-primary text-background">
+                     <DialogTitle className="font-mono uppercase">Canvas Mode</DialogTitle>
+                   </DialogHeader>
+                   <div className="flex-1 overflow-auto bg-muted">
+                     <DoodleMining 
+                       onImageGenerated={handleCanvasImage}
+                       showMining={false}
+                     />
+                   </div>
+                 </DialogContent>
+               </Dialog>
+             </div>
+
              {imagePreview && (
                <div className="relative">
                  <img src={imagePreview} className="h-6 w-6 object-cover border border-border/20" />
@@ -357,13 +413,15 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
                </div>
              )}
              
+             {!imagePreview && <span className="text-[9px] text-red-500 font-bold">* REQUIRED</span>}
+             
              <div className="ml-auto flex items-center gap-2">
                <button 
                  type="submit" 
-                 disabled={loading}
-                 className="h-6 px-3 bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest hover:opacity-80 disabled:opacity-50"
+                 disabled={loading || !content.trim() || !imageFile || !hasValidPoW}
+                 className="h-6 px-3 bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest hover:opacity-80 disabled:opacity-50 flex items-center gap-1"
                >
-                 {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Post'}
+                 {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <><Send className="w-3 h-3" /> Post</>}
                </button>
              </div>
           </div>

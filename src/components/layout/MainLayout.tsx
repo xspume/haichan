@@ -157,13 +157,13 @@ export function MainLayout() {
       <DiagnosticsBanner />
 
       {/* Global Banners */}
-      {siteSettings?.maintenanceMode && (
+      {!!siteSettings?.maintenanceMode && (
         <div className="bg-red-600 text-white text-[10px] py-1 text-center font-bold tracking-wider border-b border-black z-[60]">
           SYSTEM MAINTENANCE MODE ACTIVE - READ ONLY FOR NON-ADMINS
         </div>
       )}
       
-      {siteSettings?.motd && (
+      {!!siteSettings?.motd && (
         <div className="bg-primary text-background text-[11px] py-1 text-center font-bold border-b border-black flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap z-[60]">
           <Sparkles className="w-3 h-3 flex-shrink-0 animate-pulse" />
           <span className="animate-marquee-slow">{siteSettings.motd}</span>
