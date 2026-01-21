@@ -40,6 +40,7 @@ export interface MiningSession {
   accumulatedPoints: number
   pendingPoints: number // Points not yet flushed to backend
   paused: boolean
+  element?: HTMLElement // For mouseover mining feedback
 }
 
 type MiningManagerListener = (sessions: MiningSession[]) => void
@@ -58,6 +59,8 @@ export class MiningManager {
   private flushTimer: any = null
   private lastActiveParams: string = ''
   private pauseSubmissionsUntil = 0
+  private userIdentity: string | undefined = undefined
+  private identityLoading: boolean = false
 
   private constructor() {
     this.engine = new MiningEngine()
@@ -137,6 +140,14 @@ export class MiningManager {
     const activeSession = this.getActiveSession()
     if (activeSession) {
       activeSession.currentProgress = progress
+      
+      // Update DOM element attributes for mouseover mining feedback
+      if (activeSession.element) {
+        activeSession.element.setAttribute('data-mining-hash', progress.hash)
+        activeSession.element.setAttribute('data-mining-points', progress.points.toString())
+        activeSession.element.setAttribute('data-mining-progress', 'true')
+      }
+      
       this.emit()
     }
   }
@@ -298,6 +309,33 @@ export class MiningManager {
     return this.sessions.find(s => s.mode === mode)
   }
 
+  private async getIdentity(): Promise<string | undefined> {
+    if (this.userIdentity !== undefined) return this.userIdentity
+    if (this.identityLoading) {
+      // Wait for it to load
+      while (this.identityLoading) {
+        await new Promise(resolve => setTimeout(resolve, 100))
+      }
+      return this.userIdentity
+    }
+
+    this.identityLoading = true
+    try {
+      const user = await db.auth.me()
+      if (user) {
+        const profile = await db.db.users.get(user.id)
+        this.userIdentity = profile?.bitcoinAddress || ''
+      } else {
+        this.userIdentity = ''
+      }
+    } catch (e) {
+      this.userIdentity = ''
+    } finally {
+      this.identityLoading = false
+    }
+    return this.userIdentity || undefined
+  }
+
   private detectMobile(): boolean {
     if (typeof navigator === 'undefined') return false
     return /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -331,14 +369,7 @@ export class MiningManager {
     this.stopDedicatedMining()
 
     // Get user identity (bitcoin address) to bind PoW
-    let identity: string | undefined
-    try {
-      const user = await db.auth.me()
-      const profile = await db.db.users.get(user.id)
-      identity = profile?.bitcoinAddress
-    } catch (e) {
-      // Ignore auth errors
-    }
+    const identity = await this.getIdentity()
 
     // Create new dedicated session
     // Don't reduce points on mobile - dedicated mining usually has strict requirements (e.g. posting)
@@ -385,14 +416,7 @@ export class MiningManager {
 
     // Fetch identity and then start mining
     const initMining = async () => {
-      let identity: string | undefined
-      try {
-        const user = await db.auth.me()
-        const profile = await db.db.users.get(user.id)
-        identity = profile?.bitcoinAddress
-      } catch (e) {
-        // Ignore auth errors
-      }
+      const identity = await this.getIdentity()
 
       if (isStopped) return
 
@@ -408,7 +432,8 @@ export class MiningManager {
         currentProgress: null,
         accumulatedPoints: 0,
         pendingPoints: 0,
-        paused: false
+        paused: false,
+        element
       }
 
       // Add to sessions
@@ -418,6 +443,14 @@ export class MiningManager {
 
       miningCleanup = () => {
         this.sessions = this.sessions.filter(s => s !== session)
+        
+        // Clear DOM element attributes
+        if (element) {
+          element.removeAttribute('data-mining-hash')
+          element.removeAttribute('data-mining-points')
+          element.removeAttribute('data-mining-progress')
+        }
+        
         this.updateEngine()
       }
     }
@@ -431,6 +464,14 @@ export class MiningManager {
       } else {
         // If it hasn't started yet, ensure any pending session is cleared
         this.sessions = this.sessions.filter(s => s.mode !== 'mouseover')
+        
+        // Clear DOM element attributes
+        if (element) {
+          element.removeAttribute('data-mining-hash')
+          element.removeAttribute('data-mining-points')
+          element.removeAttribute('data-mining-progress')
+        }
+        
         this.updateEngine()
       }
     }
@@ -445,14 +486,7 @@ export class MiningManager {
     if (this.sessions.some(s => s.mode === 'background')) return
 
     // Get user identity (bitcoin address) to bind PoW
-    let identity: string | undefined
-    try {
-      const user = await db.auth.me()
-      const profile = await db.db.users.get(user.id)
-      identity = profile?.bitcoinAddress
-    } catch (e) {
-      // Ignore auth errors
-    }
+    const identity = await this.getIdentity()
 
     const session: MiningSession = {
       mode: 'background',

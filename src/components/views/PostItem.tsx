@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import { MoreVertical, Trash2, Zap, Loader2 } from 'lucide-react'
 import { DifficultyBandBadge, BadgesInline } from '../../lib/badge-utils'
 import { processRichText } from '../../lib/rich-text'
 import { MiningButton } from '../mining/MiningButton'
 import { MiningProgressBadge } from '../ui/mining-progress-badge'
 import { getFlagEmoji } from '../../lib/utils'
+import { useMouseoverMining, useMining } from '../../hooks/use-mining'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,15 +39,32 @@ export const PostItem = React.memo(function PostItem({
   onModPost,
   onDeletePost
 }: PostItemProps) {
-  const isPostMining = dedicatedSession?.targetId === post.id && dedicatedSession?.targetType === targetType
+  const elementRef = useRef<HTMLDivElement>(null)
+  const { useAttachTo } = useMouseoverMining(targetType, post.id)
+  const { mouseoverSession } = useMining()
   
+  const isDedicatedMining = dedicatedSession?.targetId === post.id && dedicatedSession?.targetType === targetType
+  const isMouseoverMining = mouseoverSession?.targetId === post.id && mouseoverSession?.targetType === targetType
+  const activeSession = isDedicatedMining ? dedicatedSession : (isMouseoverMining ? mouseoverSession : null)
+  const isMining = !!activeSession
+  
+  useEffect(() => {
+    if (elementRef.current) {
+      return useAttachTo(elementRef.current)
+    }
+  }, [useAttachTo])
+
   const richText = React.useMemo(() => processRichText(post.content), [post.content])
 
   const getEffectivePow = (basePow: number, id: string, type: 'thread' | 'post') => {
+    let effectivePow = basePow
     if (dedicatedSession?.targetType === type && dedicatedSession?.targetId === id) {
-      return basePow + (dedicatedSession.pendingPoints || 0)
+      effectivePow += (dedicatedSession.pendingPoints || 0)
     }
-    return basePow
+    if (mouseoverSession?.targetType === type && mouseoverSession?.targetId === id) {
+      effectivePow += (mouseoverSession.pendingPoints || 0)
+    }
+    return effectivePow
   }
 
   const formatDate = (dateStr: string) => {
@@ -66,7 +84,11 @@ export const PostItem = React.memo(function PostItem({
   }
 
   return (
-    <div id={`p${post.post_number || post.postNumber}`} className="post-reply bg-card border border-border/40 p-1.5 mb-1.5 w-fit min-w-[300px] max-w-full">
+    <div 
+      ref={elementRef}
+      id={`p${post.post_number || post.postNumber}`} 
+      className={`post-reply bg-card border border-border/40 p-1.5 mb-1.5 w-fit min-w-[300px] max-w-full transition-colors duration-300 ${isMouseoverMining ? 'bg-primary/5 border-primary/30 shadow-sm' : ''}`}
+    >
       <div className="post-header flex items-center flex-wrap gap-1 text-[11px] mb-1 font-mono">
         <input type="checkbox" className="mr-1 scale-75 opacity-50" />
         <span className="font-bold text-[#117743]">
@@ -95,8 +117,15 @@ export const PostItem = React.memo(function PostItem({
         <span className="text-muted-foreground opacity-30 text-[9px] ml-1">{formatHashAge(post.createdAt)}</span>
         
         <div className="flex items-center gap-1 ml-1 opacity-70">
-          <DifficultyBandBadge points={post.totalPow || 0} className="scale-75 origin-left" />
-          {isPostMining && <MiningProgressBadge show={true} />}
+          <DifficultyBandBadge points={getEffectivePow(post.totalPow || 0, post.id, targetType)} className="scale-75 origin-left" />
+          {activeSession && (
+            <MiningProgressBadge 
+              show={true} 
+              points={activeSession.currentProgress?.points || 0}
+              hashRate={activeSession.currentProgress?.hashRate || 0}
+              className="scale-75 origin-left"
+            />
+          )}
         </div>
         
         {canDelete && (
@@ -175,7 +204,7 @@ export const PostItem = React.memo(function PostItem({
           
           <div className="flex gap-2 text-[9px] items-center text-muted-foreground opacity-50 group">
             <span className="font-mono text-primary/70">POW: {getEffectivePow(post.totalPow || 0, post.id, targetType)}</span>
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className={`flex items-center gap-1 transition-opacity ${isMining ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
               <MiningButton targetType={targetType} targetId={post.id} size="sm" className="h-4 px-1.5 text-[8px] bg-primary/20 hover:bg-primary/40 text-primary border-none rounded-none" />
             </div>
           </div>
