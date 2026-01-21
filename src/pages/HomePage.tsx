@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Zap, Database, Lock, Trophy, MessageSquare, BookOpen, Sparkles, TrendingUp, LayoutGrid, Users } from 'lucide-react'
 import db, { publicDb } from '../lib/db-client'
@@ -10,6 +10,8 @@ import { useAuth } from '../contexts/AuthContext'
 import { requestCache } from '../lib/request-cache'
 import { withRateLimit, isTransientError } from '../lib/rate-limit-utils'
 import { subscribeToChannel } from '../lib/realtime-manager'
+import { useMouseoverMining, useMining } from '../hooks/use-mining'
+import { MiningProgressBadge } from '../components/ui/mining-progress-badge'
 
 const MAX_USERS = 256
 
@@ -17,6 +19,51 @@ interface UserMetadata {
   hasSeenHowToStart?: boolean
   firstVisitDate?: string
   [key: string]: any
+}
+
+interface BoardCardProps {
+  board: any
+  isMining: boolean
+  miningProgress?: any
+}
+
+const BoardCard = ({ board, isMining, miningProgress }: BoardCardProps) => {
+  const elementRef = useRef<HTMLAnchorElement>(null)
+  const { useAttachTo } = useMouseoverMining('board', board.id)
+
+  useEffect(() => {
+    if (elementRef.current) {
+      return useAttachTo(elementRef.current)
+    }
+  }, [useAttachTo])
+
+  return (
+    <Link 
+      ref={elementRef}
+      to={`/board/${board.slug}`}
+      className={`card-3d p-4 hover:bg-primary/5 transition-all group relative ${isMining ? 'border-primary bg-primary/5' : ''}`}
+    >
+      <div className="flex justify-between items-start mb-2">
+        <span className="text-lg font-black text-primary tracking-tighter">/{board.slug}/</span>
+        <div className="flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 bg-primary text-background uppercase">
+          <TrendingUp size={10} />
+          {Number((board.totalPow ?? board.total_pow ?? 0) + (miningProgress?.points || 0)).toLocaleString()}
+        </div>
+      </div>
+      <p className="text-[10px] line-clamp-2 opacity-70 group-hover:opacity-100 transition-opacity">
+        {board.description}
+      </p>
+      {isMining && (
+        <div className="absolute top-1 right-1/2 translate-x-1/2">
+          <MiningProgressBadge 
+            show={true} 
+            points={miningProgress?.points || 0}
+            hashRate={miningProgress?.hashRate || 0}
+          />
+        </div>
+      )}
+    </Link>
+  )
 }
 
 export function HomePage() {
@@ -28,6 +75,8 @@ export function HomePage() {
   const [newestUser, setNewestUser] = useState<any>(null)
   const [totalUsers, setTotalUsers] = useState(0)
   const [showHowToStart, setShowHowToStart] = useState(false)
+  const { mouseoverSession } = useMining()
+  const currentMiningBoardId = mouseoverSession?.targetType === 'board' ? mouseoverSession.targetId : null
 
   useEffect(() => {
     // Load data on mount (auth is guaranteed by ProtectedRoute)
@@ -171,9 +220,8 @@ export function HomePage() {
       const allBoardsRaw = await requestCache.getOrFetch<any[]>(
         'global-top-boards',
         () => withRateLimit(() => publicDb.db.boards.list({
-          orderBy: { totalPow: 'desc' },
           limit: 20,
-          select: ['id', 'name', 'slug', 'description', 'totalPow', 'expired']
+          orderBy: { total_pow: 'desc' }
         }), { maxRetries: 5, initialDelayMs: 200, timeoutMs: 20000 }),
         isRetry ? 0 : 30000 
       )
@@ -369,22 +417,12 @@ export function HomePage() {
               )}
               
               {boards.map((board) => (
-                <Link 
+                <BoardCard 
                   key={board.id} 
-                  to={`/board/${board.slug}`}
-                  className="card-3d p-4 hover:bg-primary/5 transition-all group"
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <span className="text-lg font-black text-primary tracking-tighter">/{board.slug}/</span>
-                    <div className="flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 bg-primary text-background uppercase">
-                      <TrendingUp size={10} />
-                      {Number(board.totalPow || 0).toLocaleString()}
-                    </div>
-                  </div>
-                  <p className="text-[10px] line-clamp-2 opacity-70 group-hover:opacity-100 transition-opacity">
-                    {board.description}
-                  </p>
-                </Link>
+                  board={board} 
+                  isMining={currentMiningBoardId === board.id} 
+                  miningProgress={currentMiningBoardId === board.id ? mouseoverSession?.currentProgress : null}
+                />
               ))}
               
               {boards.length === 0 && !loading && (
