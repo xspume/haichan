@@ -6,14 +6,13 @@ import { CircularOrbImage } from '../ui/circular-orb-image'
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '../ui/hover-card'
 import { useMouseoverMining, useMining } from '../../hooks/use-mining'
 import { MiningProgressBadge } from '../ui/mining-progress-badge'
-import { cn } from '../../lib/utils'
+import { cn } from '@/lib/utils'
 
 interface ThreadCardProps {
   thread: any
   boardSlug: string
   replyCount?: number
   isMining: boolean
-  miningProgress?: any
 }
 
 // Memoized ThreadCard to prevent re-renders when parent state changes
@@ -21,8 +20,7 @@ const ThreadCard = memo(function ThreadCard({
   thread, 
   boardSlug, 
   replyCount = 0,
-  isMining,
-  miningProgress
+  isMining
 }: ThreadCardProps) {
   const { useAttachTo } = useMouseoverMining('thread', thread.id)
   const elementRef = useRef<HTMLDivElement>(null)
@@ -67,11 +65,7 @@ const ThreadCard = memo(function ThreadCard({
           )}
           {isMining && (
             <div className="absolute top-2 right-2 z-10">
-              <MiningProgressBadge 
-                show={true} 
-                points={miningProgress?.points || 0}
-                hashRate={miningProgress?.hashRate || 0}
-              />
+              <MiningProgressBadge show={true} />
             </div>
           )}
         </div>
@@ -80,15 +74,8 @@ const ThreadCard = memo(function ThreadCard({
       {/* Thread Info */}
       <div className="p-2 flex-1 flex flex-col gap-1.5 font-mono">
         <div className="flex flex-wrap gap-1">
-          <DifficultyBandBadge points={(thread.totalPow ?? thread.total_pow ?? 0) + (miningProgress?.points || 0)} className="scale-75 origin-left" />
-          {!thread.imageUrl && isMining && (
-            <MiningProgressBadge 
-              show={true} 
-              points={miningProgress?.points || 0}
-              hashRate={miningProgress?.hashRate || 0}
-              className="scale-75 origin-left"
-            />
-          )}
+          <DifficultyBandBadge points={thread.totalPow || 0} className="scale-75 origin-left" />
+          {!thread.imageUrl && isMining && <MiningProgressBadge show={true} />}
         </div>
         
         <h3 className="font-bold text-[11px] uppercase tracking-tighter line-clamp-2 text-primary group-hover:underline">
@@ -108,7 +95,7 @@ const ThreadCard = memo(function ThreadCard({
               Replies: {replyCount}
             </span>
             <span className="flex items-center gap-0.5 font-black">
-              Work: {thread.totalPow ?? thread.total_pow ?? 0}
+              Work: {thread.totalPow || 0}
             </span>
           </div>
         </div>
@@ -148,7 +135,7 @@ const ThreadCard = memo(function ThreadCard({
             <div className="flex items-center gap-2">
               <TrendingUp className="w-3 h-3 text-primary" />
               <span className="text-xs">
-                <span className="font-bold">Total PoW:</span> {thread.totalPow ?? thread.total_pow ?? 0}
+                <span className="font-bold">Total PoW:</span> {thread.totalPow || 0}
               </span>
             </div>
             
@@ -195,7 +182,6 @@ export function BoardCatalog({ threads, boardSlug }: BoardCatalogProps) {
           boardSlug={boardSlug}
           replyCount={thread.replyCount || 0}
           isMining={currentMiningThreadId === thread.id}
-          miningProgress={currentMiningThreadId === thread.id ? mouseoverSession?.currentProgress : null}
         />
       ))}
     </div>

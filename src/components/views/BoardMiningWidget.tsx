@@ -141,13 +141,7 @@ export function BoardMiningWidget({ board, onMineComplete }: BoardMiningWidgetPr
           <CardTitle className="text-base font-mono flex items-center gap-2">
             <Zap className="w-4 h-4" />
             MINE BOARD
-            {isBoardMining && (
-              <MiningProgressBadge 
-                show={true} 
-                points={mouseoverSession?.currentProgress?.points || 0}
-                hashRate={mouseoverSession?.currentProgress?.hashRate || 0}
-              />
-            )}
+            {isBoardMining && <MiningProgressBadge show={true} />}
           </CardTitle>
           <button className="p-1">
             {isExpanded ? (
@@ -168,7 +162,7 @@ export function BoardMiningWidget({ board, onMineComplete }: BoardMiningWidgetPr
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Current PoW:</span>
-              <span className="font-bold">{(board.totalPow || 0) + optimisticPow + (mouseoverSession?.currentProgress?.points || 0)}</span>
+              <span className="font-bold">{(board.totalPow || 0) + optimisticPow}</span>
             </div>
             {minedHash && (
               <>

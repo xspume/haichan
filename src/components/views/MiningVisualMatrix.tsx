@@ -61,8 +61,6 @@ export function MiningVisualMatrix({ hash }: MiningVisualMatrixProps) {
   const noiseCanvasRef = useRef<HTMLCanvasElement | null>(null)
   const scanCanvasRef = useRef<HTMLCanvasElement | null>(null)
   const textureImgRef = useRef<HTMLImageElement | null>(null)
-  const lastHashRef = useRef<string | undefined>(hash)
-  const glitchTimeRef = useRef<number>(0)
 
   const [matrix, setMatrix] = useState<VisualMatrix>(DEFAULT_VISUAL_MATRIX)
   const [prompt, setPrompt] = useState('')
@@ -128,13 +126,6 @@ export function MiningVisualMatrix({ hash }: MiningVisualMatrixProps) {
   }, [ai.url])
 
   useEffect(() => {
-    if (hash !== lastHashRef.current) {
-      lastHashRef.current = hash
-      glitchTimeRef.current = 1.0 // Trigger glitch
-    }
-  }, [hash])
-
-  useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -173,12 +164,6 @@ export function MiningVisualMatrix({ hash }: MiningVisualMatrixProps) {
         return
       }
       lastFrameRef.current = ts
-
-      // Decelerate glitch
-      if (glitchTimeRef.current > 0) {
-        glitchTimeRef.current -= 0.05
-        if (glitchTimeRef.current < 0) glitchTimeRef.current = 0
-      }
 
       const t = todFactor(matrix, Date.now())
       const day = Math.sin(t * Math.PI * 2) * 0.5 + 0.5
@@ -228,35 +213,24 @@ export function MiningVisualMatrix({ hash }: MiningVisualMatrixProps) {
 
       // lighting accents / fuzzy oscilloscope
       ctx.save()
-      
-      // Glitch offset
-      if (glitchTimeRef.current > 0) {
-        const offset = glitchTimeRef.current * 20
-        ctx.translate((Math.random() - 0.5) * offset, (Math.random() - 0.5) * offset)
-        if (Math.random() > 0.8) {
-          ctx.globalCompositeOperation = 'difference'
-        } else {
-          ctx.globalCompositeOperation = 'lighter'
-        }
-      } else {
-        ctx.globalCompositeOperation = 'lighter'
-      }
+      ctx.globalCompositeOperation = 'lighter'
       
       if (hash) {
         // Fuzzy oscilloscope rendering based on hash
+        // We'll create a "diamond" central focus by narrowing the wave in the middle
         const hashBits = hash.split('').map(hex => parseInt(hex, 16).toString(2).padStart(4, '0')).join('')
-        const layers = 6 + (glitchTimeRef.current > 0 ? 4 : 0)
+        const layers = 6
         
-        ctx.shadowBlur = 8 + (glitchTimeRef.current * 20)
+        ctx.shadowBlur = 8
         ctx.shadowColor = colors.a
         
         for (let j = 0; j < layers; j++) {
           ctx.beginPath()
-          ctx.strokeStyle = glitchTimeRef.current > 0.5 && j % 2 === 0 ? '#ff00ff' : colors.a
+          ctx.strokeStyle = colors.a
           ctx.globalAlpha = 0.15 + (Math.random() * 0.2)
           ctx.lineWidth = 0.5 + Math.random() * 2.0
           
-          const stepX = canvas.width / 256
+          const stepX = canvas.width / 256 // higher resolution for fuzz
           const centerY = canvas.height / 2
           
           for (let x = 0; x <= 256; x++) {
@@ -265,13 +239,10 @@ export function MiningVisualMatrix({ hash }: MiningVisualMatrixProps) {
             
             // Envelope for diamond shape - wider in middle
             const xNorm = (x / 256) * 2 - 1 // -1 to 1
-            const envelope = Math.pow(1 - Math.abs(xNorm), 1.5) // Sharper diamond
+            const envelope = 1 - Math.abs(xNorm)
             
-            // Glitch interference
-            const glitchFactor = glitchTimeRef.current > 0 ? (Math.random() * glitchTimeRef.current * 100) : 0
-            
-            const bitOffset = (bitValue * 120 - 60) * envelope * (0.8 + 0.2 * Math.sin(ts * 0.002 + j))
-            const fuzzyNoise = (Math.random() - 0.5) * (12 + glitchFactor)
+            const bitOffset = (bitValue * 80 - 40) * envelope * (0.8 + 0.2 * Math.sin(ts * 0.002 + j))
+            const fuzzyNoise = (Math.random() - 0.5) * 12
             const highFreqNoise = Math.sin(x * 0.5 + ts * 0.1) * 3
             
             const targetY = centerY + bitOffset + fuzzyNoise + highFreqNoise
@@ -279,73 +250,16 @@ export function MiningVisualMatrix({ hash }: MiningVisualMatrixProps) {
             if (x === 0) {
               ctx.moveTo(0, targetY)
             } else {
-              // Geometric glitch: sharp lines when glitching
-              if (glitchTimeRef.current > 0.7 && Math.random() > 0.95) {
-                ctx.lineTo(x * stepX, targetY + (Math.random() - 0.5) * 100)
-              } else {
-                ctx.lineTo(x * stepX, targetY)
-              }
+              ctx.lineTo(x * stepX, targetY)
             }
           }
           ctx.stroke()
         }
         
-        // Central Diamond Focus
-        const drawDiamond = (size: number, alpha: number, color: string, fill: boolean = false) => {
-          ctx.save()
-          ctx.translate(canvas.width / 2, canvas.height / 2)
-          
-          if (glitchTimeRef.current > 0) {
-            const glitchOffset = glitchTimeRef.current * 10
-            ctx.translate((Math.random() - 0.5) * glitchOffset, (Math.random() - 0.5) * glitchOffset)
-            ctx.rotate(Math.sin(ts * 0.01) * glitchTimeRef.current * 0.2)
-            ctx.scale(1 + Math.random() * glitchTimeRef.current * 0.5, 1 + Math.random() * glitchTimeRef.current * 0.5)
-          }
-          
-          ctx.beginPath()
-          ctx.moveTo(0, -size)
-          ctx.lineTo(size * 0.8, 0)
-          ctx.lineTo(0, size)
-          ctx.lineTo(-size * 0.8, 0)
-          ctx.closePath()
-          
-          if (fill) {
-            ctx.fillStyle = color
-            ctx.globalAlpha = alpha * 0.2
-            ctx.fill()
-          }
-          
-          ctx.strokeStyle = color
-          ctx.globalAlpha = alpha
-          ctx.lineWidth = 3
-          ctx.stroke()
-          
-          // Internal structures
-          ctx.beginPath()
-          ctx.moveTo(0, -size)
-          ctx.lineTo(0, size)
-          ctx.moveTo(-size * 0.8, 0)
-          ctx.lineTo(size * 0.8, 0)
-          ctx.lineWidth = 1
-          ctx.globalAlpha = alpha * 0.5
-          ctx.stroke()
-          
-          ctx.restore()
-        }
-
-        // Diamond layers
-        drawDiamond(120, 0.4, colors.a, true)
-        drawDiamond(125, 0.2, '#fff')
-        
-        if (glitchTimeRef.current > 0) {
-          drawDiamond(140 + Math.random() * 20, 0.6 * glitchTimeRef.current, '#ff00ff')
-          drawDiamond(150 + Math.random() * 30, 0.4 * glitchTimeRef.current, '#00ffff')
-        }
-
         // Central pulse
         ctx.beginPath()
         ctx.strokeStyle = '#fff'
-        ctx.globalAlpha = 0.1 + (glitchTimeRef.current * 0.4)
+        ctx.globalAlpha = 0.1
         ctx.lineWidth = 1
         ctx.moveTo(0, canvas.height/2)
         ctx.lineTo(canvas.width, canvas.height/2)

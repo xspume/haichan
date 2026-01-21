@@ -99,8 +99,10 @@ export function BoardsPage() {
         'page-boards',
         () => withRateLimit(() => publicDb.db.boards.list({
           // IMPORTANT: directory should not default to a small page size.
+          // Without an explicit limit, the SDK may return only the first page (often 10).
           limit: 200,
-          orderBy: { total_pow: 'desc' }
+          orderBy: { totalPow: 'desc' },
+          select: ['id', 'name', 'slug', 'description', 'totalPow', 'expired']
         }), { maxRetries: 5, initialDelayMs: 300, timeoutMs: 20000 }),
         isRetry ? 0 : 5000 
       )
@@ -189,7 +191,7 @@ export function BoardsPage() {
                             {board.description || 'No description'}
                           </span>
                           <span className="text-[10px] text-muted-foreground whitespace-nowrap">
-                            {(board.totalPow ?? board.total_pow ?? 0)} PoW
+                            {board.totalPow || 0} PoW
                           </span>
                           <button
                             onClick={() => setSelectedBoardForMining(board.id)}

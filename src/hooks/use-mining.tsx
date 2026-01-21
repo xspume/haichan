@@ -129,6 +129,9 @@ export function useMouseoverMining(targetType: string, targetId: string) {
 
     // Mouse handlers (Desktop)
     const handleMouseEnter = (_e: Event) => {
+      // Ignore if it's likely a touch emulation (though we separate listeners now, good to be safe)
+      if ('ontouchstart' in window && window.innerWidth < 768) return;
+
       // mouseenter
       if (!miningCleanupRef.current) {
         miningCleanupRef.current = managerRef.current.startMouseoverMining(
