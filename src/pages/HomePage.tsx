@@ -467,22 +467,6 @@ export function HomePage() {
           </div>
 
           <GlobalPoWStats />
-          
-          {/* Weird Human Element */}
-          <div className="card-3d p-4 border-2 border-primary bg-primary/5 relative group overflow-hidden">
-            <div className="absolute -bottom-4 -right-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <Users size={80} />
-            </div>
-            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] mb-2 text-primary">Status: Breathing</h4>
-            <p className="text-[11px] leading-relaxed opacity-70 italic font-serif">
-              "Every hash is a heart beat. Every post is a breath in the machine. We are the ghosts in the silicon, carving our names into the entropy."
-            </p>
-            <div className="mt-4 flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-primary animate-ping" />
-              <span className="text-[9px] font-bold uppercase tracking-widest">Existence Verified</span>
-            </div>
-          </div>
-
           <HashleLeaderboard />
           <PostersList />
         </div>
