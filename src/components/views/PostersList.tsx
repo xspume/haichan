@@ -66,6 +66,7 @@ export function PostersList() {
 
   const loadPosters = async () => {
     try {
+      console.log('[PostersList] Loading posters...')
       // Get all users with PoW points, sorted by highest first
       const users = await requestCache.getOrFetch<any[]>(
         'posters-list-users',
@@ -79,7 +80,10 @@ export function PostersList() {
         CACHE_TTL
       )
 
+      console.log('[PostersList] Users fetched:', { count: users?.length, users })
+
       if (!users || users.length === 0) {
+        console.log('[PostersList] No users found')
         setPosters([])
         return
       }
@@ -91,6 +95,7 @@ export function PostersList() {
         diamondLevel: Number(user.diamondLevel) || 0
       }))
 
+      console.log('[PostersList] Posters processed:', { count: activePostersList.length })
       setPosters(activePostersList)
     } catch (error: any) {
       // Keep existing data on transient errors (timeouts, rate limits, flaky network)

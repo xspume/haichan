@@ -52,12 +52,12 @@ export async function createNotificationsForPost(
     // Insert notifications
     for (const userId of notifiedUserIds) {
       await db.db.notifications.create({
-        user_id: userId,
-        sender_id: senderId,
-        post_id: postId,
-        thread_id: threadId,
+        userId,
+        senderId,
+        postId,
+        threadId,
         type: 'reply',
-        created_at: new Date().toISOString()
+        createdAt: new Date().toISOString()
       })
     }
     

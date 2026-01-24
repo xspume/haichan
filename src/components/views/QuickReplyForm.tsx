@@ -181,7 +181,7 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
           `posts/${Date.now()}-${randomId}.${extension}`,
           { upsert: true }
         )
-        publicUrl = uploadResult.publicUrl
+        publicUrl = uploadResult.url
         await saveToImageLibrary(publicUrl, imageFile instanceof File ? imageFile.name : 'canvas-upload.png', imageFile.size, user.id)
       }
 
@@ -264,7 +264,7 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
          console.warn('Post created but no ID returned, notifications might be skipped')
       }
 
-      if (powData) {
+      if (powData && newPost?.id) {
         await invokeFunction('validate-pow', {
           body: {
             challenge: powData.challenge,
@@ -273,8 +273,8 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
             points: powData.points,
             trailingZeros: powData.trailingZeros,
             prefix: powData.prefix,
-            targetType: 'thread',
-            targetId: threadId,
+            targetType: 'post',
+            targetId: newPost.id,
             userId: user.id
           }
         })
