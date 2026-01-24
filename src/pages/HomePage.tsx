@@ -30,7 +30,7 @@ export function HomePage() {
   const [showHowToStart, setShowHowToStart] = useState(false)
 
   useEffect(() => {
-    // Load data on mount (auth is guaranteed by ProtectedRoute)
+    // Load data on mount - HomePage is public, works with or without auth
     const initializeData = async () => {
       let dataLoaded = false;
       
@@ -43,6 +43,8 @@ export function HomePage() {
       }, 8000); // Increased slightly for safety
 
       try {
+        console.log('[HomePage] Starting data load...', { isAuthenticated: authState.isAuthenticated, userId: dbUser?.id })
+        
         // Load critical data with higher priority/lower retry delay
         const criticalResults = await Promise.allSettled([
           loadBoards(),
@@ -54,6 +56,8 @@ export function HomePage() {
         criticalResults.forEach((result, idx) => {
           if (result.status === 'rejected') {
             console.error(`[HomePage] Critical task ${idx} failed:`, result.reason)
+          } else {
+            console.log(`[HomePage] Critical task ${idx} completed successfully`)
           }
         })
 
@@ -167,6 +171,8 @@ export function HomePage() {
     try {
       setError(null)
       
+      console.log('[HomePage] Loading boards...', { isRetry })
+      
       // Fetch ALL boards (not just user's boards) - use publicDb for global reads
       const allBoardsRaw = await requestCache.getOrFetch<any[]>(
         'global-top-boards',
@@ -178,20 +184,26 @@ export function HomePage() {
         isRetry ? 0 : 30000 
       )
       
+      console.log('[HomePage] Boards fetched:', { count: allBoardsRaw?.length, boards: allBoardsRaw })
+      
       // Filter expired boards in memory - handles 0, '0', null, undefined, false
       const allBoards = (allBoardsRaw || [])
         .filter(b => String(b.expired) !== '1')
         .slice(0, 10)
       
+      console.log('[HomePage] Boards after filtering:', { count: allBoards.length })
+      
       if (allBoards && allBoards.length > 0) {
         setBoards(allBoards)
       } else if (!isRetry) {
         // If empty, try one more time without cache after a short delay
+        console.log('[HomePage] No boards found, retrying without cache...')
         requestCache.invalidate('global-top-boards')
         // Wait for retry to complete before resolving
         await new Promise(resolve => setTimeout(resolve, 1000))
         return await loadBoards(true)
       } else {
+        console.log('[HomePage] No boards found after retry')
         setBoards([])
       }
     } catch (err: any) {
@@ -206,6 +218,7 @@ export function HomePage() {
 
   const loadOnlineUsers = async () => {
     try {
+      console.log('[HomePage] Loading online users...')
       const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000).toISOString()
       // Fetch ALL active users, not just current user
       const active = await requestCache.getOrFetch<any[]>(
@@ -216,10 +229,12 @@ export function HomePage() {
         }), { maxRetries: 5, initialDelayMs: 300 }),
         10000 // 10 second cache
       )
+      console.log('[HomePage] Chat activity fetched:', { count: active?.length })
       // Filter to only users active in last 2 minutes
       const recentlyActive = (active || []).filter(u => 
         u.lastActivity && new Date(u.lastActivity).toISOString() > twoMinutesAgo
       )
+      console.log('[HomePage] Recently active users:', { count: recentlyActive.length })
       setOnlineUsers(recentlyActive)
     } catch (error: any) {
       // Silently handle rate limit errors - cache will retry automatically
@@ -266,12 +281,14 @@ export function HomePage() {
 
   const loadTotalUsers = async () => {
     try {
+      console.log('[HomePage] Loading total users count...')
       // Fetch actual total user count from DB
       const count = await requestCache.getOrFetch<number>(
         'homepage-total-users',
         () => withRateLimit(() => publicDb.db.users.count(), { maxRetries: 3, initialDelayMs: 300, timeoutMs: 20000 }),
         300000 // Cache for 5 minutes
       )
+      console.log('[HomePage] Total users count:', count)
       setTotalUsers(typeof count === 'number' ? count : 0)
     } catch (error: any) {
       // Keep existing data on transient errors (timeouts, rate limits, flaky network)
@@ -296,6 +313,28 @@ export function HomePage() {
   // Show the full imageboard dashboard
   return (
     <div className="bg-background text-foreground min-h-screen font-mono">
+      {/* Diagnostic Banner - Remove after debugging */}
+      {(boards.length === 0 || totalUsers === 0) && (
+        <div className="mb-4 p-4 border-2 border-yellow-500 bg-yellow-500/10 text-yellow-500">
+          <div className="text-xs font-bold mb-2">🔍 DIAGNOSTIC INFO (Check Console for Details)</div>
+          <div className="text-[10px] space-y-1 font-mono">
+            <div>Auth Status: {authState.isAuthenticated ? 'AUTHENTICATED' : 'NOT AUTHENTICATED'}</div>
+            <div>User ID: {dbUser?.id || 'NONE'}</div>
+            <div>Boards Loaded: {boards.length}</div>
+            <div>Total Users: {totalUsers}</div>
+            <div>Online Users: {onlineUsers.length}</div>
+            <div className="mt-2 pt-2 border-t border-yellow-500/30">
+              {boards.length === 0 && <div>⚠️ No boards found - database may be empty</div>}
+              {totalUsers === 0 && <div>⚠️ No users found - database may be empty</div>}
+              <div className="mt-2">
+                Check browser console (F12) for detailed logs.
+                Look for "[HomePage]", "[BoardsPage]", "[PostersList]" messages.
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Quick Actions Bar - no duplicate header */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-primary/20 pb-3">
         <p className="text-[10px] uppercase tracking-wider opacity-60">The Entropy Harvest</p>

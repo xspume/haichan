@@ -94,6 +94,8 @@ export function BoardsPage() {
   const loadBoards = async (isRetry = false): Promise<void> => {
     try {
       setError(null)
+      console.log('[BoardsPage] Loading boards...', { isRetry })
+      
       // Fetch ALL boards (not just current user's boards) - this is the directory
       const allBoardsRaw = await requestCache.getOrFetch<any[]>(
         'page-boards',
@@ -107,17 +109,23 @@ export function BoardsPage() {
         isRetry ? 0 : 5000 
       )
       
+      console.log('[BoardsPage] Boards fetched:', { count: allBoardsRaw?.length, boards: allBoardsRaw })
+      
       // Filter expired boards in memory to be safer with types
       const allBoards = (allBoardsRaw || []).filter(b => String(b.expired) !== '1');
+      
+      console.log('[BoardsPage] Boards after filtering:', { count: allBoards.length })
       
       if (allBoards && allBoards.length > 0) {
         setBoards(allBoards)
         setLoading(false)
       } else if (!isRetry) {
+        console.log('[BoardsPage] No boards found, retrying...')
         requestCache.invalidate('page-boards')
         await new Promise(resolve => setTimeout(resolve, 1000))
         return await loadBoards(true)
       } else {
+        console.log('[BoardsPage] No boards found after retry')
         setBoards([])
         setLoading(false)
       }
@@ -146,6 +154,24 @@ export function BoardsPage() {
   return (
     <div className="bg-background text-foreground min-h-screen font-mono">
       <div className="container mx-auto p-3 max-w-7xl">
+        {/* Diagnostic Banner - Remove after debugging */}
+        {boards.length === 0 && !loading && (
+          <div className="mb-4 p-4 border-2 border-yellow-500 bg-yellow-500/10 text-yellow-500">
+            <div className="text-xs font-bold mb-2">🔍 BOARDS PAGE DIAGNOSTIC</div>
+            <div className="text-[10px] space-y-1 font-mono">
+              <div>Auth Status: {authState.isAuthenticated ? 'AUTHENTICATED' : 'NOT AUTHENTICATED'}</div>
+              <div>Boards Loaded: {boards.length}</div>
+              <div>Error: {error || 'NONE'}</div>
+              <div className="mt-2 pt-2 border-t border-yellow-500/30">
+                <div>⚠️ No boards found - database may be empty or query is failing</div>
+                <div className="mt-2">
+                  Check browser console (F12) for "[BoardsPage]" logs
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
         <div className="mb-6 border-b-2 border-primary pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
             <h1 className="text-4xl font-black uppercase tracking-tight flex items-center gap-3">
