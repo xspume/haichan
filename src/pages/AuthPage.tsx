@@ -154,6 +154,7 @@ export function AuthPage() {
       if (useBitcoinAuth) {
         // Private Key Login Flow
         const { isValidWIF, deriveAddressFromWIF } = await import('../lib/bitcoin')
+        const { sha256 } = await import('../lib/crypto')
         
         if (!isValidWIF(privateKeyInput)) {
           setUsernameError('Invalid Private Key (WIF format required)')
@@ -180,9 +181,21 @@ export function AuthPage() {
         if (result.data && result.data.user && result.data.user.email) {
           loginEmail = result.data.user.email
           setResolvedEmail(loginEmail)
-          // If we wanted to use private key as password, we would hash it here
-          // But for now, we assume user still needs their access code
-          console.log('[AuthPage] Found user for address, proceeding with email:', loginEmail)
+          
+          // CRITICAL FIX: Derive login password from private key using the stored salt
+          const userMetadata = result.data.user.metadata || {}
+          const salt = userMetadata.keySalt || ''
+          
+          if (!salt) {
+            console.warn('[AuthPage] No salt found for Bitcoin user - this may be an old account')
+            // Fallback to password or show error
+            setUsernameError('Account found but secure key authentication is not configured. Use password login.')
+            setLoading(false)
+            return
+          }
+          
+          loginPassword = await sha256(privateKeyInput + salt)
+          console.log('[AuthPage] Derived deterministic password from private key')
         } else {
           setUsernameError('No account found for this Bitcoin address. Have you registered?')
           setLoading(false)
@@ -458,15 +471,19 @@ Generated: ${new Date().toISOString()}
       }
 
       // 3. Prepare Bitcoin auth data
+      const { sha256 } = await import('../lib/crypto')
       const salt = generateSalt()
       const keyHash = await hashPrivateKey(generatedKeys.privateKey, salt)
+      
+      // CRITICAL FIX: Use deterministic hash of private key as Blink password for Bitcoin registration
+      const blinkPassword = await sha256(generatedKeys.privateKey + salt)
 
       // 4. Create Auth User
       let user: any = null
       try {
         user = await db.auth.signUp({
           email,
-          password: registerPassword,
+          password: blinkPassword,
           displayName: registerUsername,
           metadata: {
             username: registerUsername,
@@ -480,7 +497,7 @@ Generated: ${new Date().toISOString()}
 
         // Auto-login after signup
         console.log('[AuthPage] Signup successful, auto-logging in...')
-        await db.auth.signInWithEmail(email, registerPassword)
+        await db.auth.signInWithEmail(email, blinkPassword)
         console.log('[AuthPage] Auto-login successful')
 
       } catch (signupError: any) {

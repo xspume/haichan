@@ -2,15 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Send } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
-import { BadgesInline } from '../../lib/badge-utils'
-import { useAuth } from '../../contexts/AuthContext'
-import toast from 'react-hot-toast'
-import { usePoWValidity } from '../../hooks/use-pow-validity'
-import { useMining } from '../../hooks/use-mining'
-import { MiningManager } from '../../lib/mining/MiningManager'
-import { getPoWValidationData } from '../../lib/pow-validation'
-import { invokeFunction } from '../../lib/functions-utils'
-import { Zap } from 'lucide-react'
+import { processRichText } from '../../lib/rich-text'
 
 interface Message {
   id: string
@@ -121,7 +113,7 @@ export function ChatView() {
               <BadgesInline user={msg.user} className="inline-flex ml-0.5" />
             </span>
             {': '}
-            <span>{msg.content}</span>
+            <div className="inline-block">{processRichText(msg.content)}</div>
           </div>
         ))}
         <div ref={messagesEndRef} />

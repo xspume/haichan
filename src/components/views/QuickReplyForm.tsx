@@ -11,7 +11,7 @@ import { DoodleMining } from './DoodleMining'
 import { parseTripcode, generateTripcode } from '../../lib/tripcode'
 import { isValidImageForBoard, getImageValidationError } from '../../lib/image-validation'
 import { saveToImageLibrary } from '../../lib/image-library'
-import { fetchPostNumberWithPoW, getPoWValidationData } from '../../lib/pow-validation'
+import { fetchPostNumberWithPoW, getPoWValidationData, clearPoWValidationData } from '../../lib/pow-validation'
 import { usePoWValidity } from '../../hooks/use-pow-validity'
 import { useMining } from '../../hooks/use-mining'
 import { MiningManager } from '../../lib/mining/MiningManager'
@@ -172,7 +172,7 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
         }
       }
 
-      let publicUrl = null
+      let publicUrl = ''
       if (imageFile) {
         const extension = imageFile instanceof File ? imageFile.name.split('.').pop() : 'png'
         const randomId = Math.random().toString(36).substring(2, 15)
@@ -185,104 +185,47 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
         await saveToImageLibrary(publicUrl, imageFile instanceof File ? imageFile.name : 'canvas-upload.png', imageFile.size, user.id)
       }
 
-      // Capture PoW data BEFORE it's consumed by fetchPostNumberWithPoW
+      // Capture PoW data 
       const powData = getPoWValidationData()
-      
-      // Get post number (PoW REQUIRED)
-      const nextPostNumber = await fetchPostNumberWithPoW(true)
+      if (!powData) throw new Error('PoW data missing')
 
-      const postData: any = {
-        threadId,
-        userId: user.id,
-        username: finalUsername,
-        content: content.trim(),
-        postNumber: nextPostNumber,
-        countryCode: guessCountryCode(),
-        totalPow: 0,
-        createdAt: new Date().toISOString()
-      }
-
-      if (tripcode) postData.tripcode = tripcode
-      if (publicUrl) postData.imageUrl = publicUrl
-      if (replyTo) {
-        try {
-          const isNumeric = /^\d+$/.test(replyTo)
-          const parent = await publicDb.db.posts.list({
-            where: isNumeric
-              ? { threadId, postNumber: Number(replyTo) }
-              : { id: replyTo },
-            limit: 1
-          })
-          if (parent?.[0]?.id) postData.parentPostId = parent[0].id
-        } catch {
-          // ignore
+      // Use ATOMIC VALIDATE & CREATE endpoint (Fix 3 & 5)
+      const { data: result, error: powError } = await invokeFunction<any>('validate-pow', {
+        body: {
+          ...powData,
+          targetType: 'post',
+          userId: user.id,
+          createPostData: {
+            threadId,
+            content: content.trim(),
+            imageUrl: publicUrl,
+            username: finalUsername,
+            tripcode: tripcode,
+            countryCode: guessCountryCode()
+          }
         }
-      }
-      
-      const newPost = await db.db.posts.create(postData)
+      })
 
-      // Update thread metadata for lists/sorting
-      try {
-        const threads = await publicDb.db.threads.list({ where: { id: threadId }, limit: 1 })
-        const current = threads?.[0]
-        await db.db.threads.update(threadId, {
-          replyCount: (Number(current?.replyCount) || 0) + 1,
-          lastPostAt: new Date().toISOString(),
-          bumpOrder: Math.floor(Date.now() / 1000),
-          updatedAt: new Date().toISOString()
-        })
-      } catch (e) {
-        console.warn('[QuickReplyForm] Failed to update thread metadata:', e)
+      if (powError || result?.valid === false) {
+        throw new Error(result?.error || powError?.message || 'PoW validation failed')
       }
 
-      // Create notifications
-      // We pass the new post ID (from SDK result usually, or just assume success if void)
-      // The SDK create usually returns the object. 
-      // If db-client.ts wrapper returns void, we might not have the ID.
-      // Let's check db-client.ts or assume it returns the created object. 
-      // Blink SDK `create` usually returns the object.
-      
-      if (newPost && newPost.id) {
-        // Find the parent post ID if replyTo was a post number
-        // Actually replyTo prop is usually the Post Number string in this form logic
-        // But createNotificationsForPost handles number parsing from content.
-        // If replyTo is an ID, we pass it. If it's a number, we let content parser handle it.
-        // In ThreadDetailPage, we setReplyTo with postNumber.toString().
-        // So we don't have the parent UUID easily here unless we look it up.
-        // But createNotificationsForPost handles content parsing which covers >>123.
-        // The replyTo prop helps pre-fill content.
-        
-        await createNotificationsForPost(
+      const createdPostId = result.postId;
+
+      // Create notifications (optional enhancement)
+      if (createdPostId) {
+        createNotificationsForPost(
            content, 
            threadId, 
-           newPost.id, 
+           createdPostId, 
            user.id,
-           postData.parentPostId // Pass the resolved parentPostId
-        )
-      } else {
-        // Fallback if create doesn't return ID (it should)
-         console.warn('Post created but no ID returned, notifications might be skipped')
-      }
-
-      if (powData && newPost?.id) {
-        await invokeFunction('validate-pow', {
-          body: {
-            challenge: powData.challenge,
-            nonce: powData.nonce,
-            hash: powData.hash,
-            points: powData.points,
-            trailingZeros: powData.trailingZeros,
-            prefix: powData.prefix,
-            targetType: 'post',
-            targetId: newPost.id,
-            userId: user.id
-          }
-        })
+           undefined // parent ID can be resolved from content parser >>123
+        ).catch(err => console.warn('Notification error:', err))
       }
 
       toast.success('Reply posted')
 
-      // Bust caches so reply counts update immediately in board lists
+      // Bust caches so reply counts update immediately
       requestCache.invalidatePattern(/^threads-/)
 
       setContent('')
@@ -292,6 +235,7 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
       
       // Stop mining after success
       miningManagerRef.current.stopDedicatedMining()
+      clearPoWValidationData()
       
     } catch (error: any) {
       toast.error(error.message || 'Failed to post')

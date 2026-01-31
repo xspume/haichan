@@ -49,6 +49,18 @@ interface ValidationRequest {
   targetType: 'board' | 'thread' | 'post' | 'blog' | 'global' | 'image';
   targetId?: string;
   userId?: string;
+  // Optional post data for secure creation
+  createPostData?: {
+    boardId?: string;
+    threadId?: string;
+    title?: string;
+    content: string;
+    imageUrl?: string;
+    username?: string;
+    tripcode?: string;
+    countryCode?: string;
+    postAnonymously?: boolean;
+  };
 }
 
 interface ValidationResponse {
@@ -60,6 +72,8 @@ interface ValidationResponse {
   verifiedTrailingZeros?: number;
   dbUpdated?: boolean;
   totalPoints?: number; // Total points added
+  postNumber?: number; // New post number if post created
+  postId?: string; // ID of the created post
 }
 
 /**
@@ -129,7 +143,7 @@ async function verifyHash(challenge: string, nonce: string, expectedHash: string
  * Validate PoW submission against server-side rules and apply to database
  */
 async function validateAndApplyPoW(request: ValidationRequest): Promise<ValidationResponse> {
-  const { targetType, targetId, userId } = request;
+  const { targetType, targetId, userId, createPostData } = request;
 
   // Fetch site settings
   let siteSettings: any = null;
@@ -174,55 +188,70 @@ async function validateAndApplyPoW(request: ValidationRequest): Promise<Validati
   let bestHash = '';
 
   for (const share of sharesToValidate) {
-      // 1. Verify hash was correctly computed
-      const isHashValid = await verifyHash(share.challenge, share.nonce, share.hash);
-      if (!isHashValid) {
-        console.warn(`[validate-pow] Hash verification failed for share. Hash: ${share.hash.substring(0, 10)}... Challenge: ${share.challenge.substring(0, 10)}... Nonce: ${share.nonce.substring(0, 10)}...`);
-        continue; // Skip invalid shares
-      }
+    // Detect the actual prefix from the hash (not claimed prefix)
+    const basePrefix = '21e8';
+    
+    // 0. CHECK FOR REPLAY ATTACK (CRITICAL)
+    // Check if this hash/nonce combination has already been used
+    const existingRecords = await blink.db.powRecords.list({
+      where: { hash: share.hash, nonce: share.nonce },
+      limit: 1
+    });
+    
+    if (existingRecords && existingRecords.length > 0) {
+      console.warn(`[validate-pow] REPLAY DETECTED: Hash ${share.hash.substring(0, 10)} has already been used.`);
+      continue;
+    }
 
-      // 2. Detect the actual prefix from the hash (not claimed prefix)
-      // Pass the claimed prefix from the share if available to ensure it matches
-      const detected = detectHashPrefix(share.hash, share.prefix || request.prefix);
-      if (!detected) {
-        console.warn(`[validate-pow] No valid prefix detected for hash: ${share.hash.substring(0, 16)}... (Required: ${share.prefix || request.prefix || '21e8'})`);
-        continue;
-      }
+    // 1. Verify hash was correctly computed
+    const isHashValid = await verifyHash(share.challenge, share.nonce, share.hash);
+    if (!isHashValid) {
+          console.warn(`[validate-pow] Hash verification failed for share. Hash: ${share.hash.substring(0, 10)}... Challenge: ${share.challenge.substring(0, 10)}... Nonce: ${share.nonce.substring(0, 10)}...`);
+          continue; // Skip invalid shares
+        }
 
-      // 3. Enforce minimum prefix requirement (must at least be '21e8')
-      if (!share.hash.startsWith('21e8')) {
-        console.warn(`[validate-pow] Hash does not meet minimum prefix 21e8: ${share.hash.substring(0, 10)}... (Starts with: ${share.hash.substring(0, 4)})`);
-        continue;
-      }
+        // 2. Detect the actual prefix from the hash (not claimed prefix)
+        // Pass the claimed prefix from the share if available to ensure it matches
+        const detected = detectHashPrefix(share.hash, share.prefix || request.prefix);
+        if (!detected) {
+          console.warn(`[validate-pow] No valid prefix detected for hash: ${share.hash.substring(0, 16)}... (Required: ${share.prefix || request.prefix || '21e8'})`);
+          continue;
+        }
 
-      // 4. Use 21e8 as base for all calculations to ensure consistency with "Leading Zeros" logic
-      const sharePrefix = '21e8';
-      
-      // 5. Count zeros after the 21e8 prefix
-      const verifiedTrailingZeros = countTrailingZeros(share.hash, sharePrefix);
-      
-      // 6. Calculate points (15 * 4^zeros)
-      const verifiedPoints = 15 * Math.pow(4, verifiedTrailingZeros);
-      
-      totalValidPoints += verifiedPoints;
-      
-      if (verifiedTrailingZeros > maxTrailingZeros) {
-          maxTrailingZeros = verifiedTrailingZeros;
-          bestHash = share.hash;
-      }
+        // 3. Enforce minimum prefix requirement (must at least be '21e8')
+        if (!share.hash.startsWith('21e8')) {
+          console.warn(`[validate-pow] Hash does not meet minimum prefix 21e8: ${share.hash.substring(0, 10)}... (Starts with: ${share.hash.substring(0, 4)})`);
+          continue;
+        }
 
-      validRecords.push({
-        id: `pow_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
-        userId: userId!,
-        targetType,
-        targetId: targetId || 'global',
-        challenge: share.challenge,
-        nonce: share.nonce,
-        hash: share.hash,
-        points: verifiedPoints,
-        trailingZeros: verifiedTrailingZeros,
-        isDiamond: share.hash.startsWith('21e80000') ? 1 : 0,
-      });
+        // 4. Use 21e8 as base for all calculations to ensure consistency with "Leading Zeros" logic
+        const sharePrefix = '21e8';
+        
+        // 5. Count zeros after the 21e8 prefix
+        const verifiedTrailingZeros = countTrailingZeros(share.hash, sharePrefix);
+        
+        // 6. Calculate points (15 * 4^zeros)
+        const verifiedPoints = 15 * Math.pow(4, verifiedTrailingZeros);
+        
+        totalValidPoints += verifiedPoints;
+        
+        if (verifiedTrailingZeros > maxTrailingZeros) {
+            maxTrailingZeros = verifiedTrailingZeros;
+            bestHash = share.hash;
+        }
+
+        validRecords.push({
+          id: `pow_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`,
+          userId: userId!,
+          targetType,
+          targetId: targetId || 'global',
+          challenge: share.challenge,
+          nonce: share.nonce,
+          hash: share.hash,
+          points: verifiedPoints,
+          trailingZeros: verifiedTrailingZeros,
+          isDiamond: share.hash.startsWith('21e80000') ? 1 : 0,
+        });
   }
 
   if (validRecords.length === 0) {
@@ -232,6 +261,79 @@ async function validateAndApplyPoW(request: ValidationRequest): Promise<Validati
 
   // 6. Apply to Database
   try {
+    let createdPostId: string | undefined;
+    let newPostNumber: number | undefined;
+
+    // A. Handle Post/Thread Creation if requested
+    if (createPostData && (targetType === 'post' || targetType === 'thread')) {
+      console.log(`[validate-pow] Securely creating ${targetType}...`);
+      
+      // 1. Get next post number atomically
+      let sequenceId = '1';
+      let sequenceResult = await blink.db.postSequence.list({ limit: 1 });
+      let currentNumber = 100;
+      
+      if (sequenceResult.length === 0) {
+        await blink.db.postSequence.create({ id: sequenceId, currentNumber: 101 });
+        currentNumber = 101;
+      } else {
+        sequenceId = sequenceResult[0].id;
+        currentNumber = Number(sequenceResult[0].currentNumber) + 1;
+        await blink.db.postSequence.update(sequenceId, { currentNumber });
+      }
+      
+      newPostNumber = currentNumber;
+      
+      // 2. Create the record
+      const timestamp = new Date().toISOString();
+      const commonData = {
+        userId: userId!,
+        username: createPostData.username || 'Anonymous',
+        content: createPostData.content,
+        imageUrl: createPostData.imageUrl || '',
+        postNumber: currentNumber,
+        countryCode: createPostData.countryCode || '',
+        totalPow: totalValidPoints,
+        createdAt: timestamp,
+        updatedAt: timestamp,
+      };
+
+      if (createPostData.tripcode) (commonData as any).tripcode = createPostData.tripcode;
+
+      if (targetType === 'thread') {
+        const thread = await blink.db.threads.create({
+          ...commonData,
+          boardId: createPostData.boardId!,
+          title: createPostData.title || 'Untitled',
+          replyCount: 0,
+          bumpOrder: Math.floor(Date.now() / 1000),
+          lastPostAt: timestamp,
+          expired: 0
+        });
+        createdPostId = thread.id;
+      } else {
+        const post = await blink.db.posts.create({
+          ...commonData,
+          threadId: createPostData.threadId!,
+        });
+        createdPostId = post.id;
+        
+        // Update thread bump and reply count
+        const thread = await blink.db.threads.get(createPostData.threadId!);
+        if (thread) {
+          await blink.db.threads.update(createPostData.threadId!, {
+            replyCount: (Number(thread.replyCount) || 0) + 1,
+            lastPostAt: timestamp,
+            bumpOrder: Math.floor(Date.now() / 1000),
+            updatedAt: timestamp
+          });
+        }
+      }
+      
+      // Update validRecords with the new targetId
+      validRecords.forEach(r => r.targetId = createdPostId);
+    }
+
     // Bulk Insert Records
     if (userId && validRecords.length > 0) {
       // Use createMany for high performance batch insertion
@@ -365,7 +467,9 @@ async function validateAndApplyPoW(request: ValidationRequest): Promise<Validati
       valid: true,
       verifiedPoints: totalValidPoints,
       totalPoints: totalValidPoints,
-      dbUpdated: true
+      dbUpdated: true,
+      postId: createdPostId,
+      postNumber: newPostNumber
     };
 
   } catch (dbError: any) {
