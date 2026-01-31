@@ -9,8 +9,8 @@ export async function createNotificationsForPost(
 ) {
   try {
     // 1. Find all >>(\d+) patterns
-    const matches = content.match(/>>(\d+)/g) || []
-    const quotedNumbers = matches.map(m => m.replace('>>', ''))
+    const matches = content.match(/>>(\s*)(\d+)/g) || []
+    const quotedNumbers = matches.map(m => m.replace(/>>(\s*)/, ''))
     
     // 2. Fetch thread posts to resolve numbers
     // In a real production app, we would query specifically for these numbers

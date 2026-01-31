@@ -54,7 +54,8 @@ export function processRichText(
           return <br key={`br-${lineIndex}`} />
         }
 
-        const isGreentext = line.trim().startsWith('>') && !line.trim().startsWith('>>')
+        // Lines starting with > (but not >>) get redtext styling
+        const isRedtext = line.trim().startsWith('>') && !line.trim().startsWith('>>')
         
         // Final elements for this specific line
         const lineElements: React.ReactNode[] = []
@@ -74,7 +75,7 @@ export function processRichText(
               // Process text before the YouTube link for URLs and Quotes
               const beforeText = line.substring(lastIndex, startIndex)
               if (beforeText) {
-                lineElements.push(...processInlineElements(beforeText, lineIndex, `yt-pre-${matchIndex}`, options, isGreentext))
+                lineElements.push(...processInlineElements(beforeText, lineIndex, `yt-pre-${matchIndex}`, options, isRedtext))
               }
               
               // Add YouTube embed block
@@ -104,7 +105,7 @@ export function processRichText(
         
         // 2. Process whatever is left in the line (or the whole line if no YT)
         if (remainingText) {
-          lineElements.push(...processInlineElements(remainingText, lineIndex, 'final', options, isGreentext))
+          lineElements.push(...processInlineElements(remainingText, lineIndex, 'final', options, isRedtext))
         }
 
         return (
@@ -125,7 +126,7 @@ function processInlineElements(
   lineIndex: number,
   segmentKey: string,
   options: RichTextOptions,
-  isGreentext: boolean
+  isRedtext: boolean
 ): React.ReactNode[] {
   const { allowHyperlinks = true, openLinksInNewTab = true } = options
   const elements: React.ReactNode[] = []
@@ -151,7 +152,7 @@ function processInlineElements(
     if (startIndex > lastIndex) {
       const plainText = text.substring(lastIndex, startIndex)
       elements.push(
-        <span key={`text-${lineIndex}-${segmentKey}-${matchIndex}`} className={isGreentext ? "text-green-600 font-mono" : ""}>
+        <span key={`text-${lineIndex}-${segmentKey}-${matchIndex}`} className={isRedtext ? "redtext font-mono" : ""}>
           {plainText}
         </span>
       )
@@ -176,7 +177,7 @@ function processInlineElements(
           key={`quote-${lineIndex}-${segmentKey}-${matchIndex}`}
           href={`#p${quoteId}`}
           data-post-id={quoteId}
-          className="quotelink text-red-400 hover:underline cursor-pointer font-bold"
+          className="quotelink hover:underline cursor-pointer font-bold"
         >
           {quoteMatch}
         </a>
@@ -190,7 +191,7 @@ function processInlineElements(
   if (lastIndex < text.length) {
     const remainingPlainText = text.substring(lastIndex)
     elements.push(
-      <span key={`text-end-${lineIndex}-${segmentKey}`} className={isGreentext ? "text-green-600 font-mono" : ""}>
+      <span key={`text-end-${lineIndex}-${segmentKey}`} className={isRedtext ? "redtext font-mono" : ""}>
         {remainingPlainText}
       </span>
     )

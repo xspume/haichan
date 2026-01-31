@@ -66,7 +66,7 @@ export const PostItem = React.memo(function PostItem({
   }
 
   return (
-    <div id={post.id} className="post-reply bg-card border border-border/40 p-1.5 mb-1.5 w-fit min-w-[300px] max-w-full relative">
+    <div id={post.id} className="post-reply bg-card border border-border/40 p-1.5 mb-1.5 w-fit min-w-[300px] max-w-full relative scroll-mt-16">
       <span id={`p${post.post_number || post.postNumber}`} className="absolute -top-16" />
       <div className="post-header flex items-center flex-wrap gap-1 text-[11px] mb-1 font-mono">
         <input type="checkbox" className="mr-1 scale-75 opacity-50" />
