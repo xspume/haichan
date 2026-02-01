@@ -62,8 +62,8 @@ export function DitheredImage({ src, alt, className = '', onClick }: DitheredIma
   return (
     <>
       {loading && (
-        <div className="flex items-center justify-center bg-gray-100 animate-pulse">
-          <span className="font-mono text-xs text-gray-500">PROCESSING...</span>
+        <div className="flex items-center justify-center bg-muted animate-pulse">
+          <span className="font-mono text-xs text-muted-foreground">PROCESSING...</span>
         </div>
       )}
       <img

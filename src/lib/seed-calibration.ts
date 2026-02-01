@@ -46,6 +46,7 @@ All future effort is measured against this datum.
 NO REPLIES ALLOWED.
         `,
         totalPow: 10000000, // 10 million PoW
+        imageUrl: 'https://storage.googleapis.com/haichan-pow-imageboard-7e3gh26u/site-assets/calibration.png',
         createdAt: '2026-01-01T00:00:00.000Z',
         postNumber: 0,
         expired: 0

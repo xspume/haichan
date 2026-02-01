@@ -65,8 +65,8 @@ const ThreadCard = memo(function ThreadCard({
             
             {/* Status Overlays */}
             {(thread.totalPow || 0) < 20 && (
-              <div className="absolute inset-0 flex items-center justify-center bg-background/20 backdrop-blur-[1px]">
-                <div className="bg-background/80 text-[8px] font-bold border border-primary px-1 animate-pulse uppercase">
+              <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
+                <div className="bg-black/80 text-[8px] font-bold border border-primary px-1 animate-pulse uppercase">
                   Locked
                 </div>
               </div>
@@ -97,7 +97,7 @@ const ThreadCard = memo(function ThreadCard({
         </Link>
       </HoverCardTrigger>
       
-      <HoverCardContent className="w-80 rounded-none border-2 border-primary bg-background text-primary shadow-3d-lg z-50 p-3 font-sans" side="bottom">
+      <HoverCardContent className="w-80 rounded-none border-2 border-primary bg-black text-primary shadow-3d-lg z-50 p-3 font-sans" side="bottom">
         <div className="space-y-2">
           <div>
             <div className="flex justify-between items-start gap-2 mb-1">

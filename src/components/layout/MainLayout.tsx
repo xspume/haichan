@@ -185,7 +185,7 @@ export function MainLayout() {
       {/* Header */}
       <header className="h-16 border-b-2 border-primary bg-black sticky top-8 lg:top-10 z-50 flex items-center px-4 justify-between shadow-sm">
         <div className="flex items-center gap-4">
-          <Link to="/" className="flex items-center justify-center w-10 h-10 bg-white border-2 border-white shadow-3d-sm">
+          <Link to="/" className="flex items-center justify-center w-10 h-10 bg-background border-2 border-primary shadow-3d-sm">
             <Glasses className="w-6 h-6 text-primary" />
           </Link>
           
@@ -269,7 +269,7 @@ export function MainLayout() {
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-1.5 w-10 h-10 flex items-center justify-center bg-white border-2 border-white text-primary hover:bg-white/90 transition-colors shadow-sm"
+            className="p-1.5 w-10 h-10 flex items-center justify-center bg-background border-2 border-primary text-primary hover:bg-primary/10 transition-colors shadow-sm"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>

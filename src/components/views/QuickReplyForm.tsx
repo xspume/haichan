@@ -330,7 +330,7 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
                      <Palette className="w-3.5 h-3.5 text-primary" />
                    </button>
                  </DialogTrigger>
-                 <DialogContent className="max-w-[95vw] w-[800px] h-[90vh] p-0 overflow-hidden border-4 border-primary rounded-none bg-background shadow-3d-lg">
+                 <DialogContent className="max-w-[95vw] w-[800px] h-[90vh] p-0 overflow-hidden border-4 border-primary rounded-none bg-black shadow-3d-lg">
                    <DialogHeader className="p-4 border-b-2 border-primary bg-primary text-background">
                      <DialogTitle className="font-black uppercase tracking-widest">Canvas Mode</DialogTitle>
                    </DialogHeader>
