@@ -336,14 +336,16 @@ export function HomePage() {
       )}
       
       {/* Quick Actions Bar - no duplicate header */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-muted pb-3">
+      <div className="mb-6 hidden lg:flex flex-wrap items-center justify-between gap-3 border-b border-muted pb-3">
         <p className="text-[10px] uppercase tracking-widest opacity-40 font-bold">› no bots</p>
-        <div className="flex gap-2">
-          <Link to="/mine" className="btn-haichan text-[10px] px-3 py-1 uppercase font-black">
-            Start Mining
+        <div className="flex gap-4">
+          <Link to="/mine" className="relative group px-4 py-1 border-2 border-primary bg-background text-primary text-[12px] font-black uppercase tracking-widest transition-all active:translate-x-[2px] active:translate-y-[2px]">
+            <span className="relative z-10">Start Mining</span>
+            <div className="absolute -bottom-1.5 -right-1.5 w-full h-full bg-primary -z-10 group-active:-bottom-0 group-active:-right-0 transition-all" />
           </Link>
-          <Link to="/chat" className="btn-haichan text-[10px] px-3 py-1 uppercase font-black">
-            Global Chat
+          <Link to="/chat" className="relative group px-4 py-1 border-2 border-primary bg-background text-primary text-[12px] font-black uppercase tracking-widest transition-all active:translate-x-[2px] active:translate-y-[2px]">
+            <span className="relative z-10">Global Chat</span>
+            <div className="absolute -bottom-1.5 -right-1.5 w-full h-full bg-primary -z-10 group-active:-bottom-0 group-active:-right-0 transition-all" />
           </Link>
         </div>
       </div>
@@ -353,38 +355,39 @@ export function HomePage() {
         <div className="lg:col-span-8 space-y-6">
           <Announcements />
           
-          {/* Welcome Info Box */}
-          <div className="border-2 border-primary/30 p-6 relative overflow-hidden group shadow-3d-sm bg-card/50">
-            <div className="absolute top-0 right-0 p-2 opacity-5">
-              <Zap size={120} className="text-primary" />
+          {/* Welcome Info Box - COMPUTOCRACY (Matches Screenshot) */}
+          <div className="border-4 border-primary p-6 relative overflow-hidden bg-black shadow-3d-lg min-h-[300px] flex flex-col justify-center">
+            <div className="absolute -bottom-10 -right-10 opacity-10 pointer-events-none">
+              <Zap size={300} className="text-primary stroke-[1px]" />
             </div>
-            <h2 className="text-xl font-black mb-4 uppercase tracking-tighter text-primary flex items-center gap-2">
-              <Sparkles className="w-5 h-5" />
-              What is this place?
-            </h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-3">
-                <p className="text-xs leading-relaxed text-foreground/80 font-medium">
-                  Imageboard with proof-of-work. Posts require hashing. No bots, no free lunch.
+            
+            <div className="relative z-10">
+              <h2 className="text-5xl md:text-7xl font-black mb-2 uppercase tracking-tighter text-primary leading-none">
+                COMPUTOCRACY
+              </h2>
+              <div className="space-y-4 max-w-xl">
+                <p className="text-lg md:text-xl font-bold leading-tight text-primary uppercase tracking-tight">
+                  Participation is balanced by computational investment through verification.
                 </p>
-                <div className="p-3 bg-primary/10 border border-primary/20">
-                  <div className="text-[10px] uppercase font-black text-primary mb-1 tracking-widest">protocol</div>
-                  <div className="text-xs font-black font-mono">SHA-256 (PREFIX: 21e8)</div>
-                </div>
+                <div className="h-1 w-24 bg-primary" />
+                <p className="text-xs font-medium text-primary/60 uppercase tracking-widest">
+                  no bots. no free lunch. sha-256 (prefix: 21e8)
+                </p>
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-xs">
-                  <div className="w-1.5 h-1.5 bg-primary" />
-                  <span className="font-bold">› Posts ranked by work</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <div className="w-1.5 h-1.5 bg-primary" />
-                  <span className="font-bold">› Tripcodes via hashcash</span>
-                </div>
-                <div className="flex items-center gap-2 text-xs">
-                  <div className="w-1.5 h-1.5 bg-primary" />
-                  <span className="font-bold">› No ads, no tracking</span>
-                </div>
+            </div>
+            
+            <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-20 hidden md:flex">
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase">
+                <div className="w-2 h-2 bg-primary" />
+                Posts ranked by work
+              </div>
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase">
+                <div className="w-2 h-2 bg-primary" />
+                Tripcodes via hashcash
+              </div>
+              <div className="flex items-center gap-2 text-[10px] font-black uppercase">
+                <div className="w-2 h-2 bg-primary" />
+                No ads, no tracking
               </div>
             </div>
           </div>

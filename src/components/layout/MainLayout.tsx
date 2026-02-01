@@ -173,10 +173,10 @@ export function MainLayout() {
       )}
 
       {/* Header */}
-      <header className="h-12 border-b-2 border-primary bg-background sticky top-0 z-50 flex items-center px-4 justify-between shadow-sm">
+      <header className="h-16 border-b-2 border-primary bg-background sticky top-0 z-50 flex items-center px-4 justify-between shadow-sm">
         <div className="flex items-center gap-4">
-          <Link to="/" className="haichan-logo">
-            HAICHAN
+          <Link to="/" className="flex items-center justify-center w-10 h-10 bg-white border-2 border-white shadow-3d-sm">
+            <Glasses className="w-6 h-6 text-primary" />
           </Link>
           
           <div className="hidden lg:flex items-center gap-2">
@@ -252,19 +252,32 @@ export function MainLayout() {
               </DropdownMenu>
             </div>
           ) : (
-            <Link to="/auth" className="btn-haichan text-[10px] py-1 font-black uppercase tracking-widest px-4 shadow-md">
-              Login
+            <Link to="/auth" className="relative group px-4 py-1 border-2 border-primary bg-background text-primary text-[12px] font-black uppercase tracking-widest transition-all active:translate-x-[2px] active:translate-y-[2px]">
+              <span className="relative z-10">Login</span>
+              <div className="absolute -bottom-1.5 -right-1.5 w-full h-full bg-primary -z-10 group-active:-bottom-0 group-active:-right-0 transition-all" />
             </Link>
           )}
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-1.5 border-2 border-primary text-primary hover:bg-primary hover:text-background transition-colors shadow-sm"
+            className="p-1.5 w-10 h-10 flex items-center justify-center bg-white border-2 border-white text-primary hover:bg-white/90 transition-colors shadow-sm"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </header>
+
+      {/* Mobile-Friendly Quick Toolbar (Matches Screenshot) */}
+      <div className="lg:hidden border-b-2 border-primary/20 bg-background/50 backdrop-blur-sm px-4 py-2 flex items-center gap-3 sticky top-16 z-40">
+        <Link to="/mine" className="relative group px-3 py-1 border-2 border-primary bg-background text-primary text-[11px] font-black uppercase tracking-widest transition-all active:translate-x-[2px] active:translate-y-[2px]">
+          <span className="relative z-10">Start Mining</span>
+          <div className="absolute -bottom-1 -right-1 w-full h-full bg-primary -z-10 group-active:-bottom-0 group-active:-right-0 transition-all" />
+        </Link>
+        <Link to="/chat" className="relative group px-3 py-1 border-2 border-primary bg-background text-primary text-[11px] font-black uppercase tracking-widest transition-all active:translate-x-[2px] active:translate-y-[2px]">
+          <span className="relative z-10">Global Chat</span>
+          <div className="absolute -bottom-1 -right-1 w-full h-full bg-primary -z-10 group-active:-bottom-0 group-active:-right-0 transition-all" />
+        </Link>
+      </div>
 
       <div className="flex flex-1 overflow-hidden relative">
         {/* Slender Desktop Sidebar */}
