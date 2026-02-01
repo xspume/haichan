@@ -740,6 +740,23 @@ serve(async (req) => {
         }
 
         if (boardId) {
+          // Generate a thematic image for the thread (mandatory for imageboard)
+          let imageUrl = '';
+          try {
+            const { data: images } = await blink.ai.generateImage({
+              prompt: `A 90s style dithered black and white image board aesthetic for: ${thread.title}. ${thread.content.substring(0, 100)}`,
+              model: 'fal-ai/nano-banana-pro',
+              size: '1024x1024'
+            });
+            if (images && images.length > 0) {
+              imageUrl = images[0].url;
+            }
+          } catch (imgError) {
+            console.error('Failed to generate image for Talky thread:', imgError);
+            // Fallback: use a default pixel art image if generation fails
+            imageUrl = 'https://storage.googleapis.com/haichan-pow-imageboard-7e3gh26u/site-assets/talky-default.png';
+          }
+
           // Create the thread
           const newThread = await blink.db.threads.create({
             boardId,
@@ -747,6 +764,7 @@ serve(async (req) => {
             username: TALKY_USERNAME,
             title: thread.title,
             content: thread.content,
+            imageUrl: imageUrl,
             totalPow: 1000, // Talky has some default power
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()

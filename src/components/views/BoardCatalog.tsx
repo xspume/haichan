@@ -52,7 +52,7 @@ const ThreadCard = memo(function ThreadCard({
         >
           {/* Thread Image Container */}
           <div className="catalog-thumb-container">
-            {thread.imageUrl ? (
+            {thread.imageUrl && (
               <img
                 src={thread.imageUrl}
                 alt={thread.title}
@@ -61,8 +61,6 @@ const ThreadCard = memo(function ThreadCard({
                   (thread.totalPow || 0) < 20 ? 'blur-md grayscale opacity-40' : 'group-hover:scale-105'
                 )}
               />
-            ) : (
-              <div className="text-[10px] text-muted-foreground font-sans uppercase">No Image</div>
             )}
             
             {/* Status Overlays */}

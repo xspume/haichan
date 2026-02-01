@@ -286,6 +286,12 @@ async function validateAndApplyPoW(request: ValidationRequest): Promise<Validati
       
       // 2. Create the record
       const timestamp = new Date().toISOString();
+      
+      // Ensure threads ALWAYS have an image (IMAGEBOARD rule)
+      if (targetType === 'thread' && (!createPostData.imageUrl || createPostData.imageUrl.trim() === '')) {
+        return { valid: false, error: 'Image is mandatory for new threads on this imageboard.' };
+      }
+
       const commonData = {
         userId: userId!,
         username: createPostData.username || 'Anonymous',
