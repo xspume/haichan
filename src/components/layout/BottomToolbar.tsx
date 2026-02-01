@@ -125,7 +125,7 @@ export function BottomToolbar() {
   const isActiveMining = stats.miningMode !== 'idle'
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-6 bg-background border-t border-primary text-primary text-[9px] md:text-[10px] z-50 flex items-center px-2 gap-2 md:gap-3 font-mono select-none overflow-hidden justify-between">
+    <div className="fixed bottom-0 left-0 right-0 h-6 bg-black border-t border-primary text-primary text-[9px] md:text-[10px] z-50 flex items-center px-2 gap-2 md:gap-3 font-mono select-none overflow-hidden justify-between">
       
       {/* Navigation Links (4chan style clickbar) */}
       <div className="flex items-center gap-2 md:gap-3 shrink-0">

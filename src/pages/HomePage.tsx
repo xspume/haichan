@@ -394,7 +394,7 @@ export function HomePage() {
 
           {/* Boards Grid */}
           <div className="space-y-4 pt-4">
-            <div className="flex items-center justify-between border-b-2 border-primary pb-2 mb-4 bg-primary/5 px-2">
+            <div className="flex items-center justify-between border-b-2 border-primary pb-2 mb-4 bg-black px-2">
               <h3 className="text-sm font-black uppercase tracking-widest flex items-center gap-2 text-primary">
                 <LayoutGrid className="w-4 h-4" />
                 boards
@@ -415,7 +415,7 @@ export function HomePage() {
                 <Link 
                   key={board.id} 
                   to={`/board/${board.slug}`}
-                  className="border-2 border-primary/20 p-4 hover:bg-primary/5 transition-all group shadow-sm hover:shadow-3d-sm hover:border-primary/40 bg-card/30"
+                  className="border-2 border-primary/20 p-4 hover:bg-primary/5 transition-all group shadow-sm hover:shadow-3d-sm hover:border-primary/40 bg-black"
                 >
                   <div className="flex justify-between items-start mb-2">
                     <span className="text-lg font-black text-primary tracking-tighter uppercase">/{board.slug}/</span>
@@ -473,7 +473,7 @@ export function HomePage() {
         {/* Right Column - System Stats */}
         <div className="lg:col-span-4 space-y-6">
           {/* Site Statistics */}
-          <div className="border-2 border-primary/20 p-4 bg-primary/5 border-l-4 border-primary shadow-3d-sm">
+          <div className="border-2 border-primary/20 p-4 bg-black border-l-4 border-primary shadow-3d-sm">
             <h3 className="text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2 border-b border-primary/20 pb-2 text-primary">
               <Database className="w-3 h-3" />
               system stats

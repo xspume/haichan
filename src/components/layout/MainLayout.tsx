@@ -154,8 +154,18 @@ export function MainLayout() {
   ]
 
   return (
-    <div className="min-h-screen bg-background flex flex-col font-sans">
+    <div className="min-h-screen bg-background flex flex-col font-sans pt-8 lg:pt-10">
       <DiagnosticsBanner />
+
+      {/* Top Fixed Toolbars (90s Style) */}
+      <div className="fixed top-0 left-0 right-0 z-[100] bg-black border-b border-primary/40 flex items-center h-8 lg:h-10 px-2 divide-x divide-primary/20 overflow-x-auto no-scrollbar">
+        <div className="shrink-0">
+          <BoardsToolbar />
+        </div>
+        <div className="shrink-0 h-full flex items-center">
+          <HubsToolbar />
+        </div>
+      </div>
 
       {/* Global Banners */}
       {!!siteSettings?.maintenanceMode && (
@@ -173,15 +183,14 @@ export function MainLayout() {
       )}
 
       {/* Header */}
-      <header className="h-16 border-b-2 border-primary bg-background sticky top-0 z-50 flex items-center px-4 justify-between shadow-sm">
+      <header className="h-16 border-b-2 border-primary bg-black sticky top-8 lg:top-10 z-50 flex items-center px-4 justify-between shadow-sm">
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center justify-center w-10 h-10 bg-white border-2 border-white shadow-3d-sm">
             <Glasses className="w-6 h-6 text-primary" />
           </Link>
           
           <div className="hidden lg:flex items-center gap-2">
-            <BoardsToolbar />
-            <HubsToolbar />
+            {/* Toolbars moved to top fixed bar */}
           </div>
         </div>
 
@@ -268,7 +277,7 @@ export function MainLayout() {
       </header>
 
       {/* Mobile-Friendly Quick Toolbar (Matches Screenshot) */}
-      <div className="lg:hidden border-b-2 border-primary/20 bg-background/50 backdrop-blur-sm px-4 py-2 flex items-center gap-3 sticky top-16 z-40">
+      <div className="lg:hidden border-b-2 border-primary/20 bg-black px-4 py-2 flex items-center gap-3 sticky top-24 z-40">
         <Link to="/mine" className="relative group px-3 py-1 border-2 border-primary bg-background text-primary text-[11px] font-black uppercase tracking-widest transition-all active:translate-x-[2px] active:translate-y-[2px]">
           <span className="relative z-10">Start Mining</span>
           <div className="absolute -bottom-1 -right-1 w-full h-full bg-primary -z-10 group-active:-bottom-0 group-active:-right-0 transition-all" />
@@ -281,7 +290,7 @@ export function MainLayout() {
 
       <div className="flex flex-1 overflow-hidden relative">
         {/* Slender Desktop Sidebar */}
-        <aside className="hidden lg:flex w-48 flex-col border-r-2 border-primary/20 bg-card/30 h-full overflow-y-auto custom-scrollbar shadow-sm">
+        <aside className="hidden lg:flex w-48 flex-col border-r-2 border-primary/20 bg-black h-full overflow-y-auto custom-scrollbar shadow-sm">
           <nav className="p-2 space-y-1">
             {sidebarItems.map((item) => (
               <Link 

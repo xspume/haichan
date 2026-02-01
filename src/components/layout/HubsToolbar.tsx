@@ -16,7 +16,7 @@ export function HubsToolbar() {
   ]
 
   return (
-    <div className="flex items-center gap-2 text-[11px] font-sans border-l-2 border-primary/20 ml-2 pl-3">
+    <div className="flex items-center gap-2 text-[11px] font-sans h-full bg-black px-3">
       {hubs.map((hub) => (
         <Link
           key={hub.to}

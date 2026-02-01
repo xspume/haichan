@@ -590,11 +590,11 @@
 }
 
 .catalog-item {
-  @apply flex flex-col items-center text-center p-1 hover:bg-muted/50 transition-colors cursor-pointer border border-transparent hover:border-border/40;
+  @apply flex flex-col items-center text-center p-1 hover:bg-primary/10 transition-colors cursor-pointer border border-transparent hover:border-primary/40 bg-black;
 }
 
 .catalog-thumb-container {
-  @apply w-full aspect-square flex items-center justify-center overflow-hidden mb-1 relative bg-muted/20;
+  @apply w-full aspect-square flex items-center justify-center overflow-hidden mb-1 relative bg-black border border-primary/10;
 }
 
 .catalog-thumb {
