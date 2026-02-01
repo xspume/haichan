@@ -46,23 +46,27 @@ export function AboutPage() {
 
           <TabsContent value="manifesto" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="space-y-4">
-              <h2 className="text-xl font-black uppercase bg-foreground text-background inline-block px-2">Core Principles</h2>
+              <h2 className="text-xl font-black uppercase bg-foreground text-background inline-block px-2">rules</h2>
               <ul className="space-y-2 text-sm leading-relaxed">
                 <li className="flex gap-4">
                   <span className="font-bold">01</span>
-                  <span><span className="font-black">No following.</span> We focus on content rather than social connections. Only the work remains.</span>
+                  <span>No following/followers. Content only.</span>
                 </li>
                 <li className="flex gap-4">
                   <span className="font-bold">02</span>
-                  <span><span className="font-black">No vanity points.</span> Your past deeds do not grant you future rights. Every post is validated through current effort.</span>
+                  <span>No karma farming. Each post stands alone.</span>
                 </li>
                 <li className="flex gap-4">
                   <span className="font-bold">03</span>
-                  <span><span className="font-black">No advertising.</span> Your attention is not our product. We prioritize user contribution over data collection.</span>
+                  <span>No ads. Your attention isn't for sale.</span>
                 </li>
                 <li className="flex gap-4">
                   <span className="font-bold">04</span>
-                  <span><span className="font-black">Verification required.</span> There is a barrier to entry to ensure quality. If you cannot verify, you cannot post.</span>
+                  <span>Proof-of-work required. Can't hash, can't post.</span>
+                </li>
+                <li className="flex gap-4">
+                  <span className="font-bold">05</span>
+                  <span>Don't be a dickhead.</span>
                 </li>
               </ul>
             </div>
@@ -100,15 +104,11 @@ export function AboutPage() {
             <div className="space-y-6">
               <div className="space-y-2">
                 <h3 className="font-black uppercase text-lg border-b border-foreground/20 pb-1">How do I post?</h3>
-                <p className="text-sm text-foreground/80">You must solve a verification puzzle (Proof of Work) before your content is accepted. Your computer will do this automatically when you click post.</p>
+                <p className="text-sm text-foreground/80">Write something, click post. Browser hashes until valid nonce. Few seconds.</p>
               </div>
               <div className="space-y-2">
-                <h3 className="font-black uppercase text-lg border-b border-foreground/20 pb-1">What is Proof of Work?</h3>
-                <p className="text-sm text-foreground/80">Proof of Work is a way to ensure that posts are made by real people rather than bots. It requires a small amount of computational effort to validate each action.</p>
-              </div>
-              <div className="space-y-2">
-                <h3 className="font-black uppercase text-lg border-b border-foreground/20 pb-1">Is this related to Bitcoin?</h3>
-                <p className="text-sm text-foreground/80">It uses similar cryptographic principles to Bitcoin for verification and identity, but it is a separate system dedicated to community discussion.</p>
+                <h3 className="font-black uppercase text-lg border-b border-foreground/20 pb-1">What's proof-of-work?</h3>
+                <p className="text-sm text-foreground/80">Your CPU does math until it finds a valid hash.</p>
               </div>
             </div>
           </TabsContent>

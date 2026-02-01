@@ -104,8 +104,8 @@ export function DiamondHashDisplay() {
   }
 
   return (
-    <div className="card-3d bg-background overflow-hidden">
-      <div className="bg-primary text-background px-4 py-2 font-bold uppercase tracking-widest flex items-center justify-between">
+    <div className="border-4 border-primary bg-background overflow-hidden shadow-3d font-sans">
+      <div className="bg-primary text-background px-4 py-2 font-black uppercase tracking-widest flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Crown className="w-5 h-5" />
           <span>Diamond Identity</span>
@@ -114,22 +114,22 @@ export function DiamondHashDisplay() {
 
       <div className="p-6">
         {user?.bitcoinAddress && (
-          <div className="mb-8 p-4 border-2 border-primary/30 bg-primary/5 rounded-none font-mono">
-            <div className="text-[10px] uppercase tracking-widest text-primary/60 mb-2 font-bold flex items-center justify-between">
+          <div className="mb-8 p-4 border-2 border-primary/30 bg-primary/5 rounded-none font-mono shadow-sm">
+            <div className="text-[10px] uppercase tracking-widest text-primary/60 mb-2 font-black flex items-center justify-between">
               <span>Primary Node Address</span>
-              <span className="text-green-500 animate-pulse text-[8px]">● IDENTITY_VERIFIED</span>
+              <span className="text-primary animate-pulse text-[8px] bg-primary/10 px-1 border border-primary/20">● IDENTITY_VERIFIED</span>
             </div>
-            <div className="text-sm font-black text-primary break-all selection:bg-primary selection:text-background">
+            <div className="text-sm font-black text-primary break-all selection:bg-primary selection:text-background tracking-tighter">
               {user.bitcoinAddress}
             </div>
-            <div className="mt-2 text-[9px] text-primary/40 uppercase tracking-tighter">
+            <div className="mt-2 text-[9px] text-primary/40 uppercase tracking-widest font-bold">
               Legacy P2PKH Protocol • 1-Address Identity
             </div>
           </div>
         )}
 
         <div className="mb-8">
-          <div className="text-[10px] uppercase tracking-widest text-primary/60 mb-3 font-bold">Cryptographic Precision Levels</div>
+          <div className="text-[10px] uppercase tracking-widest text-primary/60 mb-3 font-black">Cryptographic Precision Levels</div>
           <div className="grid grid-cols-10 gap-1.5">
             {Array.from({ length: 60 }, (_, i) => {
               const level = i + 1

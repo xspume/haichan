@@ -108,32 +108,32 @@ export function PostersList() {
   }
 
   return (
-    <div className="card-3d bg-background overflow-hidden">
+    <div className="card-3d bg-background overflow-hidden border-2 border-primary/20 shadow-3d-sm">
       {/* Header */}
-      <div className="bg-primary text-background px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest flex items-center justify-between">
+      <div className="bg-primary text-background px-3 py-1 font-sans text-[10px] font-black uppercase flex items-center justify-between tracking-widest">
         <div className="flex items-center gap-2">
           <Users className="w-3 h-3" />
-          <span>Recently Active Posters</span>
+          <span>Active Contributors</span>
         </div>
       </div>
 
       {/* Posters List */}
-      <div className="p-4 space-y-1 font-mono text-[10px]">
+      <div className="p-4 space-y-1 font-sans text-[10px]">
         {loading ? (
-          <div className="text-center text-primary/30 py-4 text-[9px] uppercase tracking-widest italic animate-pulse">
-            Loading poster list...
+          <div className="text-center text-primary/30 py-4 text-[9px] uppercase tracking-widest italic animate-pulse font-black">
+            Syncing data...
           </div>
         ) : posters.length > 0 ? (
           posters.map((poster, index) => (
-            <div key={poster.id} className="flex items-center justify-between group py-0.5 px-1 hover:bg-primary/5 transition-colors">
-              <span className="flex items-center gap-2">
-                <span className="opacity-40 tabular-nums">0{index + 1}</span>
-                <span className="font-bold group-hover:text-primary transition-colors cursor-pointer truncate max-w-[100px]">
+            <div key={poster.id} className="flex items-center justify-between group py-0.5 px-1 hover:bg-primary/5 transition-colors border-b border-primary/5 last:border-0">
+              <span className="flex items-center gap-2 overflow-hidden">
+                <span className="opacity-40 font-bold tabular-nums">0{index + 1}</span>
+                <span className="font-black group-hover:text-primary transition-colors cursor-pointer truncate max-w-[100px] text-[hsl(var(--name))]">
                   {formatBrandName(poster.username)}
                 </span>
-                <BadgesInline user={poster} className="scale-75" />
+                <BadgesInline user={poster} className="scale-75 shrink-0" />
               </span>
-              <span className="font-bold tabular-nums text-primary/80">
+              <span className="font-black tabular-nums text-primary/80 shrink-0">
                 {Number(poster.totalPowPoints).toLocaleString()}
               </span>
             </div>

@@ -135,15 +135,15 @@ export function BoardMiningWidget({ board, onMineComplete }: BoardMiningWidgetPr
   }
 
   return (
-    <Card className="border-2 border-foreground bg-card">
+    <Card className="border-2 border-primary bg-card shadow-3d-sm font-sans">
       <CardHeader className="pb-3 cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-mono flex items-center gap-2">
-            <Zap className="w-4 h-4" />
+          <CardTitle className="text-base font-black flex items-center gap-2 uppercase tracking-tighter">
+            <Zap className="w-4 h-4 text-primary animate-pulse" />
             MINE BOARD
             {isBoardMining && <MiningProgressBadge show={true} />}
           </CardTitle>
-          <button className="p-1">
+          <button className="p-1 text-primary hover:bg-primary/10 transition-colors">
             {isExpanded ? (
               <ChevronUp className="w-4 h-4" />
             ) : (
@@ -155,24 +155,24 @@ export function BoardMiningWidget({ board, onMineComplete }: BoardMiningWidgetPr
 
       {isExpanded && (
         <CardContent className="space-y-3">
-          <div className="text-xs font-mono space-y-2">
+          <div className="text-[11px] font-bold space-y-2 uppercase tracking-tight">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Board:</span>
-              <span className="font-bold">/{board.slug}/</span>
+              <span className="text-muted-foreground opacity-60">Board:</span>
+              <span className="text-primary">/{board.slug}/</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Current PoW:</span>
-              <span className="font-bold">{(board.totalPow || 0) + optimisticPow}</span>
+              <span className="text-muted-foreground opacity-60">Current PoW:</span>
+              <span className="text-foreground">{(board.totalPow || 0) + optimisticPow}</span>
             </div>
             {minedHash && (
               <>
-                <div className="flex justify-between border-t border-foreground/30 pt-2 mt-2">
-                  <span className="text-muted-foreground">Mined Points:</span>
-                  <span className="font-bold text-green-600">{minedPoints}</span>
+                <div className="flex justify-between border-t border-primary/20 pt-2 mt-2">
+                  <span className="text-muted-foreground opacity-60">Mined Points:</span>
+                  <span className="font-black text-primary animate-pulse">{minedPoints}</span>
                 </div>
-                <div className="break-all text-[9px] font-mono p-2 bg-muted border border-foreground/20 rounded">
-                  <span className="text-muted-foreground">Hash: </span>
-                  <span className="font-bold">{minedHash}</span>
+                <div className="break-all text-[9px] font-mono p-2 bg-primary/5 border border-primary/20 rounded-none mt-1">
+                  <span className="text-muted-foreground opacity-50 uppercase tracking-tighter">Hash: </span>
+                  <span className="font-medium text-foreground/80">{minedHash}</span>
                 </div>
               </>
             )}
@@ -181,7 +181,7 @@ export function BoardMiningWidget({ board, onMineComplete }: BoardMiningWidgetPr
           <div
             key={remountKey}
             ref={mineButtonRef}
-            className="border-2 border-foreground p-2 bg-muted hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer text-center font-mono text-xs font-bold relative"
+            className="border-2 border-primary/40 p-3 bg-primary/5 hover:bg-primary hover:text-background transition-all cursor-pointer text-center font-black text-[10px] uppercase tracking-widest relative shadow-sm hover:shadow-3d-sm active:scale-[0.98]"
           >
             {isBoardMining ? (
               <div className="flex items-center justify-center gap-2">
@@ -201,19 +201,19 @@ export function BoardMiningWidget({ board, onMineComplete }: BoardMiningWidgetPr
             <Button
               onClick={handleSubmitMining}
               disabled={isSubmitting}
-              className="w-full font-mono text-xs font-bold bg-green-600 hover:bg-green-700 text-white border-2 border-green-700"
+              className="w-full font-black uppercase text-[10px] tracking-widest h-9 shadow-md"
             >
               {isSubmitting ? 'SUBMITTING...' : 'SUBMIT PoW'}
             </Button>
           )}
 
-          <div className="text-xs text-muted-foreground font-mono border-t border-foreground/30 pt-2">
-            <p className="mb-1 font-bold">HOW TO MINE:</p>
-            <ol className="list-decimal list-inside space-y-0.5 text-[11px]">
-              <li>Hover over the mining area</li>
-              <li>Your browser searches for hashes</li>
-              <li>When a valid hash is found, click SUBMIT</li>
-              <li>Board PoW increases by the hash value</li>
+          <div className="text-[10px] text-muted-foreground font-medium border-t border-primary/10 pt-2 leading-relaxed">
+            <p className="mb-1 font-black uppercase tracking-widest text-primary opacity-60 text-[9px]">How to verify:</p>
+            <ol className="list-decimal list-inside space-y-0.5 opacity-80">
+              <li>Hover over the verify zone above</li>
+              <li>Your machine will search for entropy</li>
+              <li>When a hash is discovered, click SUBMIT</li>
+              <li>Board prestige increases instantly</li>
             </ol>
           </div>
         </CardContent>

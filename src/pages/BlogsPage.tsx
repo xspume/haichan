@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Button } from '../components/ui/button'
 import { BookOpen, Plus, TrendingUp, User } from 'lucide-react'
 import { useMouseoverMining } from '../hooks/use-mining'
-import db, { publicDb } from '../lib/db-client'
+import { publicDb } from '../lib/db-client'
 import { getFontFamily } from '../lib/rich-text'
 import { useAuth } from '../contexts/AuthContext'
+import { subscribeToChannel } from '../lib/realtime-manager'
 
 function BlogCard({ blog }: { blog: any }) {
   const { useAttachTo } = useMouseoverMining('blog', blog.id)
@@ -92,31 +93,25 @@ export function BlogsPage() {
     loadBlogs()
 
     // Set up realtime subscription for live blog updates
+    // Uses subscribeToChannel which handles auth checks to prevent WebSocket errors
     let unsubscribe: (() => void) | null = null
-    let isMounted = true
 
     const initRealtime = async () => {
-      try {
-        unsubscribe = await db.realtime.subscribe('blogs', (message: any) => {
-          if (isMounted && (message.type === 'blog_updated' || message.type === 'pow_completed')) {
+      unsubscribe = await subscribeToChannel(
+        'blogs',
+        'blogs-page-updates',
+        (message: any) => {
+          if (message.type === 'blog_updated' || message.type === 'pow_completed') {
             // Silently refresh blogs in background
             loadBlogs()
           }
-        })
-      } catch (error: any) {
-        // Handle subscription timeout gracefully - realtime is non-critical
-        if (error?.name === 'BlinkRealtimeError' && error?.message?.includes('timeout')) {
-          console.warn('Blogs realtime subscription timeout (non-critical)')
-        } else {
-          console.warn('Blogs realtime subscription failed (non-critical):', error?.message || error)
         }
-      }
+      )
     }
 
     initRealtime()
 
     return () => {
-      isMounted = false
       unsubscribe?.()
     }
   }, [])

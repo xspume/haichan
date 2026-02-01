@@ -32,25 +32,28 @@ export function MiningStatusBadge() {
   const getStatusConfig = () => {
     if (powerMode === 'lurk') {
       return {
-        bg: 'bg-blue-400',
-        border: 'border-blue-600',
-        text: 'Lurk Mode',
+        bg: 'bg-blue-500/20',
+        border: 'border-blue-500',
+        text: 'LURK_MODE',
+        color: 'text-blue-400',
         icon: '🌙'
       }
     }
     if (powerMode === 'low') {
       return {
-        bg: 'bg-yellow-400',
-        border: 'border-yellow-600',
-        text: 'Low Power',
+        bg: 'bg-yellow-500/20',
+        border: 'border-yellow-500',
+        text: 'LOW_POWER',
+        color: 'text-yellow-400',
         icon: '🔋'
       }
     }
     return {
-      bg: 'bg-green-400',
-      border: 'border-green-600',
-      text: `${hashRate.toFixed(0)} H/s`,
-      icon: <Zap className="w-3 h-3" />
+      bg: 'bg-primary/20',
+      border: 'border-primary',
+      text: `${hashRate.toFixed(0)} H/S`,
+      color: 'text-primary',
+      icon: <Zap className="w-3 h-3 text-primary" />
     }
   }
 
@@ -58,16 +61,16 @@ export function MiningStatusBadge() {
 
   return (
     <div 
-      className={`flex items-center gap-1.5 px-2 py-1 border text-xs font-mono transition-all text-black ${config.bg} ${config.border} animate-pulse`}
+      className={`flex items-center gap-1.5 px-2.5 py-1 border-2 font-sans transition-all ${config.bg} ${config.border} ${config.color} animate-pulse shadow-sm`}
       title={`Mining active: ${hashRate.toFixed(0)} H/s (${powerMode} power)`}
     >
       <span className="flex items-center justify-center">
         {config.icon}
       </span>
-      <span className="font-bold uppercase tracking-tighter">
+      <span className="font-black text-[10px] uppercase tracking-widest">
         {config.text}
       </span>
-      <div className="w-1.5 h-1.5 bg-black rounded-full animate-ping" />
+      <div className={`w-1.5 h-1.5 rounded-full animate-ping ${config.color.replace('text-', 'bg-')}`} />
     </div>
   )
 }

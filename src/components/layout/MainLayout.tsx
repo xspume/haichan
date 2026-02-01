@@ -75,6 +75,7 @@ export function MainLayout() {
     window.addEventListener('keydown', handleKeyPress)
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
+      window.removeEventListener('keydown', handleKeyPress)
       keydownListenerRef.current = null
     }
   }, [authState.user])
@@ -153,26 +154,26 @@ export function MainLayout() {
   ]
 
   return (
-    <div className="min-h-screen bg-background flex flex-col font-mono">
+    <div className="min-h-screen bg-background flex flex-col font-sans">
       <DiagnosticsBanner />
 
       {/* Global Banners */}
       {!!siteSettings?.maintenanceMode && (
-        <div className="bg-red-600 text-white text-[10px] py-1 text-center font-bold tracking-wider border-b border-black z-[60]">
+        <div className="bg-destructive text-destructive-foreground text-[10px] py-1 text-center font-black tracking-widest border-b border-primary z-[60] animate-pulse">
           SYSTEM MAINTENANCE MODE ACTIVE - READ ONLY FOR NON-ADMINS
         </div>
       )}
       
       {!!siteSettings?.motd && (
-        <div className="bg-primary text-background text-[11px] py-1 text-center font-bold border-b border-black flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap z-[60]">
+        <div className="bg-primary text-background text-[11px] py-1 text-center font-black border-b border-primary/20 flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap z-[60] tracking-widest">
           <Sparkles className="w-3 h-3 flex-shrink-0 animate-pulse" />
-          <span className="animate-marquee-slow">{siteSettings.motd}</span>
+          <span className="animate-marquee-slow uppercase">{siteSettings.motd}</span>
           <Sparkles className="w-3 h-3 flex-shrink-0 animate-pulse" />
         </div>
       )}
 
       {/* Header */}
-      <header className="h-12 border-b border-primary bg-background sticky top-0 z-50 flex items-center px-4 justify-between">
+      <header className="h-12 border-b-2 border-primary bg-background sticky top-0 z-50 flex items-center px-4 justify-between shadow-sm">
         <div className="flex items-center gap-4">
           <Link to="/" className="haichan-logo">
             HAICHAN
@@ -189,10 +190,10 @@ export function MainLayout() {
           <button
             onClick={toggle3D}
             className={cn(
-              "p-1.5 transition-all duration-200 border no-3d bg-background text-foreground shadow-3d-sm",
+              "p-1.5 transition-all duration-200 border-2 no-3d bg-background shadow-sm",
               is3DEnabled
                 ? "btn-3d-toggle active border-primary"
-                : "border-primary hover:border-primary/80 hover:bg-primary/10"
+                : "border-primary/20 hover:border-primary text-primary hover:bg-primary/10"
             )}
             title={is3DEnabled ? "Disable 3D Mode" : "Enable 3D Mode (Red/Cyan Glasses)"}
           >
@@ -201,15 +202,15 @@ export function MainLayout() {
 
           {user ? (
             <div className="flex items-center gap-3">
-              <Link to="/profile" className="hidden sm:flex items-center gap-1 text-primary hover:underline text-xs">
+              <Link to="/profile" className="hidden sm:flex items-center gap-1 text-primary hover:underline text-[10px] font-black uppercase tracking-tight">
                 {username || 'user'}
                 <BadgesInline user={dbUser} className="scale-75" />
               </Link>
               
-              <Link to="/notifications" className="relative p-1 text-primary hover:bg-primary/10 transition-colors">
+              <Link to="/notifications" className="relative p-1.5 text-primary hover:bg-primary/10 transition-colors border border-transparent hover:border-primary/20">
                 <Bell className="w-4 h-4" />
                 {notificationCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[8px] px-1 rounded-full animate-pulse">
+                  <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-[8px] px-1 font-black animate-pulse border border-background">
                     {notificationCount}
                   </span>
                 )}
@@ -217,48 +218,48 @@ export function MainLayout() {
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 border border-primary hover:bg-primary hover:text-background transition-all">
+                  <Button variant="outline" size="sm" className="h-8 w-8 p-0 border-2 border-primary hover:bg-primary hover:text-background transition-all shadow-sm">
                     <User className="w-4 h-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 bg-background border-2 border-primary rounded-none shadow-3d mt-1">
+                <DropdownMenuContent align="end" className="w-48 bg-background border-2 border-primary rounded-none shadow-3d-lg mt-1 font-sans">
                   <DropdownMenuItem asChild>
-                    <Link to="/profile" className="flex items-center gap-2 cursor-pointer py-2 hover:bg-primary/10">
-                      <User className="w-4 h-4" />
-                      <span>Profile</span>
+                    <Link to="/profile" className="flex items-center gap-2 cursor-pointer py-2.5 px-3 hover:bg-primary/10 transition-colors">
+                      <User className="w-4 h-4 text-primary" />
+                      <span className="text-xs font-black uppercase tracking-widest">Profile</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/settings" className="flex items-center gap-2 cursor-pointer py-2 hover:bg-primary/10">
-                      <Settings className="w-4 h-4" />
-                      <span>Settings</span>
+                    <Link to="/settings" className="flex items-center gap-2 cursor-pointer py-2.5 px-3 hover:bg-primary/10 transition-colors">
+                      <Settings className="w-4 h-4 text-primary" />
+                      <span className="text-xs font-black uppercase tracking-widest">Settings</span>
                     </Link>
                   </DropdownMenuItem>
                   {(user?.username === 'jcb' || Number(user?.isAdmin) > 0) && (
                     <DropdownMenuItem asChild>
-                      <Link to="/admin" className="flex items-center gap-2 cursor-pointer py-2 text-primary font-bold hover:bg-primary/10">
+                      <Link to="/admin" className="flex items-center gap-2 cursor-pointer py-2.5 px-3 text-primary hover:bg-primary/10 transition-colors">
                         <Shield className="w-4 h-4" />
-                        <span>Admin</span>
+                        <span className="text-xs font-black uppercase tracking-widest">Admin Panel</span>
                       </Link>
                     </DropdownMenuItem>
                   )}
-                  <DropdownMenuSeparator className="bg-primary/30" />
-                  <DropdownMenuItem onClick={handleLogout} className="flex items-center gap-2 cursor-pointer py-2 text-red-500 hover:bg-red-500/10">
+                  <DropdownMenuSeparator className="bg-primary/20 h-0.5" />
+                  <DropdownMenuItem onClick={handleLogout} className="flex items-center gap-2 cursor-pointer py-2.5 px-3 text-destructive hover:bg-destructive/10 transition-colors">
                     <LogOut className="w-4 h-4" />
-                    <span>Logout</span>
+                    <span className="text-xs font-black uppercase tracking-widest">Logout</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
           ) : (
-            <Link to="/auth" className="btn-3d text-[10px] py-1">
+            <Link to="/auth" className="btn-haichan text-[10px] py-1 font-black uppercase tracking-widest px-4 shadow-md">
               Login
             </Link>
           )}
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-1 border border-primary hover:bg-primary hover:text-background transition-colors"
+            className="lg:hidden p-1.5 border-2 border-primary text-primary hover:bg-primary hover:text-background transition-colors shadow-sm"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -267,35 +268,35 @@ export function MainLayout() {
 
       <div className="flex flex-1 overflow-hidden relative">
         {/* Slender Desktop Sidebar */}
-        <aside className="hidden lg:flex w-48 flex-col border-r border-primary bg-background/50 h-full overflow-y-auto custom-scrollbar">
+        <aside className="hidden lg:flex w-48 flex-col border-r-2 border-primary/20 bg-card/30 h-full overflow-y-auto custom-scrollbar shadow-sm">
           <nav className="p-2 space-y-1">
             {sidebarItems.map((item) => (
               <Link 
                 key={item.to} 
                 to={item.to}
-                className="flex items-center gap-3 px-3 py-2 text-xs hover:bg-primary hover:text-background transition-colors border border-transparent hover:border-primary group"
+                className="flex items-center gap-3 px-3 py-2 text-[11px] font-black uppercase tracking-widest hover:bg-primary hover:text-background transition-colors border border-transparent hover:border-primary/40 group shadow-none hover:shadow-sm"
               >
                 <span className="text-primary group-hover:text-background transition-colors">{item.icon}</span>
-                <span className="uppercase tracking-wider">{item.label}</span>
+                <span>{item.label}</span>
               </Link>
             ))}
             
             {user && (
-              <div className="pt-4 mt-4 border-t border-primary/20">
-                <div className="px-3 py-1 text-[10px] text-muted-foreground uppercase tracking-wider mb-2">My Account</div>
-                <div className="px-3 py-2 border-2 border-primary bg-background shadow-3d-sm mb-4">
+              <div className="pt-4 mt-4 border-t-2 border-primary/10">
+                <div className="px-3 py-1 text-[9px] text-muted-foreground uppercase font-black tracking-widest mb-2 opacity-60">My Status</div>
+                <div className="px-3 py-2 border-2 border-primary/40 bg-background shadow-sm mb-4 mx-1">
                   <div className="flex items-center justify-between text-[10px] mb-1">
-                    <span className="opacity-60">POWER</span>
-                    <span className="text-primary font-bold">{dbUser?.totalPowPoints || 0}</span>
+                    <span className="opacity-60 font-bold tracking-tighter">POWER</span>
+                    <span className="text-primary font-black">{dbUser?.totalPowPoints || 0}</span>
                   </div>
                   <div className="flex items-center justify-between text-[10px]">
-                    <span className="opacity-60">DIAMOND</span>
-                    <span className="text-primary font-bold">LVL {dbUser?.diamondLevel || 0}</span>
+                    <span className="opacity-60 font-bold tracking-tighter">DIAMOND</span>
+                    <span className="text-primary font-black">LVL {dbUser?.diamondLevel || 0}</span>
                   </div>
                 </div>
                 
-                <div className="px-3 py-2 text-[9px] text-primary/60 italic leading-tight">
-                  Press M to toggle dedicated mining anytime.
+                <div className="px-3 py-2 text-[9px] text-primary/40 font-bold italic leading-tight uppercase tracking-tighter">
+                  Press M to toggle mining.
                 </div>
               </div>
             )}

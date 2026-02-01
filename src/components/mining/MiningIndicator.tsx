@@ -36,12 +36,12 @@ export function MiningIndicator() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 bg-black border-4 border-white min-w-[320px] font-mono text-xs overflow-hidden shadow-2xl">
+    <div className="fixed bottom-4 right-4 bg-background border-4 border-primary min-w-[320px] font-mono text-xs overflow-hidden shadow-3d-lg z-[100]">
       {/* Top Bar - PROMINENT */}
-      <div className="bg-card text-card-foreground px-3 py-2 flex items-center justify-between border-b-4 border-foreground">
+      <div className="bg-primary text-primary-foreground px-3 py-2 flex items-center justify-between border-b-4 border-primary">
         <div className="flex items-center gap-2">
           <Zap className="w-4 h-4 animate-pulse" />
-          <span className="font-black text-sm text-primary">Verification</span>
+          <span className="font-black text-sm uppercase tracking-tighter">Verification</span>
         </div>
         <div className="flex gap-1">
           <button
@@ -62,13 +62,13 @@ export function MiningIndicator() {
       </div>
 
       {/* Content */}
-      <div className="p-3 bg-black text-white">
+      <div className="p-3 bg-background text-foreground">
         {isActiveMining ? (
           <>
             {/* Prominent Timer */}
-            <div className="mb-4 border-4 border-foreground bg-card text-card-foreground p-2 text-center">
-              <div className="text-xs font-bold mb-1">Estimated Time</div>
-              <div className="text-3xl font-black font-mono">
+            <div className="mb-4 border-4 border-primary bg-card text-card-foreground p-2 text-center shadow-3d-sm">
+              <div className="text-[10px] font-bold mb-1 uppercase tracking-widest opacity-70">Estimated Time</div>
+              <div className="text-3xl font-black font-mono text-primary">
                 {remainingTime}s
               </div>
               <div className="text-xs mt-1 opacity-70">

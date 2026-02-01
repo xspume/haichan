@@ -644,33 +644,39 @@ Generated: ${new Date().toISOString()}
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 md:p-8 font-mono">
-      <div className="w-full max-w-md space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center p-4 font-sans">
+      <div className="w-full max-w-md space-y-8 animate-fade-in">
         <div className="text-center space-y-2">
-          <h1 className="text-5xl font-bold tracking-tighter haichan-logo">HAICHAN</h1>
-          <p className="text-xs text-primary/60 uppercase tracking-wider">Human Consensus Experiment</p>
+          <h1 className="haichan-logo text-5xl mb-4">HAICHAN</h1>
+          <p className="text-[10px] uppercase font-black tracking-[0.3em] text-primary opacity-60">Identity Extraction Protocol</p>
         </div>
 
-        <div className="card-3d p-1 bg-primary">
-          <div className="bg-background p-6">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-3 mb-8 bg-primary/10 p-1 rounded-none border border-primary/30">
-                <TabsTrigger value="login" className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-background text-[10px] uppercase font-bold">
-                  <LogIn className="w-3 h-3 mr-2" />
-                  Login
-                </TabsTrigger>
-                <TabsTrigger value="register" className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-background text-[10px] uppercase font-bold">
-                  <UserPlus className="w-3 h-3 mr-2" />
-                  Join
-                </TabsTrigger>
-                <TabsTrigger value="lurk" className="rounded-none data-[state=active]:bg-primary data-[state=active]:text-background text-[10px] uppercase font-bold">
-                  👻 Lurk
-                </TabsTrigger>
-              </TabsList>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid grid-cols-2 w-full h-12 bg-primary/10 border-2 border-primary/20 p-1 rounded-none shadow-sm">
+            <TabsTrigger 
+              value="login" 
+              className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-primary data-[state=active]:text-background rounded-none transition-all"
+            >
+              <LogIn className="w-3.5 h-3.5 mr-2" />
+              Access
+            </TabsTrigger>
+            <TabsTrigger 
+              value="register" 
+              className="font-black uppercase tracking-widest text-[10px] data-[state=active]:bg-primary data-[state=active]:text-background rounded-none transition-all"
+            >
+              <UserPlus className="w-3.5 h-3.5 mr-2" />
+              Initialize
+            </TabsTrigger>
+          </TabsList>
 
-              {/* LOGIN TAB */}
-              <TabsContent value="login" className="animate-in fade-in duration-300">
-                <form onSubmit={handleUsernameLogin} className="space-y-6">
+          <TabsContent value="login">
+            <Card className="border-4 border-primary bg-card/50 shadow-3d mt-4 rounded-none overflow-hidden">
+              <CardHeader className="bg-primary/5 border-b-2 border-primary/20">
+                <CardTitle className="text-sm font-black uppercase tracking-widest text-primary">Biometric Auth</CardTitle>
+                <CardDescription className="text-[10px] font-bold opacity-60 uppercase tracking-tight">Enter your cryptographic credentials</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <form onSubmit={handleUsernameLogin} className="space-y-4">
                   {usernameError && (
                     <div className="p-3 bg-red-950/30 border border-red-500/50 text-red-500 text-[10px] font-bold uppercase tracking-wider">
                       Error: {usernameError}
@@ -751,10 +757,18 @@ Generated: ${new Date().toISOString()}
                     {loading ? 'Logging in...' : 'Login'}
                   </Button>
                 </form>
-              </TabsContent>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-              {/* REGISTER TAB */}
-              <TabsContent value="register" className="animate-in fade-in duration-300">
+          {/* REGISTER TAB */}
+          <TabsContent value="register" className="animate-in fade-in duration-300">
+            <Card className="border-4 border-primary bg-card/50 shadow-3d mt-4 rounded-none overflow-hidden">
+              <CardHeader className="bg-primary/5 border-b-2 border-primary/20">
+                <CardTitle className="text-sm font-black uppercase tracking-widest text-primary">Initialize Identity</CardTitle>
+                <CardDescription className="text-[10px] font-bold opacity-60 uppercase tracking-tight">Secure your cryptographic credentials</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6">
                 <form onSubmit={handleRegister} className="space-y-4">
                   <div className="bg-primary/5 p-3 border border-primary/30 mb-4">
                      <p className="text-[10px] font-mono leading-tight text-primary/70">
@@ -878,63 +892,56 @@ Generated: ${new Date().toISOString()}
                     {loading ? 'Registering...' : 'Register'}
                   </Button>
                 </form>
-              </TabsContent>
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-              {/* LURK TAB */}
-              <TabsContent value="lurk" className="animate-in fade-in duration-300">
+          {/* LURK TAB */}
+          <TabsContent value="lurk" className="animate-in fade-in duration-300">
+            <Card className="border-4 border-primary bg-card/50 shadow-3d mt-4 rounded-none overflow-hidden">
+              <CardHeader className="bg-primary/5 border-b-2 border-primary/20">
+                <CardTitle className="text-sm font-black uppercase tracking-widest text-primary">Lurk Mode</CardTitle>
+                <CardDescription className="text-[10px] font-bold opacity-60 uppercase tracking-tight">Observe the experiment</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6">
                 <div className="font-mono text-xs leading-relaxed space-y-4 max-h-[60vh] overflow-y-auto pr-2">
-                  
-                  {/* Abstract */}
-                  <section className="border p-3 border-primary/30">
-                    <h2 className="font-bold text-sm mb-2 text-primary">lurk mode</h2>
-                    <p className="text-justify text-primary/70">
-                      haichan tests the idea that an online community can be made healthier and more interesting by replacing cheap abundance (infinite posts, infinite users, zero-cost identity) with cryptographically enforced scarcity and computational friction.
-                    </p>
-                  </section>
+                  <div className="space-y-4 font-mono">
+                    <div className="space-y-2">
+                      <h3 className="text-sm font-black uppercase text-primary">tl;dr</h3>
+                      <p className="text-xs leading-relaxed opacity-80">
+                        Imageboard where posting costs CPU cycles. No bots. Limited users. That's it.
+                      </p>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <h3 className="text-sm font-black uppercase text-primary">how it works</h3>
+                      <ul className="text-xs space-y-1 opacity-80">
+                        <li>› Post requires SHA-256 hash with valid prefix</li>
+                        <li>› Your browser mines it (few seconds)</li>
+                        <li>› More work = higher ranking</li>
+                        <li>› Identity tied to bitcoin keypair</li>
+                      </ul>
+                    </div>
 
-                  {/* Core Mechanism 1 */}
-                  <section className="border p-3 border-primary/30">
-                    <h3 className="font-bold text-sm mb-2 text-primary">caps the social graph</h3>
-                    <p className="text-justify text-primary/70">
-                      A hard ceiling on users (256-sized tranches, invite-gated) turns the board into a finite game. You are not shouting into a global feed; you are interacting inside a closed topology whose participants are known, trackable, and costly to fake.
-                    </p>
-                  </section>
+                    <div className="space-y-2">
+                      <h3 className="text-sm font-black uppercase text-primary">why</h3>
+                      <p className="text-xs leading-relaxed opacity-80">
+                        Spam is free. Posts here aren't.
+                      </p>
+                    </div>
 
-                  {/* Core Mechanism 2 */}
-                  <section className="border p-3 border-primary/30">
-                    <h3 className="font-bold text-sm mb-2 text-primary">prices expression in computation</h3>
-                    <p className="text-justify text-primary/70">
-                      Posting is gated by proof-of-work and protocol-level friction. You can't spam your way to visibility; you have to literally burn cycles. Every post is a small cryptographic artifact with a verifiable cost history.
-                    </p>
-                  </section>
-
-                  {/* Core Mechanism 3 */}
-                  <section className="border p-3 border-primary/30">
-                    <h3 className="font-bold text-sm mb-2 text-primary">compresses the medium</h3>
-                    <p className="text-justify text-primary/70">
-                      Images are aggressively compressed/dithered; the interface is TUI/ssh-like. By constraining bandwidth and aesthetics, haichan foregrounds structure (who can post, at what cost, with what history) over UI spectacle.
-                    </p>
-                  </section>
-
-                  {/* Core Mechanism 4 */}
-                  <section className="border p-3 border-primary/30">
-                    <h3 className="font-bold text-sm mb-2 text-primary">responds to work, not vibes</h3>
-                    <p className="text-justify text-primary/70">
-                      The global state of the board (ordering, visibility, possible actions) is designed to be a function of aggregate work performed by participants. The community doesn't just live on the substrate; it drives it.
-                    </p>
-                  </section>
-
-                  {/* Core Mechanism 5 */}
-                  <section className="border p-3 border-primary/30">
-                    <h3 className="font-bold text-sm mb-2 text-primary">treats posts as programmable primitives</h3>
-                    <p className="text-justify text-primary/70">
-                      Because each post has a cryptographic pedigree and exists in a small, legible space, it can be composed into higher-order systems: reputation markets, computational data markets, or other experiments in valuing small, dense artifacts.
-                    </p>
-                  </section>
+                    <div className="space-y-2">
+                      <h3 className="text-sm font-black uppercase text-primary">limits</h3>
+                      <ul className="text-xs space-y-1 opacity-80">
+                        <li>› 256 users per epoch</li>
+                        <li>› Invite codes required</li>
+                        <li>› Images get dithered</li>
+                      </ul>
+                    </div>
+                  </div>
 
                   {/* Bottom CTA */}
                   <div className="border-2 border-primary bg-primary/5 p-3 text-center">
-                    <p className="text-xs mb-2 text-primary/70">Ready to participate?</p>
                     <div className="flex gap-2">
                       <Button 
                         onClick={() => setActiveTab('login')} 
@@ -954,18 +961,18 @@ Generated: ${new Date().toISOString()}
                     </div>
                   </div>
                 </div>
-              </TabsContent>
-            </Tabs>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
 
-            {/* Footer Links */}
-            <div className="mt-4 text-center text-sm text-muted-foreground space-y-1">
-              {showAdminSeed && (
-                <div>
-                  <button type="button" onClick={() => navigate('/seed')} className="text-xs font-mono text-primary/70 hover:text-primary underline">[ADMIN] Seed Test User</button>
-                </div>
-              )}
+        {/* Footer Links */}
+        <div className="mt-4 text-center text-sm text-muted-foreground space-y-1">
+          {showAdminSeed && (
+            <div>
+              <button type="button" onClick={() => navigate('/seed')} className="text-xs font-mono text-primary/70 hover:text-primary underline">[ADMIN] Seed Test User</button>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

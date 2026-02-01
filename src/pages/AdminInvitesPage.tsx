@@ -98,13 +98,13 @@ export function AdminInvitesPage() {
   }
 
   return (
-    <div className="bg-background text-foreground min-h-screen">
+    <div className="bg-background text-foreground min-h-screen font-sans">
       <div className="container mx-auto p-4 max-w-4xl">
-        <div className="border-4 border-black bg-black text-white p-3 mb-4">
+        <div className="border-4 border-primary bg-card text-card-foreground p-3 mb-4 shadow-3d-sm">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold font-mono">INVITE CODES</h1>
-              <p className="text-xs font-mono mt-1">
+              <h1 className="text-2xl font-black uppercase tracking-tighter">INVITE CODES</h1>
+              <p className="text-[10px] font-bold mt-1 opacity-70 uppercase tracking-widest">
                 Epoch-based invite system • {authState.user?.isAdmin ? 'Admin' : 'User'} • Current epoch: {currentEpoch}
               </p>
             </div>
@@ -112,9 +112,9 @@ export function AdminInvitesPage() {
               <Button
                 onClick={handleGenerateCodes}
                 disabled={generating}
-                className="bg-muted text-foreground hover:bg-muted/80 font-mono font-bold"
+                className="font-sans font-black uppercase text-[10px]"
               >
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className="w-3 h-3 mr-2" />
                 {generating ? 'GENERATING...' : 'GENERATE CODES'}
               </Button>
             )}
@@ -123,46 +123,46 @@ export function AdminInvitesPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <Card className="border-2 border-black">
+          <Card className="border-2 border-primary bg-background shadow-3d-sm">
             <CardContent className="pt-6">
               <div className="text-center">
-                <Key className="w-8 h-8 mx-auto mb-2" />
-                <p className="text-3xl font-mono font-bold">{unusedCodes.length}</p>
-                <p className="text-xs font-mono text-muted-foreground mt-1">UNUSED CODES</p>
+                <Key className="w-6 h-6 mx-auto mb-2 text-primary" />
+                <p className="text-3xl font-black">{unusedCodes.length}</p>
+                <p className="text-[9px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">UNUSED CODES</p>
               </div>
             </CardContent>
           </Card>
-          <Card className="border-2 border-black">
+          <Card className="border-2 border-primary bg-background shadow-3d-sm">
             <CardContent className="pt-6">
               <div className="text-center">
-                <Users className="w-8 h-8 mx-auto mb-2" />
-                <p className="text-3xl font-mono font-bold">{usedCodes.length}</p>
-                <p className="text-xs font-mono text-muted-foreground mt-1">USED CODES</p>
+                <Users className="w-6 h-6 mx-auto mb-2 text-primary" />
+                <p className="text-3xl font-black">{usedCodes.length}</p>
+                <p className="text-[9px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">USED CODES</p>
               </div>
             </CardContent>
           </Card>
-          <Card className="border-2 border-black">
+          <Card className="border-2 border-primary bg-background shadow-3d-sm">
             <CardContent className="pt-6">
               <div className="text-center">
-                <Check className="w-8 h-8 mx-auto mb-2" />
-                <p className="text-3xl font-mono font-bold">{inviteCodes.length}</p>
-                <p className="text-xs font-mono text-muted-foreground mt-1">TOTAL CODES</p>
+                <Check className="w-6 h-6 mx-auto mb-2 text-primary" />
+                <p className="text-3xl font-black">{inviteCodes.length}</p>
+                <p className="text-[9px] font-bold text-muted-foreground mt-1 uppercase tracking-widest">TOTAL CODES</p>
               </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Info Box */}
-        <Card className="border-2 border-black mb-6">
+        <Card className="border-2 border-border/40 mb-6 bg-card/30">
           <CardContent className="pt-6">
-            <div className="border-l-4 border-blue-600 pl-4 py-2">
-              <p className="text-xs font-mono text-blue-600 font-bold mb-2">📋 INVITE CODE SYSTEM</p>
-              <ul className="text-xs font-mono space-y-1 text-muted-foreground">
+            <div className="border-l-4 border-primary pl-4 py-2">
+              <p className="text-[10px] text-primary font-black mb-2 uppercase tracking-widest">📋 INVITE CODE SYSTEM</p>
+              <ul className="text-[11px] space-y-1 text-muted-foreground font-medium">
                 <li>• Only the admin user "jcb" can generate invite codes</li>
                 <li>• Admin generates {ADMIN_CODES_PER_EPOCH} invite codes per batch</li>
                 <li>• Codes can have multiple uses (default: 1 use per code)</li>
                 <li>• All generated codes appear in the list below</li>
-                {!isJcb && <li className="text-yellow-600 font-bold">⚠️ You do not have permission to generate codes</li>}
+                {!isJcb && <li className="text-destructive font-bold uppercase">⚠️ You do not have permission to generate codes</li>}
               </ul>
             </div>
           </CardContent>
@@ -170,10 +170,10 @@ export function AdminInvitesPage() {
 
         {/* Unused Codes */}
         {unusedCodes.length > 0 && (
-          <Card className="border-2 border-black mb-6">
-            <CardHeader className="border-b-2 border-black bg-green-600 text-white">
-              <CardTitle className="font-mono text-sm flex items-center gap-2">
-                <Key className="w-4 h-4" />
+          <Card className="border-2 border-primary mb-6 shadow-3d-sm">
+            <CardHeader className="border-b border-primary/20 bg-primary/5">
+              <CardTitle className="text-[10px] font-black flex items-center gap-2 uppercase tracking-widest">
+                <Key className="w-3 h-3" />
                 AVAILABLE INVITE CODES ({unusedCodes.length})
               </CardTitle>
             </CardHeader>
@@ -185,17 +185,17 @@ export function AdminInvitesPage() {
                   const remainingUses = maxUses - usesCount
                   
                   return (
-                    <div key={code.id} className="flex items-center gap-2 p-3 bg-muted rounded border-2 border-dashed">
+                    <div key={code.id} className="flex items-center gap-2 p-3 bg-muted/20 border-2 border-dashed border-border/40">
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
-                          <p className="text-lg font-mono font-bold select-all">{code.code}</p>
+                          <p className="text-lg font-mono font-black select-all text-primary">{code.code}</p>
                           {maxUses > 1 && (
-                            <span className="text-xs font-mono bg-blue-600 text-white px-2 py-1 rounded">
+                            <span className="text-[9px] font-black bg-primary/20 text-primary px-2 py-0.5 border border-primary/20 uppercase">
                               {remainingUses}/{maxUses} USES
                             </span>
                           )}
                         </div>
-                        <p className="text-xs font-mono text-muted-foreground mt-1">
+                        <p className="text-[10px] text-muted-foreground mt-1 font-medium italic">
                           Created: {new Date(code.createdAt).toLocaleString()}
                         </p>
                       </div>
@@ -203,9 +203,9 @@ export function AdminInvitesPage() {
                         onClick={() => copyToClipboard(code.code)}
                         variant="outline"
                         size="sm"
-                        className="font-mono"
+                        className="text-[10px] font-black uppercase px-4 h-7"
                       >
-                        <Copy className="w-4 h-4 mr-2" />
+                        <Copy className="w-3 h-3 mr-2" />
                         COPY
                       </Button>
                     </div>

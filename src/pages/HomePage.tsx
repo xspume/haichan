@@ -312,18 +312,18 @@ export function HomePage() {
 
   // Show the full imageboard dashboard
   return (
-    <div className="bg-background text-foreground min-h-screen font-mono">
+    <div className="bg-background text-foreground min-h-screen font-sans">
       {/* Diagnostic Banner - Remove after debugging */}
       {(boards.length === 0 || totalUsers === 0) && (
-        <div className="mb-4 p-4 border-2 border-yellow-500 bg-yellow-500/10 text-yellow-500">
-          <div className="text-xs font-bold mb-2">🔍 DIAGNOSTIC INFO (Check Console for Details)</div>
+        <div className="mb-4 p-4 border-2 border-primary/40 bg-primary/5 text-primary">
+          <div className="text-xs font-bold mb-2 uppercase tracking-widest">🔍 DIAGNOSTIC INFO</div>
           <div className="text-[10px] space-y-1 font-mono">
             <div>Auth Status: {authState.isAuthenticated ? 'AUTHENTICATED' : 'NOT AUTHENTICATED'}</div>
             <div>User ID: {dbUser?.id || 'NONE'}</div>
             <div>Boards Loaded: {boards.length}</div>
             <div>Total Users: {totalUsers}</div>
             <div>Online Users: {onlineUsers.length}</div>
-            <div className="mt-2 pt-2 border-t border-yellow-500/30">
+            <div className="mt-2 pt-2 border-t border-primary/30">
               {boards.length === 0 && <div>⚠️ No boards found - database may be empty</div>}
               {totalUsers === 0 && <div>⚠️ No users found - database may be empty</div>}
               <div className="mt-2">
@@ -336,13 +336,13 @@ export function HomePage() {
       )}
       
       {/* Quick Actions Bar - no duplicate header */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-primary/20 pb-3">
-        <p className="text-[10px] uppercase tracking-wider opacity-60">The Entropy Harvest</p>
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-muted pb-3">
+        <p className="text-[10px] uppercase tracking-widest opacity-40 font-bold">› no bots</p>
         <div className="flex gap-2">
-          <Link to="/mine" className="btn-3d text-[10px] px-3 py-1">
+          <Link to="/mine" className="btn-haichan text-[10px] px-3 py-1 uppercase font-black">
             Start Mining
           </Link>
-          <Link to="/chat" className="btn-3d text-[10px] px-3 py-1">
+          <Link to="/chat" className="btn-haichan text-[10px] px-3 py-1 uppercase font-black">
             Global Chat
           </Link>
         </div>
@@ -354,36 +354,37 @@ export function HomePage() {
           <Announcements />
           
           {/* Welcome Info Box */}
-          <div className="card-3d p-6 relative overflow-hidden group">
+          <div className="border-2 border-primary/30 p-6 relative overflow-hidden group shadow-3d-sm bg-card/50">
             <div className="absolute top-0 right-0 p-2 opacity-5">
               <Zap size={120} className="text-primary" />
             </div>
-            <h2 className="text-xl font-bold mb-4 uppercase tracking-wider text-primary flex items-center gap-2">
+            <h2 className="text-xl font-black mb-4 uppercase tracking-tighter text-primary flex items-center gap-2">
               <Sparkles className="w-5 h-5" />
-              The Human Consensus
+              What is this place?
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <p className="text-xs leading-relaxed text-primary/80">
-                  Haichan is a collective intelligence experiment. 
-                  Every byte here is paid for with the heat of a processor. 
-                  Humanity is the proof.
+                <p className="text-xs leading-relaxed text-foreground/80 font-medium">
+                  Imageboard with proof-of-work. Posts require hashing. No bots, no free lunch.
                 </p>
-                <div className="p-3 bg-primary/5 border border-primary/20">
-                  <div className="text-[10px] uppercase font-bold text-primary mb-1">Hashing Protocol</div>
-                  <div className="text-xs font-bold font-mono">SHA-256 (PREFIX: 21e8)</div>
+                <div className="p-3 bg-primary/10 border border-primary/20">
+                  <div className="text-[10px] uppercase font-black text-primary mb-1 tracking-widest">protocol</div>
+                  <div className="text-xs font-black font-mono">SHA-256 (PREFIX: 21e8)</div>
                 </div>
               </div>
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-xs">
                   <div className="w-1.5 h-1.5 bg-primary" />
-                  <span className="font-bold">MERIT-BASED RANKING</span>
+                  <span className="font-bold">› Posts ranked by work</span>
                 </div>
                 <div className="flex items-center gap-2 text-xs">
                   <div className="w-1.5 h-1.5 bg-primary" />
-                  <span className="font-bold">VERIFIED REPUTATION</span>
+                  <span className="font-bold">› Tripcodes via hashcash</span>
                 </div>
-
+                <div className="flex items-center gap-2 text-xs">
+                  <div className="w-1.5 h-1.5 bg-primary" />
+                  <span className="font-bold">› No ads, no tracking</span>
+                </div>
               </div>
             </div>
           </div>
@@ -391,12 +392,12 @@ export function HomePage() {
           {/* Boards Grid */}
           <div className="space-y-4 pt-4">
             <div className="flex items-center justify-between border-b-2 border-primary pb-2 mb-4 bg-primary/5 px-2">
-              <h3 className="text-sm font-black uppercase tracking-wider flex items-center gap-2">
-                <LayoutGrid className="w-4 h-4 text-primary" />
-                Index of Boards
+              <h3 className="text-sm font-black uppercase tracking-widest flex items-center gap-2 text-primary">
+                <LayoutGrid className="w-4 h-4" />
+                boards
               </h3>
-              <Link to="/boards" className="text-[10px] font-bold text-primary hover:bg-primary hover:text-background px-2 py-0.5 border border-primary transition-all uppercase tracking-tight">
-                View Directory
+              <Link to="/boards" className="text-[10px] font-black text-accent hover:bg-accent hover:text-background px-3 py-1 border border-accent transition-all uppercase tracking-widest shadow-sm">
+                [view all]
               </Link>
             </div>
             
@@ -411,11 +412,11 @@ export function HomePage() {
                 <Link 
                   key={board.id} 
                   to={`/board/${board.slug}`}
-                  className="card-3d p-4 hover:bg-primary/5 transition-all group"
+                  className="border-2 border-primary/20 p-4 hover:bg-primary/5 transition-all group shadow-sm hover:shadow-3d-sm hover:border-primary/40 bg-card/30"
                 >
                   <div className="flex justify-between items-start mb-2">
-                    <span className="text-lg font-black text-primary tracking-tighter">/{board.slug}/</span>
-                    <div className="flex items-center gap-1 text-[9px] font-bold px-1.5 py-0.5 bg-primary text-background uppercase">
+                    <span className="text-lg font-black text-primary tracking-tighter uppercase">/{board.slug}/</span>
+                    <div className="flex items-center gap-1 text-[9px] font-black px-1.5 py-0.5 bg-accent text-background uppercase tracking-widest shadow-sm">
                       <TrendingUp size={10} />
                       {Number(board.totalPow || 0).toLocaleString()}
                     </div>
@@ -446,7 +447,7 @@ export function HomePage() {
                   <div className="flex flex-wrap justify-center gap-3 pt-2">
                     <Link 
                       to="/boards/create" 
-                      className="btn-3d text-xs px-6 py-2 bg-primary text-background font-black uppercase tracking-wider"
+                      className="btn-haichan text-xs px-6 py-2 bg-primary text-background font-black uppercase tracking-wider shadow-lg"
                     >
                       Create Board
                     </Link>
@@ -469,17 +470,17 @@ export function HomePage() {
         {/* Right Column - System Stats */}
         <div className="lg:col-span-4 space-y-6">
           {/* Site Statistics */}
-          <div className="card-3d p-4 bg-primary/5 border-l-4 border-primary">
-            <h3 className="text-xs font-bold uppercase tracking-widest mb-4 flex items-center gap-2 border-b border-primary/20 pb-2">
+          <div className="border-2 border-primary/20 p-4 bg-primary/5 border-l-4 border-primary shadow-3d-sm">
+            <h3 className="text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2 border-b border-primary/20 pb-2 text-primary">
               <Database className="w-3 h-3" />
-              Human Consensus Stats
+              system stats
             </h3>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <span className="text-[10px] uppercase opacity-60 font-bold">Total Registered Users</span>
+                <span className="text-[10px] uppercase opacity-60 font-bold tracking-tight">Total Registered Users</span>
                 <span className="text-xs font-black">{totalUsers}</span>
               </div>
-              <div className="w-full bg-primary/10 h-1.5 overflow-hidden">
+              <div className="w-full bg-primary/10 h-1.5 overflow-hidden border border-primary/10">
                 <div 
                   className="bg-primary h-full transition-all duration-1000" 
                   style={{ width: `${(totalUsers / MAX_USERS) * 100}%` }}
@@ -487,15 +488,15 @@ export function HomePage() {
               </div>
               <div className="grid grid-cols-2 gap-4 pt-2">
                 <div>
-                  <div className="text-[9px] uppercase opacity-50 mb-1">Active Boards</div>
-                  <div className="text-sm font-black">{boards.length}</div>
+                  <div className="text-[9px] uppercase opacity-50 mb-1 font-bold">Active Boards</div>
+                  <div className="text-sm font-black text-primary">{boards.length}</div>
                 </div>
                 <div>
-                  <div className="text-[9px] uppercase opacity-50 mb-1">Users Currently Online</div>
+                  <div className="text-[9px] uppercase opacity-50 mb-1 font-bold">Users Online</div>
                   <div className="text-sm font-black flex items-center gap-2">
                     {onlineUsers.length}
                     {onlineUsers.length === 1 && (
-                      <span className="text-[8px] px-1 bg-primary/10 text-primary uppercase font-bold animate-pulse">
+                      <span className="text-[8px] px-1 bg-primary text-background uppercase font-black animate-pulse">
                         Sole User
                       </span>
                     )}
@@ -505,8 +506,10 @@ export function HomePage() {
             </div>
           </div>
 
-          <GlobalPoWStats />
           <HashleLeaderboard />
+          
+          <GlobalPoWStats />
+          
           <PostersList />
         </div>
       </div>

@@ -30,15 +30,15 @@ export function PostPreview({ post, position }: PostPreviewProps) {
 
   return (
     <div style={style}>
-      <div className="border border-border/40 bg-card p-1.5 shadow-2xl font-mono text-[11px] min-w-[300px]">
-        <div className="flex items-center flex-wrap gap-1 mb-1 border-b border-border/20 pb-1">
-           <span className="font-bold text-[#117743]">
+      <div className="border-2 border-primary bg-card p-2 shadow-3d-lg font-sans text-[11px] min-w-[300px]">
+        <div className="flex items-center flex-wrap gap-1 mb-1 border-b border-primary/20 pb-1">
+           <span className="font-bold text-[hsl(var(--name))]">
              {post.username || 'Anonymous'}
            </span>
-           {post.tripcode && <span className="text-[#117743]">!{post.tripcode}</span>}
+           {post.tripcode && <span className="text-[hsl(var(--name))] opacity-70">!{post.tripcode}</span>}
            <BadgesInline user={post} className="inline-flex scale-75 origin-left" />
-           <span className="text-foreground/70 ml-1">{formatDate(post.createdAt)}</span>
-           <span className="text-primary/70 ml-1">No.{post.post_number || post.postNumber}</span>
+           <span className="text-foreground/70 ml-1 font-medium">{formatDate(post.createdAt)}</span>
+           <span className="text-primary font-black ml-1 uppercase tracking-tighter">No.{post.post_number || post.postNumber}</span>
         </div>
         <div className="flex gap-3 mt-1">
           {post.imageUrl && (
@@ -46,11 +46,11 @@ export function PostPreview({ post, position }: PostPreviewProps) {
                <img 
                  src={post.imageUrl} 
                  alt="Preview" 
-                 className="max-w-[100px] max-h-[100px] border border-border bg-muted" 
+                 className="max-w-[100px] max-h-[100px] border border-primary/20 bg-muted/20 object-contain shadow-sm" 
                />
             </div>
           )}
-          <div className="whitespace-pre-wrap break-words text-[13px] leading-tight">
+          <div className="whitespace-pre-wrap break-words text-[13px] leading-[1.4] text-foreground/90 font-medium">
             {post.content}
           </div>
         </div>

@@ -1,8 +1,16 @@
 import { useState, useEffect, useRef } from 'react'
-import { Send } from 'lucide-react'
+import { Send, Zap, MessageSquare } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { processRichText } from '../../lib/rich-text'
+import { useAuth } from '../../contexts/AuthContext'
+import { usePoWValidity } from '../../hooks/use-pow-validity'
+import { useMining } from '../../hooks/use-mining'
+import { MiningManager } from '../../lib/mining/MiningManager'
+import { getPoWValidationData } from '../../lib/pow-validation'
+import { invokeFunction } from '../../lib/functions-utils'
+import toast from 'react-hot-toast'
+import { BadgesInline } from '../../lib/badge-utils'
 
 interface Message {
   id: string
@@ -91,39 +99,42 @@ export function ChatView() {
   }
 
   return (
-    <div className="border-2 border-black bg-background">
+    <div className="border-2 border-primary bg-background shadow-3d-sm font-sans overflow-hidden">
       {/* Header */}
-      <div className="border-b-2 border-black bg-black text-white px-3 py-1 font-mono text-sm font-bold flex justify-between items-center">
-        <span>Global Chat</span>
+      <div className="border-b-2 border-primary bg-primary text-background px-3 py-1 font-black text-[10px] uppercase tracking-widest flex justify-between items-center">
+        <span className="flex items-center gap-2">
+          <MessageSquare className="w-3 h-3" />
+          Global Chat
+        </span>
         <div className="flex items-center gap-2">
-          <Zap size={12} className={hasValidPoW ? 'text-green-400' : 'animate-pulse text-gray-400'} />
-          <span className="text-[10px] uppercase font-normal">
-            {hasValidPoW ? 'Ready' : 'Processing...'}
+          <Zap size={10} className={hasValidPoW ? 'text-background animate-pulse' : 'text-background/40'} />
+          <span className="text-[9px] font-black">
+            {hasValidPoW ? 'READY' : 'MINING...'}
           </span>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="h-[300px] overflow-y-auto p-3 space-y-2 font-mono text-xs">
+      <div className="h-[250px] overflow-y-auto p-3 space-y-1.5 font-sans text-xs custom-scrollbar bg-primary/5">
         {messages.map((msg) => (
-          <div key={msg.id} className="leading-tight">
-            <span className="text-gray-600">{formatTime(msg.timestamp)}</span>{' '}
-            <span className="font-bold flex items-center gap-0.5">
+          <div key={msg.id} className="leading-relaxed border-b border-primary/5 pb-1">
+            <span className="text-muted-foreground opacity-60 font-bold text-[9px] tabular-nums">{formatTime(msg.timestamp)}</span>{' '}
+            <span className="font-black text-primary uppercase tracking-tighter inline-flex items-center gap-1">
               {msg.username}
-              <BadgesInline user={msg.user} className="inline-flex ml-0.5" />
+              <BadgesInline user={msg.user} className="scale-75" />
             </span>
             {': '}
-            <div className="inline-block">{processRichText(msg.content)}</div>
+            <div className="inline-block text-foreground/90 font-medium">{processRichText(msg.content)}</div>
           </div>
         ))}
         <div ref={messagesEndRef} />
       </div>
 
       {/* Input */}
-      <div className="border-t-2 border-black p-2 flex flex-col gap-2">
+      <div className="border-t-2 border-primary/20 p-2 flex flex-col gap-2 bg-background">
         {dedicatedSession && !hasValidPoW && (
-          <div className="w-full bg-gray-200 h-0.5 overflow-hidden">
-            <div className="h-full bg-black animate-progress-fast" />
+          <div className="w-full bg-primary/10 h-1 overflow-hidden border border-primary/10">
+            <div className="h-full bg-primary animate-progress-fast" />
           </div>
         )}
         <div className="flex gap-2">
@@ -132,16 +143,16 @@ export function ChatView() {
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
             placeholder={hasValidPoW ? "Type message..." : "Waiting for PoW..."}
-            className="flex-1 h-8 border-2 border-black font-mono text-xs"
+            className="flex-1 h-8 border-2 border-primary/20 bg-primary/5 text-foreground font-sans text-[11px] focus:border-primary transition-colors font-medium"
             disabled={!hasValidPoW}
           />
           <Button
             onClick={sendMessage}
-            className={`h-8 px-3 border-2 border-black font-mono ${hasValidPoW ? 'bg-black text-white' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
+            className={`h-8 px-3 border-2 border-primary font-black uppercase text-[10px] tracking-widest shadow-sm ${hasValidPoW ? 'bg-primary text-background' : 'opacity-30'}`}
             size="sm"
             disabled={!hasValidPoW}
           >
-            <Send className="w-3 h-3" />
+            <Send className="w-3.5 h-3.5" />
           </Button>
         </div>
       </div>

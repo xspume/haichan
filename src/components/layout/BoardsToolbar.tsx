@@ -77,8 +77,8 @@ export function BoardsToolbar() {
   }
 
   return (
-    <div className="flex items-center gap-1 text-[11px] font-mono border-x border-primary/20 px-3 h-8 bg-primary/5 overflow-x-auto whitespace-nowrap custom-scrollbar">
-      <span className="text-primary/60 font-bold uppercase tracking-tighter mr-1">boards:</span>
+    <div className="flex items-center gap-1 text-[11px] font-sans border-x border-primary/20 px-3 h-8 bg-primary/5 overflow-x-auto whitespace-nowrap custom-scrollbar">
+      <span className="text-primary/60 font-black uppercase tracking-widest mr-1 text-[9px]">boards:</span>
       {boards.map((board, index) => (
         <span key={board.id} className="flex items-center">
           <Link 

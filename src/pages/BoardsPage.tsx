@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { TrendingUp } from 'lucide-react'
+import { TrendingUp, LayoutGrid } from 'lucide-react'
 import { publicDb } from '../lib/db-client'
 import { requestCache } from '../lib/request-cache'
 import { withRateLimit, isTransientError } from '../lib/rate-limit-utils'
@@ -152,7 +152,7 @@ export function BoardsPage() {
 
   // Board directory is public - show boards regardless of auth state
   return (
-    <div className="bg-background text-foreground min-h-screen font-mono">
+    <div className="bg-background text-foreground min-h-screen font-sans">
       <div className="container mx-auto p-3 max-w-7xl">
         {/* Diagnostic Banner - Remove after debugging */}
         {boards.length === 0 && !loading && (
@@ -174,15 +174,15 @@ export function BoardsPage() {
         
         <div className="mb-6 border-b-2 border-primary pb-4 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <h1 className="text-4xl font-black uppercase tracking-tight flex items-center gap-3">
+            <h1 className="text-4xl font-black uppercase tracking-tighter flex items-center gap-3 text-primary">
               <TrendingUp className="w-8 h-8 text-primary" />
               Boards
             </h1>
-            <p className="text-[10px] uppercase tracking-wider opacity-60 mt-1">
+            <p className="text-[10px] uppercase tracking-widest font-bold opacity-60 mt-1">
               Active boards ranked by cumulative work.
             </p>
           </div>
-          <Link to="/boards/create" className="btn-3d text-xs px-4 py-2 bg-primary text-background font-bold uppercase tracking-wider">
+          <Link to="/boards/create" className="btn-haichan text-xs px-6 py-2 uppercase font-black tracking-widest shadow-lg">
             Create Board
           </Link>
         </div>
@@ -191,43 +191,44 @@ export function BoardsPage() {
           {/* Left Column - Boards */}
           <div className="lg:col-span-2 space-y-3">
             {/* Boards Section - 4chan style */}
-            <div className="border border-foreground">
-              <div className="border-b border-foreground bg-muted px-2 py-1 font-bold text-xs">
-                Boards List
+            <div className="border-2 border-primary/20 shadow-3d-sm bg-card/30 overflow-hidden">
+              <div className="border-b-2 border-primary/20 bg-primary/10 px-3 py-1.5 font-black text-[10px] uppercase tracking-widest text-primary flex items-center gap-2">
+                <LayoutGrid className="w-3 h-3" />
+                Boards Directory
               </div>
-              <div className="p-3">
+              <div className="p-4">
                 {error && (
-                  <div className="p-3 mb-3 border-2 border-red-500 bg-red-500/10 text-red-500 text-[10px] font-mono text-center uppercase font-bold">
+                  <div className="p-3 mb-3 border-2 border-destructive/40 bg-destructive/10 text-destructive text-[10px] font-black text-center uppercase tracking-widest">
                     Error: {error}
                   </div>
                 )}
                 
                 {boards.length > 0 ? (
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {boards.map((board) => (
-                      <div key={board.id} className="border-b border-foreground/30 pb-2 last:border-0">
-                        <div className="flex items-baseline gap-2">
+                      <div key={board.id} className="border-b border-primary/5 pb-3 last:border-0 hover:bg-primary/5 transition-colors px-2 -mx-2">
+                        <div className="flex items-center gap-3">
                           <Link
                             to={`/board/${board.slug}`}
-                            className="font-bold text-sm hover:underline"
+                            className="font-black text-lg text-primary tracking-tighter hover:underline min-w-[60px]"
                           >
                             /{board.slug}/
                           </Link>
-                          <span className="text-xs text-muted-foreground flex-1">
+                          <span className="text-xs text-foreground/70 flex-1 line-clamp-1 font-medium italic">
                             {board.description || 'No description'}
                           </span>
-                          <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+                          <span className="text-[10px] text-primary/60 whitespace-nowrap font-black uppercase tracking-tighter">
                             {board.totalPow || 0} PoW
                           </span>
                           <button
                             onClick={() => setSelectedBoardForMining(board.id)}
-                            className={`text-[10px] font-mono font-bold px-2 py-0.5 border border-foreground transition-colors ${
+                            className={`text-[10px] font-black uppercase px-3 py-1 border-2 transition-all shadow-sm ${
                               selectedBoardForMining === board.id
-                                ? 'bg-primary text-primary-foreground'
-                                : 'bg-transparent hover:bg-muted'
+                                ? 'bg-primary text-background border-primary'
+                                : 'bg-background text-primary border-primary/20 hover:border-primary hover:bg-primary/10'
                             }`}
                           >
-                            MINE
+                            {selectedBoardForMining === board.id ? 'ACTIVE' : 'MINE'}
                           </button>
                         </div>
                       </div>

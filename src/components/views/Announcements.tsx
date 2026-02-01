@@ -88,10 +88,10 @@ export function Announcements() {
   if (announcements.length === 0 && !isAdmin) return null
 
   return (
-    <div className="card-3d p-4 bg-primary/5 border-primary/20 relative overflow-hidden">
+    <div className="card-3d p-4 bg-primary/5 border-2 border-primary/20 relative overflow-hidden shadow-3d-sm">
       <div className="flex items-center justify-between mb-4 border-b border-primary/20 pb-2">
-        <h3 className="text-xs font-bold uppercase tracking-wider flex items-center gap-2">
-          <Megaphone className="w-3 h-3 text-[#FFD700]" />
+        <h3 className="text-xs font-black uppercase tracking-widest flex items-center gap-2 text-primary">
+          <Megaphone className="w-3 h-3 text-primary animate-pulse" />
           Announcements
         </h3>
         {isAdmin && (
@@ -110,9 +110,9 @@ export function Announcements() {
         )}
 
         {announcements.map((a) => (
-          <div key={a.id} className="relative group p-3 bg-background border border-primary/10 hover:border-primary/30 transition-all">
+          <div key={a.id} className="relative group p-3 bg-card border-2 border-primary/10 hover:border-primary/30 transition-all shadow-sm">
             <div className="flex justify-between items-start mb-1">
-              <span className="text-[9px] font-bold text-primary opacity-60">
+              <span className="text-[9px] font-black text-primary uppercase tracking-tighter opacity-60">
                 {new Date(a.createdAt).toLocaleString()}
               </span>
               {isAdmin && (
@@ -124,7 +124,7 @@ export function Announcements() {
                 </button>
               )}
             </div>
-            <p className="text-xs font-mono leading-relaxed whitespace-pre-wrap">{a.content}</p>
+            <p className="text-[13px] font-sans leading-relaxed whitespace-pre-wrap text-foreground/90 font-medium">{a.content}</p>
           </div>
         ))}
 
@@ -134,14 +134,14 @@ export function Announcements() {
               value={newAnnouncement}
               onChange={(e) => setNewAnnouncement(e.target.value)}
               placeholder="Post new announcement..."
-              className="w-full bg-background border border-primary/20 p-2 text-xs font-mono focus:border-primary outline-none min-h-[60px]"
+              className="w-full bg-background border-2 border-primary/20 p-2 text-xs font-sans focus:border-primary outline-none min-h-[60px] leading-relaxed transition-colors"
             />
             <button
               onClick={handlePost}
               disabled={isPosting || !newAnnouncement.trim()}
-              className="btn-3d w-full py-1 text-[10px] flex items-center justify-center gap-2"
+              className="btn-haichan w-full py-2 text-[10px] flex items-center justify-center gap-2 uppercase font-black tracking-widest shadow-lg"
             >
-              {isPosting ? 'Posting...' : <><Plus size={12} /> Create Announcement</>}
+              {isPosting ? 'Posting...' : <><Plus size={14} /> Create Announcement</>}
             </button>
           </div>
         )}

@@ -165,44 +165,44 @@ export function GlobalPoWStats() {
   }
 
   return (
-    <div className="card-3d bg-background overflow-hidden">
+    <div className="card-3d bg-background overflow-hidden border-2 border-primary/20 shadow-3d-sm">
       {/* Header */}
-      <div className="bg-primary text-background px-3 py-1 font-mono text-[10px] font-bold uppercase flex items-center justify-between">
+      <div className="bg-primary text-background px-3 py-1 font-sans text-[10px] font-black uppercase flex items-center justify-between tracking-widest">
         <span>Global Statistics</span>
         <Activity className="w-3 h-3" />
       </div>
 
       <div className="p-4 space-y-4">
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-2 font-mono text-[9px]">
-          <div className="border border-primary/20 bg-primary/5 p-2 space-y-1">
+        <div className="grid grid-cols-2 gap-2 font-sans text-[9px]">
+          <div className="border-2 border-primary/10 bg-primary/5 p-2 space-y-1 shadow-sm">
             <div className="flex items-center gap-1 opacity-60">
               <TrendingUp className="w-2.5 h-2.5" />
-              <span className="uppercase font-bold">Total Work</span>
+              <span className="uppercase font-black tracking-tighter">Total Work</span>
             </div>
             <div className="text-base font-black tracking-tighter text-primary">{stats.totalPoW.toLocaleString()}</div>
           </div>
 
-          <div className="border border-primary/20 bg-primary/5 p-2 space-y-1">
+          <div className="border-2 border-primary/10 bg-primary/5 p-2 space-y-1 shadow-sm">
             <div className="flex items-center gap-1 opacity-60">
               <Users className="w-2.5 h-2.5" />
-              <span className="uppercase font-bold">Total Users</span>
+              <span className="uppercase font-black tracking-tighter">Total Users</span>
             </div>
             <div className="text-base font-black tracking-tighter text-primary">{stats.totalUsers}</div>
           </div>
 
-          <div className="border border-primary/20 bg-primary/5 p-2 space-y-1">
+          <div className="border-2 border-primary/10 bg-primary/5 p-2 space-y-1 shadow-sm">
             <div className="flex items-center gap-1 opacity-60">
               <Zap className="w-2.5 h-2.5" />
-              <span className="uppercase font-bold">Threads</span>
+              <span className="uppercase font-black tracking-tighter">Threads</span>
             </div>
             <div className="text-base font-black tracking-tighter text-primary">{stats.totalThreads}</div>
           </div>
 
-          <div className="border border-primary/20 bg-primary/5 p-2 space-y-1">
+          <div className="border-2 border-primary/10 bg-primary/5 p-2 space-y-1 shadow-sm">
             <div className="flex items-center gap-1 opacity-60">
               <Award className="w-2.5 h-2.5" />
-              <span className="uppercase font-bold">Posts</span>
+              <span className="uppercase font-black tracking-tighter">Posts</span>
             </div>
             <div className="text-base font-black tracking-tighter text-primary">{stats.totalPosts}</div>
           </div>
@@ -210,20 +210,20 @@ export function GlobalPoWStats() {
 
         {/* Top Miners */}
         <div className="space-y-2">
-          <div className="text-[10px] uppercase font-bold text-primary opacity-60 border-b border-primary/20 pb-1">
+          <div className="text-[10px] uppercase font-black text-primary opacity-60 border-b border-primary/20 pb-1 tracking-widest">
             Top Contributors
           </div>
-          <div className="space-y-1 font-mono text-[10px]">
+          <div className="space-y-1 font-sans text-[10px]">
             {stats.topMiners.map((miner, index) => (
-              <div key={miner.id} className="flex items-center justify-between group py-0.5">
+              <div key={miner.id} className="flex items-center justify-between group py-0.5 px-1 hover:bg-primary/5 transition-colors">
                 <span className="flex items-center gap-2">
-                  <span className="opacity-40">{index + 1}</span>
-                  <span className="font-bold group-hover:text-primary transition-colors cursor-pointer">
+                  <span className="opacity-40 font-bold tabular-nums">0{index + 1}</span>
+                  <span className="font-black group-hover:text-primary transition-colors cursor-pointer text-[hsl(var(--name))]">
                     {formatBrandName(miner.username) || 'Anonymous'}
                   </span>
                   <BadgesInline user={miner} className="scale-75" />
                 </span>
-                <span className="font-bold tabular-nums text-primary/80">{Number(miner.totalPowPoints || 0).toLocaleString()}</span>
+                <span className="font-black tabular-nums text-primary/80">{Number(miner.totalPowPoints || 0).toLocaleString()}</span>
               </div>
             ))}
             {stats.topMiners.length === 0 && (

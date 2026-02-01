@@ -16,20 +16,20 @@ export function HubsToolbar() {
   ]
 
   return (
-    <div className="flex items-center gap-2 text-[11px] font-mono border-l border-primary/20 ml-2 pl-3">
+    <div className="flex items-center gap-2 text-[11px] font-sans border-l-2 border-primary/20 ml-2 pl-3">
       {hubs.map((hub) => (
         <Link
           key={hub.to}
           to={hub.to}
           className={cn(
-            "flex items-center gap-1.5 px-2 py-1 transition-all",
+            "flex items-center gap-1.5 px-2 py-1 transition-all uppercase font-black tracking-widest text-[9px]",
             location.pathname === hub.to 
-              ? "bg-primary text-background font-bold" 
+              ? "bg-primary text-background shadow-sm" 
               : "text-primary hover:bg-primary/10"
           )}
         >
           {hub.icon}
-          <span className="hidden xl:inline uppercase tracking-tighter">{hub.label}</span>
+          <span className="hidden xl:inline">{hub.label}</span>
         </Link>
       ))}
     </div>

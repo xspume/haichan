@@ -66,15 +66,15 @@ export const PostItem = React.memo(function PostItem({
   }
 
   return (
-    <div id={post.id} className="post-reply bg-card border border-border/40 p-1.5 mb-1.5 w-fit min-w-[300px] max-w-full relative scroll-mt-16">
+    <div id={post.id} className="post-reply bg-card border-2 border-primary/20 p-1.5 mb-1.5 w-fit min-w-[300px] max-w-full relative scroll-mt-16 shadow-sm">
       <span id={`p${post.post_number || post.postNumber}`} className="absolute -top-16" />
-      <div className="post-header flex items-center flex-wrap gap-1 text-[11px] mb-1 font-mono">
-        <input type="checkbox" className="mr-1 scale-75 opacity-50" />
-        <span className="font-bold text-[#117743]">
+      <div className="post-header flex items-center flex-wrap gap-1 text-[11px] mb-1 font-sans">
+        <input type="checkbox" className="mr-1 scale-75 opacity-50 accent-primary" />
+        <span className="font-bold text-[hsl(var(--name))]">
           {post.username || 'Anonymous'}
         </span>
         {post.tripcode && (
-          <span className="text-[#117743] font-normal">!{post.tripcode}</span>
+          <span className="text-[hsl(var(--name))] font-normal opacity-70">!{post.tripcode}</span>
         )}
         <BadgesInline user={post} className="inline-flex scale-75 origin-left" />
         
@@ -87,13 +87,13 @@ export const PostItem = React.memo(function PostItem({
         <span className="text-foreground/70">{formatDate(post.createdAt)}</span>
         
         <span 
-          className="cursor-pointer hover:underline text-primary/70 font-normal ml-1"
+          className="cursor-pointer hover:underline text-primary/70 font-bold ml-1"
           onClick={() => onPostNumberClick(post.post_number || post.postNumber)}
         >
           No.{post.post_number || post.postNumber}
         </span>
         
-        <span className="text-muted-foreground opacity-30 text-[9px] ml-1">{formatHashAge(post.createdAt)}</span>
+        <span className="text-muted-foreground opacity-30 text-[9px] ml-1 uppercase">{formatHashAge(post.createdAt)}</span>
         
         <div className="flex items-center gap-1 ml-1 opacity-70">
           <DifficultyBandBadge points={post.totalPow || 0} className="scale-75 origin-left" />
@@ -108,7 +108,7 @@ export const PostItem = React.memo(function PostItem({
                   <MoreVertical className="h-3 w-3" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="font-mono bg-popover text-popover-foreground border-border rounded-none">
+              <DropdownMenuContent align="end" className="font-sans bg-popover text-popover-foreground border-border rounded-none">
                 <DropdownMenuLabel className="text-[10px]">Actions</DropdownMenuLabel>
                 {isAdmin && (
                   <>
@@ -133,11 +133,11 @@ export const PostItem = React.memo(function PostItem({
         {post.imageUrl && (
           <div className="relative group shrink-0 mb-1">
             <div className={getEffectivePow(post.totalPow || 0, post.id, targetType) < 20 ? 'blur-sm grayscale transition-all duration-500' : ''}>
-              <a href={post.imageUrl} target="_blank" rel="noopener noreferrer">
+              <a href={post.imageUrl} target="_blank" rel="noopener noreferrer" className="block border border-primary/20 hover:border-primary/50 transition-colors">
                 <img
                   src={post.imageUrl}
                   alt="Post"
-                  className="max-w-[150px] max-h-[150px] border border-border shadow-sm bg-muted"
+                  className="max-w-[150px] max-h-[150px] object-contain bg-muted/20"
                 />
               </a>
             </div>
@@ -147,7 +147,7 @@ export const PostItem = React.memo(function PostItem({
                 onClick={(e) => onToggleMining(e, targetType, post.id)}
               >
                 <div className={`
-                  text-[9px] font-mono px-1 py-0.5 border flex items-center gap-1
+                  text-[9px] font-sans px-1 py-0.5 border flex items-center gap-1
                   ${dedicatedSession?.targetId === post.id 
                     ? "bg-primary text-primary-foreground border-primary animate-pulse" 
                     : "bg-background text-foreground border-foreground hover:bg-muted"}
@@ -170,14 +170,14 @@ export const PostItem = React.memo(function PostItem({
         )}
         
         <div className="flex-1">
-          <div className="post-content whitespace-pre-wrap break-words text-foreground font-mono text-[13px] leading-[1.3] mb-2">
+          <div className="post-content whitespace-pre-wrap break-words text-foreground font-sans text-[13px] leading-[1.4] mb-2 px-1">
             {richText}
           </div>
           
-          <div className="flex gap-2 text-[9px] items-center text-muted-foreground opacity-50 group">
-            <span className="font-mono text-primary/70">POW: {getEffectivePow(post.totalPow || 0, post.id, targetType)}</span>
-            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <MiningButton targetType={targetType} targetId={post.id} size="sm" className="h-4 px-1.5 text-[8px] bg-primary/20 hover:bg-primary/40 text-primary border-none rounded-none" />
+          <div className="flex gap-2 text-[9px] items-center text-muted-foreground opacity-50 group px-1">
+            <span className="font-bold text-primary/70 uppercase tracking-widest">PoW: {getEffectivePow(post.totalPow || 0, post.id, targetType)}</span>
+            <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity ml-2">
+              <MiningButton targetType={targetType} targetId={post.id} size="sm" className="h-4 px-1.5 text-[8px] bg-primary/10 hover:bg-primary/30 text-primary border border-primary/20 rounded-none uppercase font-black" />
             </div>
           </div>
         </div>

@@ -260,13 +260,13 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
   }
 
   return (
-    <div className="fixed bottom-0 right-0 p-2 z-50 w-full max-w-sm">
-      <div className="border border-border/40 shadow-2xl bg-card text-card-foreground font-mono">
-        <div className="flex items-center justify-between bg-primary text-primary-foreground p-1 border-b border-border/20 cursor-move handle">
-          <span className="font-bold text-[10px] uppercase tracking-widest">Quick Reply</span>
+    <div className="fixed bottom-0 right-0 p-2 z-50 w-full max-w-sm font-sans">
+      <div className="border-2 border-primary shadow-3d bg-card text-card-foreground">
+        <div className="flex items-center justify-between bg-primary text-background p-1.5 border-b-2 border-primary cursor-move handle">
+          <span className="font-black text-[10px] uppercase tracking-widest px-1">Quick Reply</span>
           <div className="flex gap-1">
-            <button onClick={() => setMinimized(true)} className="hover:opacity-70"><Minimize2 className="w-3 h-3" /></button>
-            <button onClick={onClose} className="hover:opacity-70"><X className="w-3 h-3" /></button>
+            <button onClick={() => setMinimized(true)} className="hover:bg-background/20 p-0.5"><Minimize2 className="w-3.5 h-3.5" /></button>
+            <button onClick={onClose} className="hover:bg-background/20 p-0.5"><X className="w-3.5 h-3.5" /></button>
           </div>
         </div>
         
@@ -276,7 +276,7 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
               placeholder="Name#trip" 
               value={nameField} 
               onChange={e => setNameField(e.target.value)}
-              className="w-full text-[11px] h-6 bg-background border border-border/20 px-1 focus:outline-none focus:border-primary"
+              className="w-full text-[11px] h-7 bg-background border-2 border-primary/20 px-2 focus:outline-none focus:border-primary font-bold placeholder:opacity-50"
             />
           </div>
           
@@ -284,7 +284,7 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
             value={content}
             onChange={e => setContent(e.target.value)}
             placeholder="Comment"
-            className="w-full text-[12px] min-h-[80px] bg-background border border-border/20 p-1 focus:outline-none focus:border-primary resize-none"
+            className="w-full text-[12px] min-h-[80px] bg-background border-2 border-primary/20 p-2 focus:outline-none focus:border-primary resize-none leading-relaxed placeholder:opacity-50"
           />
 
           <div className="flex items-center justify-between gap-2">
@@ -293,28 +293,28 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
                 id="qr-anonymous" 
                 checked={postAnonymously}
                 onCheckedChange={(checked) => setPostAnonymously(checked === true)}
-                className="h-3 w-3 border border-border/20"
+                className="h-3.5 w-3.5 border-2 border-primary/40 data-[state=checked]:bg-primary data-[state=checked]:text-background"
               />
               <Label
                 htmlFor="qr-anonymous"
-                className="text-[10px] cursor-pointer"
+                className="text-[10px] cursor-pointer font-black uppercase tracking-widest opacity-70"
               >
                 POST ANON
               </Label>
             </div>
             
             {!hasValidPoW && (
-              <div className="flex items-center gap-1 text-[9px] text-primary animate-pulse">
-                <Loader2 className="w-2 h-2 animate-spin" />
+              <div className="flex items-center gap-1.5 text-[9px] text-primary animate-pulse font-black tracking-widest">
+                <Loader2 className="w-2.5 h-2.5 animate-spin" />
                 MINING PoW...
               </div>
             )}
           </div>
 
           <div className="flex items-center gap-2">
-             <div className="flex gap-1">
-               <label htmlFor="qr-image" className="cursor-pointer border border-border/20 p-1 bg-background hover:bg-muted" title="Upload Image">
-                 <ImageIcon className="w-3 h-3" />
+             <div className="flex gap-1.5">
+               <label htmlFor="qr-image" className="cursor-pointer border-2 border-primary/20 p-1.5 bg-background hover:bg-primary/10 transition-colors shadow-sm" title="Upload Image">
+                 <ImageIcon className="w-3.5 h-3.5 text-primary" />
                </label>
                <input 
                  ref={fileInputRef}
@@ -326,15 +326,15 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
 
                <Dialog open={showCanvas} onOpenChange={setShowCanvas}>
                  <DialogTrigger asChild>
-                   <button type="button" className="cursor-pointer border border-border/20 p-1 bg-background hover:bg-muted" title="Draw Image">
-                     <Palette className="w-3 h-3" />
+                   <button type="button" className="cursor-pointer border-2 border-primary/20 p-1.5 bg-background hover:bg-primary/10 transition-colors shadow-sm" title="Draw Image">
+                     <Palette className="w-3.5 h-3.5 text-primary" />
                    </button>
                  </DialogTrigger>
-                 <DialogContent className="max-w-[95vw] w-[800px] h-[90vh] p-0 overflow-hidden border-4 border-foreground rounded-none bg-background shadow-3d">
-                   <DialogHeader className="p-4 border-b-2 border-foreground bg-primary text-background">
-                     <DialogTitle className="font-mono uppercase">Canvas Mode</DialogTitle>
+                 <DialogContent className="max-w-[95vw] w-[800px] h-[90vh] p-0 overflow-hidden border-4 border-primary rounded-none bg-background shadow-3d-lg">
+                   <DialogHeader className="p-4 border-b-2 border-primary bg-primary text-background">
+                     <DialogTitle className="font-black uppercase tracking-widest">Canvas Mode</DialogTitle>
                    </DialogHeader>
-                   <div className="flex-1 overflow-auto bg-muted">
+                   <div className="flex-1 overflow-auto bg-primary/5">
                      <DoodleMining 
                        onImageGenerated={handleCanvasImage}
                        showMining={false}
@@ -346,26 +346,26 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
 
              {imagePreview && (
                <div className="relative">
-                 <img src={imagePreview} className="h-6 w-6 object-cover border border-border/20" />
+                 <img src={imagePreview} className="h-7 w-7 object-cover border-2 border-primary shadow-sm" />
                  <button 
                    type="button"
                    onClick={() => { setImageFile(null); setImagePreview(null); }}
-                   className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full p-0.5"
+                   className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-none p-0.5 border border-background shadow-sm hover:scale-110 transition-transform"
                  >
-                   <X className="w-2 h-2" />
+                   <X className="w-2.5 h-2.5" />
                  </button>
                </div>
              )}
              
-             {!imagePreview && <span className="text-[9px] text-red-500 font-bold">* REQUIRED</span>}
+             {!imagePreview && <span className="text-[9px] text-destructive font-black tracking-widest animate-pulse">* REQUIRED</span>}
              
              <div className="ml-auto flex items-center gap-2">
                <button 
                  type="submit" 
                  disabled={loading || !content.trim() || !imageFile || !hasValidPoW}
-                 className="h-6 px-3 bg-primary text-primary-foreground text-[10px] font-bold uppercase tracking-widest hover:opacity-80 disabled:opacity-50 flex items-center gap-1"
+                 className="h-7 px-4 bg-primary text-background text-[10px] font-black uppercase tracking-widest hover:opacity-90 disabled:opacity-30 flex items-center gap-1.5 shadow-sm transition-all active:scale-95"
                >
-                 {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <><Send className="w-3 h-3" /> Post</>}
+                 {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <><Send className="w-3.5 h-3.5" /> POST</>}
                </button>
              </div>
           </div>

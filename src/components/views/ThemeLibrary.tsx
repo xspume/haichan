@@ -90,16 +90,16 @@ export const ThemeLibrary: React.FC<ThemeLibraryProps> = ({ refreshTrigger }) =>
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 font-sans">
       {themes.map((theme) => (
         <Card 
           key={theme.id}
-          className={`group overflow-hidden transition-all hover:scale-[1.02] border-2 ${
-            activeThemeId === theme.id ? 'border-primary shadow-glow' : 'border-border'
+          className={`group overflow-hidden transition-all hover:scale-[1.01] border-2 shadow-sm hover:shadow-3d-sm ${
+            activeThemeId === theme.id ? 'border-primary' : 'border-primary/20'
           }`}
         >
           <div 
-            className="h-32 w-full relative overflow-hidden"
+            className="h-32 w-full relative overflow-hidden bg-muted/20"
             style={{ backgroundColor: theme.colors.background }}
           >
             {theme.backgroundImage && (
@@ -114,55 +114,55 @@ export const ThemeLibrary: React.FC<ThemeLibraryProps> = ({ refreshTrigger }) =>
                 <img src={theme.logoImage} alt="logo" className="h-16 w-16 object-contain z-10" />
               ) : (
                 <>
-                  <div className="w-6 h-6 rounded-full shadow-lg" style={{ backgroundColor: theme.colors.primary }}></div>
-                  <div className="w-6 h-6 rounded-full shadow-lg" style={{ backgroundColor: theme.colors.secondary }}></div>
-                  <div className="w-6 h-6 rounded-full shadow-lg" style={{ backgroundColor: theme.colors.accent }}></div>
+                  <div className="w-6 h-6 shadow-md border border-background" style={{ backgroundColor: theme.colors.primary }}></div>
+                  <div className="w-6 h-6 shadow-md border border-background" style={{ backgroundColor: theme.colors.secondary }}></div>
+                  <div className="w-6 h-6 shadow-md border border-background" style={{ backgroundColor: theme.colors.accent }}></div>
                 </>
               )}
             </div>
             {activeThemeId === theme.id && (
-              <Badge className="absolute top-2 right-2 bg-primary text-primary-foreground">
-                <Check className="w-3 h-3 mr-1" /> Active
+              <Badge className="absolute top-2 right-2 bg-primary text-background font-black uppercase tracking-widest text-[8px] py-0.5 px-1.5 border-none shadow-sm">
+                <Check className="w-2.5 h-2.5 mr-1" /> Active
               </Badge>
             )}
           </div>
           
-          <CardHeader className="pb-3">
-            <CardTitle className="text-lg flex items-center justify-between">
+          <CardHeader className="pb-3 bg-primary/5">
+            <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center justify-between text-primary">
               {theme.name}
               <div className="flex items-center gap-1">
                 {user?.id === theme.userId && (
                   <Button 
                     variant="ghost" 
                     size="icon" 
-                    className="h-8 w-8 text-destructive hover:bg-destructive/10"
+                    className="h-7 w-7 text-destructive hover:bg-destructive/10 border-none"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDelete(theme.id);
                     }}
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-3.5 h-3.5" />
                   </Button>
                 )}
               </div>
             </CardTitle>
-            <CardDescription className="line-clamp-2 h-10">
+            <CardDescription className="line-clamp-2 h-10 text-[10px] font-bold opacity-70 uppercase tracking-tight">
               {theme.description || 'A custom theme created by AI.'}
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="pt-0">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
-              <User className="w-3 h-3" />
-              <span>{theme.username}</span>
+          <CardContent className="pt-4 bg-background">
+            <div className="flex items-center gap-2 text-[10px] text-muted-foreground mb-4 font-black uppercase tracking-widest">
+              <User className="w-3 h-3 text-primary opacity-60" />
+              <span className="truncate">{theme.username}</span>
             </div>
 
             <Button 
-              className="w-full font-mono"
+              className="w-full font-black uppercase text-[10px] tracking-widest h-9 shadow-md"
               variant={activeThemeId === theme.id ? "default" : "outline"}
               onClick={() => handleApply(theme)}
             >
-              {activeThemeId === theme.id ? 'Active' : 'Apply Theme'}
+              {activeThemeId === theme.id ? 'ACTIVE' : 'APPLY THEME'}
             </Button>
           </CardContent>
         </Card>

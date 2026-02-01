@@ -11,38 +11,27 @@
   :root {
     /* Haichan Dark - Black/Grey/Green/Pink */
     
-    --background: 0 0% 4%; /* Near black #0a0a0a */
-    --foreground: 0 0% 75%; /* Light grey text */
-    
-    --card: 0 0% 8%; /* Dark grey card bg */
+    --background: 0 0% 4%; /* near-black #0a0a0a */
+    --foreground: 0 0% 75%; /* light grey text */
+    --card: 0 0% 8%; /* dark grey */
     --card-foreground: 0 0% 80%;
-    
-    --popover: 0 0% 6%;
-    --popover-foreground: 0 0% 80%;
-    
-    --primary: 120 70% 45%; /* Kelly green #4CBB17 */
+    --primary: 120 70% 45%; /* kelly green */
     --primary-foreground: 0 0% 0%;
-    
-    --secondary: 0 0% 15%; /* Dark grey */
+    --secondary: 0 0% 15%; /* dark grey */
     --secondary-foreground: 0 0% 70%;
-    
     --muted: 0 0% 12%;
     --muted-foreground: 0 0% 50%;
-    
-    --accent: 350 70% 75%; /* Light pink #FFB6C1 */
+    --accent: 350 70% 75%; /* light pink */
     --accent-foreground: 0 0% 0%;
-    
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 0 0% 100%;
-    
-    --border: 0 0% 20%; /* Grey border */
+    --border: 0 0% 20%;
     --input: 0 0% 10%;
     --ring: 120 70% 45%;
     
     --radius: 0px;
     
-    --font-mono: 'arial', 'helvetica', sans-serif;
-    --font-serif: 'times new roman', serif;
+    --font-sans: 'Arial', 'Helvetica', sans-serif;
+    --font-mono: 'IBM Plex Mono', 'JetBrains Mono', 'Fira Code', monospace;
+    --font-serif: 'Crimson Text', 'Times New Roman', serif;
     
     --shadow-3d: none;
     --shadow-3d-sm: none;
@@ -66,6 +55,15 @@
     --green-light: 120 55% 65%;
     --green-pale: 120 40% 80%;
     --pink-light: 350 70% 80%;
+    
+    /* Extended Palette */
+    --subject: 120 70% 45%;
+    --name: 150 75% 25%;
+    --link: 220 60% 50%;
+    --backlink: 30 80% 50%;
+    --quote: 120 50% 40%;
+    --side-bg: 0 0% 6%;
+    --side-border: 120 70% 20%;
   }
 
   /* Yotsuba (Light/Orange) */
@@ -274,20 +272,24 @@
     --muted: 120 50% 10%;
     --muted-foreground: 120 50% 40%;
     
-    --accent: 120 100% 50%;
+    --accent: 300 100% 50%; /* Added Neon Pink as accent */
     --accent-foreground: 0 0% 0%;
     
     --destructive: 0 100% 50%;
     --destructive-foreground: 0 0% 0%;
     
-    --border: 120 100% 30%;
-    --input: 0 0% 10%;
+    --border: 120 100% 20%;
+    --input: 0 0% 5%;
     --ring: 120 100% 50%;
     
     --radius: 0px;
     
     --sidebar-background: 0 0% 3%;
     --sidebar-foreground: 120 100% 50%;
+    
+    --subject: 120 100% 60%;
+    --name: 120 100% 40%;
+    --link: 300 100% 60%;
   }
 
   /* Pink (Neon Pink/Black) */
@@ -468,20 +470,24 @@
     --muted: 120 50% 10%;
     --muted-foreground: 120 50% 40%;
     
-    --accent: 120 100% 50%;
+    --accent: 300 100% 50%; /* Added Neon Pink as accent */
     --accent-foreground: 0 0% 0%;
     
     --destructive: 0 100% 50%;
     --destructive-foreground: 0 0% 0%;
     
-    --border: 120 100% 30%;
-    --input: 0 0% 10%;
+    --border: 120 100% 20%;
+    --input: 0 0% 5%;
     --ring: 120 100% 50%;
     
     --radius: 0px;
     
     --sidebar-background: 0 0% 3%;
     --sidebar-foreground: 120 100% 50%;
+    
+    --subject: 120 100% 60%;
+    --name: 120 100% 40%;
+    --link: 300 100% 60%;
   }
 
   /* Pink (Neon Pink/Black) */
@@ -566,6 +572,49 @@
   --yotsuba-text: 0 0% 0%;
   --yotsuba-link: 240 50% 40%;
   --yotsuba-name: 150 75% 25%; /* #117743 */
+  
+  /* Broader palette extensions */
+  --chan-bg: 35 30% 96%;
+  --chan-border: 35 30% 80%;
+  --chan-text: 0 0% 0%;
+  --chan-link: 220 60% 50%;
+  --chan-subject: 120 70% 30%;
+  --chan-name: 120 70% 20%;
+  --chan-stat: 0 0% 40%;
+}
+
+/* Catalog Mode Styles - 4chan inspired */
+.catalog-container {
+  @apply grid gap-2;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.catalog-item {
+  @apply flex flex-col items-center text-center p-1 hover:bg-muted/50 transition-colors cursor-pointer border border-transparent hover:border-border/40;
+}
+
+.catalog-thumb-container {
+  @apply w-full aspect-square flex items-center justify-center overflow-hidden mb-1 relative bg-muted/20;
+}
+
+.catalog-thumb {
+  @apply max-w-full max-h-full object-contain shadow-sm;
+}
+
+.catalog-meta {
+  @apply w-full flex flex-col gap-0.5 overflow-hidden;
+}
+
+.catalog-stats {
+  @apply text-[10px] font-sans text-muted-foreground flex justify-center gap-1.5 leading-none mt-0.5;
+}
+
+.catalog-title {
+  @apply text-[11px] font-bold text-primary truncate leading-tight px-1;
+}
+
+.catalog-snippet {
+  @apply text-[10px] text-foreground/70 line-clamp-2 leading-snug px-1;
 }
 
 /* ============================================
@@ -713,6 +762,9 @@
   opacity: 0.8;
 }
 
+.redtext {
+  color: #dd4444 !important;
+}
 /* ========================================
    🎨 BLACK & GREEN GRADIENT + PINK OUTLINE
    ★★★ Haichan's new signature look ★★★
@@ -802,7 +854,7 @@
   
   body {
     @apply bg-background text-foreground;
-    font-family: 'arial', 'helvetica', sans-serif;
+    font-family: var(--font-sans);
     font-size: 13px;
     line-height: 1.4;
     position: relative;
@@ -862,7 +914,7 @@
   }
 
   .btn-haichan {
-    @apply border border-primary bg-transparent text-primary px-4 py-2 hover:bg-primary hover:text-white transition-colors;
+    @apply border border-primary bg-transparent text-primary px-4 py-2 hover:bg-primary hover:text-background transition-colors;
     border-radius: var(--radius);
   }
 
@@ -1047,11 +1099,11 @@
 
   /* 3D Slender UI Components - Removed for Yotsuba Style */
   .card-3d {
-    @apply border border-border bg-card;
+    @apply border-2 border-primary/20 bg-card shadow-sm transition-all;
   }
 
   .card-3d:hover {
-    /* No hover effect */
+    @apply border-primary/40 shadow-3d-sm;
   }
 
   .card-3d:active {
@@ -1059,16 +1111,15 @@
   }
 
   .btn-3d {
-    @apply border border-primary bg-background text-primary px-2 py-0.5 text-xs font-bold transition-colors cursor-pointer;
-    transition: all 0.1s ease;
+    @apply border-2 border-primary bg-background text-primary px-3 py-1 text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer shadow-sm;
   }
 
   .btn-3d:hover {
-    @apply bg-primary text-primary-foreground;
+    @apply bg-primary text-background shadow-3d-sm translate-x-[1px] translate-y-[1px];
   }
 
   .btn-3d:active {
-    @apply opacity-80;
+    @apply translate-x-[2px] translate-y-[2px] shadow-none;
   }
 
   /* Pink accent button variant */
@@ -1270,12 +1321,12 @@
   bottom: 80px;
   right: 16px;
   background: linear-gradient(90deg, rgba(255, 0, 0, 0.8), rgba(0, 255, 255, 0.8));
-  color: white;
+  color: #ffffff;
   font-size: 10px;
-  font-family: monospace;
+  font-family: var(--font-mono);
   font-weight: bold;
   padding: 4px 8px;
-  border: 2px solid white;
+  border: 2px solid rgba(255, 255, 255, 0.5);
   z-index: 9999;
   text-shadow: 1px 1px 0 black;
   animation: anaglyph-badge-pulse 2s infinite;

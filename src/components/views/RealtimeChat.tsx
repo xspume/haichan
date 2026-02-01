@@ -1,6 +1,6 @@
 import { invokeFunction } from '../../lib/functions-utils'
 import { useState, useEffect, useRef } from 'react'
-import { Send, Users as UsersIcon, Bot, Plus, UserPlus, Zap, Lock } from 'lucide-react'
+import { Send, Users as UsersIcon, Bot, Plus, UserPlus, Zap, Lock, MessageSquare } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog'
 import db, { publicDb } from '../../lib/db-client'
@@ -14,6 +14,7 @@ import { usePoWValidity } from '../../hooks/use-pow-validity'
 import { useMining } from '../../hooks/use-mining'
 import { MiningManager } from '../../lib/mining/MiningManager'
 import { getPoWValidationData } from '../../lib/pow-validation'
+import { subscribeToChannel } from '../../lib/realtime-manager'
 
 // Extracted ChatInput component to prevent re-renders of the main list
 const ChatInput = ({ onSend, disabled, hasValidPoW, dedicatedSession, difficulty, isAuthenticated }: { 
@@ -55,14 +56,14 @@ const ChatInput = ({ onSend, disabled, hasValidPoW, dedicatedSession, difficulty
   }
 
   return (
-    <div className="border-t-2 border-foreground p-2 flex flex-col gap-2">
+    <div className="border-t-2 border-primary p-2 flex flex-col gap-2 bg-primary/5">
       {/* PoW Progress Bar */}
-      <div className={`px-2 py-1 border text-[9px] font-mono flex items-center justify-between ${
-        hasValidPoW ? 'bg-green-900/20 border-green-500 text-green-400' : 'bg-primary/5 border-foreground/20 text-foreground/60'
+      <div className={`px-2 py-1 border text-[9px] font-sans flex items-center justify-between ${
+        hasValidPoW ? 'bg-primary/20 border-primary text-primary' : 'bg-primary/5 border-primary/20 text-primary/60'
       }`}>
         <div className="flex items-center gap-1.5">
-          <Zap size={10} className={hasValidPoW ? 'text-green-400' : 'animate-pulse'} />
-          <span>{hasValidPoW ? '✓ PoW READY' : dedicatedSession ? `MINING (${difficulty.prefix})...` : 'MINING STOPPED'}</span>
+          <Zap size={10} className={hasValidPoW ? 'text-primary' : 'animate-pulse opacity-50'} />
+          <span className="font-bold uppercase tracking-widest">{hasValidPoW ? '✓ PoW READY' : dedicatedSession ? `MINING (${difficulty.prefix})...` : 'MINING STOPPED'}</span>
         </div>
         {!hasValidPoW && dedicatedSession && <div className="w-16 h-1 bg-foreground/10 overflow-hidden"><div className="h-full bg-primary animate-progress-fast" /></div>}
       </div>
@@ -73,17 +74,18 @@ const ChatInput = ({ onSend, disabled, hasValidPoW, dedicatedSession, difficulty
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={hasValidPoW ? "Type message..." : "Waiting for PoW..."}
-          className="flex-1 px-2 py-1 border border-foreground bg-background text-foreground font-mono text-xs focus:outline-none"
+          className="flex-1 px-2 py-1 border-2 border-primary/20 bg-background text-foreground font-sans text-xs focus:outline-none focus:border-primary transition-colors"
           autoComplete="off"
           disabled={disabled || !hasValidPoW}
         />
         <Button 
           onClick={handleSend} 
           size="sm" 
-          className={`font-mono flex-shrink-0 ${hasValidPoW ? 'bg-primary' : 'opacity-50'}`} 
+          className={`font-sans font-black uppercase text-[10px] flex-shrink-0 ${hasValidPoW ? 'bg-primary text-background' : 'opacity-50'}`} 
           disabled={disabled || !hasValidPoW}
         >
-          <Send className="w-3 h-3" />
+          <Send className="w-3 h-3 mr-1" />
+          SEND
         </Button>
       </div>
     </div>
@@ -187,25 +189,42 @@ export function RealtimeChat() {
         .catch(err => console.error('[RealtimeChat] Mining error:', err))
     }
 
-    const unsubscribeChat = db.realtime.subscribe(REALTIME_CHANNEL, (message: any) => {
-      if (message.type === 'message') {
-        setMessages(prev => {
-          if (prev.some(m => m.id === message.data.id)) return prev
-          
-          // Play sound if mentioned or if it's a new message and we want sound
-          const isMentioned = isAuthenticated && user?.username && message.data.content.includes(`@${user.username}`) || message.data.content.includes('@talky')
-          if (isMentioned && message.data.userId !== user?.id) {
-            playPingSound()
+    // Use subscribeToChannel for auth-aware realtime subscriptions
+    // This prevents WebSocket errors for unauthenticated users
+    let unsubscribeChatFn: (() => void) | null = null
+    let unsubscribeActivityFn: (() => void) | null = null
+    
+    const setupRealtimeSubscriptions = async () => {
+      unsubscribeChatFn = await subscribeToChannel(
+        REALTIME_CHANNEL,
+        'realtime-chat-messages',
+        (message: any) => {
+          if (message.type === 'message') {
+            setMessages(prev => {
+              if (prev.some(m => m.id === message.data.id)) return prev
+              
+              // Play sound if mentioned or if it's a new message
+              const isMentioned = isAuthenticated && user?.username && message.data.content.includes(`@${user.username}`) || message.data.content.includes('@talky')
+              if (isMentioned && message.data.userId !== user?.id) {
+                playPingSound()
+              }
+              
+              return [...prev, message.data]
+            })
           }
-          
-          return [...prev, message.data]
-        })
-      }
-    })
-
-    const unsubscribeActivity = db.realtime.subscribe(ACTIVITY_CHANNEL, (message: any) => {
-      if (message.type === 'activity-update') loadOnlineUsers()
-    })
+        }
+      )
+      
+      unsubscribeActivityFn = await subscribeToChannel(
+        ACTIVITY_CHANNEL,
+        'realtime-chat-activity',
+        (message: any) => {
+          if (message.type === 'activity-update') loadOnlineUsers()
+        }
+      )
+    }
+    
+    setupRealtimeSubscriptions()
 
     const activityHeartbeat = setInterval(updateActivity, ACTIVITY_HEARTBEAT_INTERVAL)
     const inactivityCheck = setInterval(checkInactivity, 60000)
@@ -218,8 +237,8 @@ export function RealtimeChat() {
     window.addEventListener('click', handleInteraction, { passive: true })
 
     return () => {
-      unsubscribeChat?.then(unsub => unmountUnsubscribe(unsub));
-      unsubscribeActivity?.then(unsub => unmountUnsubscribe(unsub));
+      unsubscribeChatFn?.()
+      unsubscribeActivityFn?.()
       clearInterval(activityHeartbeat)
       clearInterval(inactivityCheck)
       clearInterval(talkyInterval)
@@ -235,10 +254,6 @@ export function RealtimeChat() {
       }
     }
   }, [user?.id, isAuthenticated])
-
-  const unmountUnsubscribe = (unsub: any) => {
-    if (typeof unsub === 'function') unsub();
-  }
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -462,33 +477,36 @@ export function RealtimeChat() {
 
   return (
     <>
-      <div className="h-full flex border-2 border-foreground">
+      <div className="h-full flex border-2 border-primary shadow-3d-sm bg-background">
         <div className="flex-1 flex flex-col">
-          <div className="border-b-2 border-foreground p-2 bg-background flex items-center justify-between">
-            <h3 className="font-bold font-mono">GLOBAL CHAT</h3>
+          <div className="border-b-2 border-primary p-2 bg-primary/5 flex items-center justify-between">
+            <h3 className="font-black text-xs uppercase tracking-widest text-primary flex items-center gap-2">
+              <MessageSquare className="w-3 h-3" />
+              Global Chat
+            </h3>
             <div className="flex gap-2">
-              <Button variant="ghost" size="sm" onClick={() => setShowCommandHelp(true)} className="font-mono text-xs">/help</Button>
+              <Button variant="ghost" size="sm" onClick={() => setShowCommandHelp(true)} className="font-sans text-[10px] uppercase font-bold tracking-tight h-6 px-2 hover:bg-primary/10">/help</Button>
             </div>
           </div>
-          <div className="flex-1 overflow-y-auto p-3 space-y-2">
+          <div className="flex-1 overflow-y-auto p-3 space-y-2 custom-scrollbar">
             {messages.map((msg) => {
               const isBot = Number(msg.isBot) > 0
               const isSelf = isAuthenticated && msg.userId === user?.id
               return (
-                <div key={msg.id} className={`border border-foreground p-2 ${isBot ? 'bg-muted border-2' : isSelf ? 'bg-foreground text-background' : 'bg-background'}`}>
+                <div key={msg.id} className={`border border-primary/20 p-2 shadow-sm ${isBot ? 'bg-primary/10 border-primary/40' : isSelf ? 'bg-primary/5 border-primary/30' : 'bg-card/50'}`}>
                   <div className="flex items-baseline justify-between mb-1">
-                    <span className="font-bold font-mono text-xs flex items-center gap-1">
-                      {isBot && <Bot className="w-3 h-3" />}
+                    <span className={`font-bold font-sans text-xs flex items-center gap-1 ${isSelf ? 'text-primary' : 'text-[hsl(var(--name))]'}`}>
+                      {isBot && <Bot className="w-3 h-3 text-primary animate-pulse" />}
                       {msg.username}
                     </span>
-                    <span className="text-[10px] font-mono opacity-60">{new Date(msg.createdAt).toLocaleTimeString()}</span>
+                    <span className="text-[9px] font-sans opacity-40 font-bold">{new Date(msg.createdAt).toLocaleTimeString()}</span>
                   </div>
-                  <div className="font-mono text-xs break-words">{msg.content}</div>
+                  <div className="font-sans text-[13px] break-words leading-relaxed text-foreground/90">{msg.content}</div>
                 </div>
-              )
+              );
             })}
             {messages.length === 0 && (
-              <div className="h-full flex items-center justify-center text-xs opacity-30 font-mono uppercase tracking-widest">
+              <div className="h-full flex items-center justify-center text-xs opacity-30 font-sans uppercase tracking-widest">
                 No signals detected...
               </div>
             )}
@@ -503,29 +521,29 @@ export function RealtimeChat() {
             isAuthenticated={isAuthenticated}
           />
         </div>
-        <div className="w-48 border-l-2 border-foreground flex flex-col">
-          <div className="border-b-2 border-foreground p-2 bg-background flex justify-between">
-            <span className="font-bold font-mono text-xs">ONLINE</span>
-            <span className="text-xs font-mono">{onlineUsers.length}/{MAX_USERS}</span>
+        <div className="w-48 border-l-2 border-primary flex flex-col">
+          <div className="border-b-2 border-primary p-2 bg-primary/5 flex justify-between">
+            <span className="font-bold font-sans text-xs uppercase tracking-widest">ONLINE</span>
+            <span className="text-xs font-sans">{onlineUsers.length}/{MAX_USERS}</span>
           </div>
           <div className="flex-1 overflow-y-auto p-2 space-y-1">
             {onlineUsers.map((u) => (
-              <div key={u.userId} className="flex items-center gap-2 p-1 border border-foreground">
-                <div className="w-2 h-2 bg-foreground rounded-full" />
-                <span className="font-mono text-xs truncate">{u.username}</span>
+              <div key={u.userId} className="flex items-center gap-2 p-1 border border-primary/20">
+                <div className="w-2 h-2 bg-primary rounded-full" />
+                <span className="font-sans text-xs truncate">{u.username}</span>
               </div>
             ))}
             {onlineUsers.length === 0 && (
-              <div className="p-2 text-[10px] opacity-30 uppercase font-mono">Alone in darkness</div>
+              <div className="p-2 text-[10px] opacity-30 uppercase font-sans">Alone in darkness</div>
             )}
           </div>
         </div>
       </div>
       <Dialog open={showCommandHelp} onOpenChange={setShowCommandHelp}>
-        <DialogContent className="font-mono">
+        <DialogContent className="font-sans">
           <DialogHeader><DialogTitle>Chat Commands</DialogTitle></DialogHeader>
           <div className="space-y-4 text-sm">
-            <div className="border border-foreground p-2">
+            <div className="border border-primary/20 p-2">
               <div className="font-bold mb-1">BASIC COMMANDS</div>
               <ul className="list-disc list-inside space-y-1 opacity-70">
                 <li>/help - Show this help</li>
@@ -533,7 +551,7 @@ export function RealtimeChat() {
                 <li>/online - List online users</li>
               </ul>
             </div>
-            <div className="border border-foreground p-2">
+            <div className="border border-primary/20 p-2">
               <div className="font-bold mb-1">TALKY COMMANDS</div>
               <ul className="list-disc list-inside space-y-1 opacity-70">
                 <li>@talky (message) - Mention Talky in chat</li>

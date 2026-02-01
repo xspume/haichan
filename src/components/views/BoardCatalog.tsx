@@ -26,6 +26,7 @@ const ThreadCard = memo(function ThreadCard({
   const elementRef = useRef<HTMLDivElement>(null)
 
   const truncate = useCallback((text: string, maxLength: number) => {
+    if (!text) return ''
     if (text.length <= maxLength) return text
     return text.substring(0, maxLength) + '...'
   }, [])
@@ -41,114 +42,94 @@ const ThreadCard = memo(function ThreadCard({
     }
   }, [useAttachTo])
 
-  const cardContent = (
-    <div
-      ref={elementRef}
-      className="bg-card border border-border/40 hover:bg-primary/5 transition-all cursor-crosshair h-full flex flex-col group overflow-hidden rounded-none"
-    >
-      {/* Thread Image */}
-      {thread.imageUrl && (
-        <div className="w-full aspect-square border-b border-border/20 overflow-hidden bg-muted flex items-center justify-center relative">
-          <div className={cn("w-full h-full transition-all duration-700", (thread.totalPow || 0) < 20 ? 'blur-md opacity-50 grayscale' : 'group-hover:scale-105')}>
-            <img
-              src={thread.imageUrl}
-              alt={thread.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          {(thread.totalPow || 0) < 20 && (
-            <div className="absolute inset-0 flex items-center justify-center bg-background/40 backdrop-blur-[2px]">
-              <div className="bg-background text-primary text-[8px] font-black uppercase tracking-wider px-2 py-1 border border-primary animate-pulse">
-                Verification Required
-              </div>
-            </div>
-          )}
-          {isMining && (
-            <div className="absolute top-2 right-2 z-10">
-              <MiningProgressBadge show={true} />
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Thread Info */}
-      <div className="p-2 flex-1 flex flex-col gap-1.5 font-mono">
-        <div className="flex flex-wrap gap-1">
-          <DifficultyBandBadge points={thread.totalPow || 0} className="scale-75 origin-left" />
-          {!thread.imageUrl && isMining && <MiningProgressBadge show={true} />}
-        </div>
-        
-        <h3 className="font-bold text-[11px] uppercase tracking-tighter line-clamp-2 text-primary group-hover:underline">
-          {truncate(thread.title, 50)}
-        </h3>
-        
-        <p className="text-[10px] text-foreground/60 line-clamp-3 flex-1 leading-tight">
-          {truncate(thread.content, 100)}
-        </p>
-
-        <div className="pt-1.5 border-t border-border/10 flex items-center justify-between text-[9px] font-bold uppercase tracking-wider">
-          <div className="flex items-center gap-1.5 opacity-60 overflow-hidden">
-            <span className="truncate text-[#117743]">{thread.username || 'Anonymous'}</span>
-          </div>
-          <div className="flex items-center gap-2 text-primary/70 tabular-nums">
-            <span className="flex items-center gap-0.5">
-              Replies: {replyCount}
-            </span>
-            <span className="flex items-center gap-0.5 font-black">
-              Work: {thread.totalPow || 0}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-
   return (
     <HoverCard openDelay={200}>
       <HoverCardTrigger asChild>
-        <Link to={`/board/${boardSlug}/thread/${thread.id}`} className="block h-full w-full">
-          {cardContent}
+        <Link 
+          to={`/board/${boardSlug}/thread/${thread.id}`} 
+          className="catalog-item group"
+          ref={elementRef}
+        >
+          {/* Thread Image Container */}
+          <div className="catalog-thumb-container">
+            {thread.imageUrl ? (
+              <img
+                src={thread.imageUrl}
+                alt={thread.title}
+                className={cn(
+                  "catalog-thumb transition-all duration-300",
+                  (thread.totalPow || 0) < 20 ? 'blur-md grayscale opacity-40' : 'group-hover:scale-105'
+                )}
+              />
+            ) : (
+              <div className="text-[10px] text-muted-foreground font-sans uppercase">No Image</div>
+            )}
+            
+            {/* Status Overlays */}
+            {(thread.totalPow || 0) < 20 && (
+              <div className="absolute inset-0 flex items-center justify-center bg-background/20 backdrop-blur-[1px]">
+                <div className="bg-background/80 text-[8px] font-bold border border-primary px-1 animate-pulse uppercase">
+                  Locked
+                </div>
+              </div>
+            )}
+            
+            {isMining && (
+              <div className="absolute top-1 right-1">
+                <MiningProgressBadge show={true} />
+              </div>
+            )}
+          </div>
+
+          {/* Metadata Section */}
+          <div className="catalog-meta">
+            <div className="catalog-stats">
+              <span>R: <b>{replyCount}</b></span>
+              <span>W: <b>{thread.totalPow || 0}</b></span>
+            </div>
+            
+            <h3 className="catalog-title">
+              {thread.title || 'Untitled'}
+            </h3>
+            
+            <p className="catalog-snippet">
+              {truncate(thread.content, 80)}
+            </p>
+          </div>
         </Link>
       </HoverCardTrigger>
-      <HoverCardContent className="w-80 rounded-none border-2 border-primary bg-background text-primary shadow-3d-lg z-50 p-4" side="right">
-        <div className="space-y-3">
+      
+      <HoverCardContent className="w-80 rounded-none border-2 border-primary bg-background text-primary shadow-3d-lg z-50 p-3 font-sans" side="bottom">
+        <div className="space-y-2">
           <div>
-            <h4 className="font-bold text-base mb-1 line-clamp-2 text-primary">{thread.title}</h4>
-            <p className="text-xs text-muted-foreground mb-2">{truncate(thread.content, 200)}</p>
+            <div className="flex justify-between items-start gap-2 mb-1">
+              <h4 className="font-bold text-sm line-clamp-2 text-primary leading-tight">
+                {thread.title || 'Untitled Thread'}
+              </h4>
+              <DifficultyBandBadge points={thread.totalPow || 0} className="scale-75 origin-right shrink-0" />
+            </div>
+            <p className="text-[11px] text-muted-foreground line-clamp-4 leading-normal italic">
+              "{truncate(thread.content, 250)}"
+            </p>
           </div>
           
-          <div className="space-y-2 border-t border-border pt-2">
-            <div className="flex items-center gap-2">
-              <User className="w-3 h-3 text-primary" />
-              <span className="text-xs">
-                <span className="font-bold">Poster:</span> {thread.username || 'Anonymous'}
-              </span>
+          <div className="grid grid-cols-2 gap-y-1 text-[10px] border-t border-border/20 pt-2 uppercase font-bold tracking-tight">
+            <div className="flex items-center gap-1.5">
+              <User className="w-2.5 h-2.5 text-primary" />
+              <span className="truncate">{thread.username || 'Anonymous'}</span>
             </div>
-            
-            <div className="flex items-center gap-2">
-              <MessageCircle className="w-3 h-3 text-primary" />
-              <span className="text-xs">
-                <span className="font-bold">Replies:</span> {replyCount}
-              </span>
+            <div className="flex items-center gap-1.5 justify-end">
+              <MessageCircle className="w-2.5 h-2.5 text-primary" />
+              <span>{replyCount} Replies</span>
             </div>
-            
-            <div className="flex items-center gap-2">
-              <TrendingUp className="w-3 h-3 text-primary" />
-              <span className="text-xs">
-                <span className="font-bold">Total PoW:</span> {thread.totalPow || 0}
-              </span>
+            <div className="flex items-center gap-1.5">
+              <TrendingUp className="w-2.5 h-2.5 text-primary" />
+              <span>Work: {thread.totalPow || 0}</span>
             </div>
-            
-            <div className="flex items-center gap-2">
-              <Clock className="w-3 h-3 text-primary" />
-              <span className="text-xs">
-                <span className="font-bold">Created:</span> {formatDate(thread.createdAt)}
-              </span>
+            <div className="flex items-center gap-1.5 justify-end">
+              <Clock className="w-2.5 h-2.5 text-primary" />
+              <span>{formatDate(thread.createdAt)}</span>
             </div>
-          </div>
-          
-          <div className="text-xs text-muted-foreground border-t border-border pt-2">
-            Click to view thread
           </div>
         </div>
       </HoverCardContent>
@@ -167,14 +148,14 @@ export function BoardCatalog({ threads, boardSlug }: BoardCatalogProps) {
 
   if (threads.length === 0) {
     return (
-      <div className="border-2 border-foreground p-8 text-center">
-        <p className="font-mono text-muted-foreground">No threads yet. Create the first thread.</p>
+      <div className="border border-border p-8 text-center bg-card/50">
+        <p className="font-sans text-muted-foreground text-sm italic">No threads yet. Create the first thread.</p>
       </div>
     )
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+    <div className="catalog-container">
       {threads.map((thread) => (
         <ThreadCard 
           key={thread.id} 

@@ -175,7 +175,7 @@ export function NewReplyPage() {
   }
 
   return (
-    <div className="bg-background text-foreground min-h-screen">
+    <div className="bg-background text-foreground min-h-screen font-sans">
       <div className="container mx-auto p-4 max-w-2xl">
         <button
           onClick={() => navigate(`/board/${boardSlug}/thread/${threadId}`)}
@@ -185,40 +185,40 @@ export function NewReplyPage() {
           BACK TO THREAD
         </button>
 
-        <div className="border-4 border-foreground bg-card text-card-foreground p-6">
-          <h1 className="text-2xl font-bold font-mono mb-2 uppercase">REPLY TO THREAD</h1>
+        <div className="border-4 border-primary bg-card text-card-foreground p-6 shadow-3d-sm">
+          <h1 className="text-2xl font-black uppercase tracking-tighter mb-2">REPLY TO THREAD</h1>
           {thread && (
-            <p className="text-xs text-muted-foreground mb-6 font-mono uppercase tracking-tighter">
+            <p className="text-[10px] text-muted-foreground mb-6 font-bold uppercase tracking-widest opacity-70">
               TARGET: {thread.title || 'Untitled Thread'}
             </p>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label htmlFor="content" className="font-mono uppercase">Your Reply *</Label>
+              <Label htmlFor="content" className="font-bold uppercase tracking-widest text-[10px]">Your Reply *</Label>
               <Textarea
                 id="content"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Message..."
-                className="mt-1 font-mono min-h-[150px]"
+                className="mt-1 min-h-[150px] leading-relaxed"
                 maxLength={10000}
               />
             </div>
 
-            <div className="border-2 border-foreground p-4 bg-muted/30">
-              <Label className="font-mono uppercase mb-3 block">File *</Label>
+            <div className="border-2 border-primary/20 p-4 bg-primary/5">
+              <Label className="font-bold uppercase tracking-widest text-[10px] mb-3 block">File *</Label>
               <div className="flex flex-wrap items-center gap-4">
                 {!imagePreview ? (
                   <div className="flex gap-2">
                     <Button
                       type="button"
                       variant="outline"
-                      className="h-24 w-24 flex-col gap-2 border-2 border-foreground border-dashed bg-background"
+                      className="h-24 w-24 flex-col gap-2 border-2 border-primary border-dashed bg-background hover:bg-primary/10 transition-all"
                       onClick={() => fileInputRef.current?.click()}
                     >
-                      <ImageIcon className="w-6 h-6" />
-                      <span className="text-[10px] font-bold">UPLOAD</span>
+                      <ImageIcon className="w-6 h-6 text-primary" />
+                      <span className="text-[10px] font-black uppercase">UPLOAD</span>
                     </Button>
                     <input
                       ref={fileInputRef}
@@ -262,8 +262,8 @@ export function NewReplyPage() {
                     >
                       <X className="w-3 h-3" />
                     </button>
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                       <span className="text-[10px] text-white font-bold bg-black px-1">SELECTED</span>
+                    <div className="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                       <span className="text-[10px] text-primary-foreground font-black bg-primary px-1 uppercase tracking-widest">SELECTED</span>
                     </div>
                   </div>
                 )}
@@ -280,17 +280,17 @@ export function NewReplyPage() {
               </div>
             </div>
 
-            <div className="flex items-center space-x-2 border-2 border-foreground p-3 bg-muted hover:bg-muted/50 transition-colors cursor-pointer"
+            <div className="flex items-center space-x-2 border-2 border-primary/20 p-3 bg-primary/5 hover:bg-primary/10 transition-colors cursor-pointer shadow-sm"
                  onClick={() => setPostAnonymously(!postAnonymously)}>
               <Checkbox 
                 id="anonymous" 
                 checked={postAnonymously}
                 onCheckedChange={(checked) => setPostAnonymously(checked === true)}
-                className="border-2 border-foreground"
+                className="border-2 border-primary"
               />
               <Label
                 htmlFor="anonymous"
-                className="font-mono text-[10px] uppercase font-bold tracking-widest cursor-pointer"
+                className="text-[10px] uppercase font-black tracking-widest cursor-pointer"
               >
                 Post Anonymously
               </Label>
@@ -300,7 +300,7 @@ export function NewReplyPage() {
               <Button
                 type="submit"
                 disabled={submitting || !content.trim() || !image}
-                className="w-full font-mono py-6 border-4 border-foreground shadow-3d hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all disabled:opacity-50 disabled:translate-none disabled:shadow-3d"
+                className="w-full py-6 border-4 border-primary shadow-3d-sm hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all disabled:opacity-50 disabled:translate-none uppercase font-black tracking-widest"
               >
                 {submitting ? 'PROCESSING...' : 'POST REPLY'}
               </Button>
