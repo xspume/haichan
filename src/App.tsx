@@ -50,6 +50,7 @@ const SeedPage = lazy(() => import('./pages/SeedPage'))
 const WorkLedgerPage = lazy(() => import('./pages/WorkLedgerPage').then(m => ({ default: m.WorkLedgerPage })))
 const AboutPage = lazy(() => import('./pages/AboutPage').then(m => ({ default: m.AboutPage })))
 const NotificationsPage = lazy(() => import('./pages/NotificationsPage').then(m => ({ default: m.NotificationsPage })))
+const OrbCallbackPage = lazy(() => import('./pages/OrbCallbackPage').then(m => ({ default: m.OrbCallbackPage })))
 
 const LoadingScreen = () => (
   <div className="min-h-screen bg-background flex items-center justify-center">
@@ -123,6 +124,7 @@ function AppRoutes() {
         <Suspense fallback={<LoadingScreen />}>
           <Routes>
             <Route path="/auth" element={<AuthPage />} />
+            <Route path="/auth/orb/callback" element={<OrbCallbackPage />} />
             <Route path="/login" element={<Navigate to="/auth" replace />} />
             <Route path="/register" element={<Navigate to="/auth" replace />} />
             <Route path="/seed" element={<SeedPage />} />

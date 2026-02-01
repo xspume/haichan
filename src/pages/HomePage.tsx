@@ -329,6 +329,11 @@ export function HomePage() {
               <div className="mt-2">
                 Check browser console (F12) for detailed logs.
                 Look for "[HomePage]", "[BoardsPage]", "[PostersList]" messages.
+                <div className="mt-2 pt-2 border-t border-primary/10">
+                  <Link to="/seed" className="text-primary font-bold hover:underline">
+                    [Click here to Initialize Database]
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
@@ -393,20 +398,20 @@ export function HomePage() {
           </div>
 
           {/* Boards Grid */}
-          <div className="space-y-4 pt-4">
-            <div className="flex items-center justify-between border-b-2 border-primary pb-2 mb-4 bg-black px-2">
-              <h3 className="text-sm font-black uppercase tracking-widest flex items-center gap-2 text-primary">
-                <LayoutGrid className="w-4 h-4" />
+          <div className="space-y-4">
+            <div className="retro-section-header">
+              <h3 className="text-lg font-black uppercase tracking-widest flex items-center gap-2 text-primary">
+                <LayoutGrid className="w-5 h-5" />
                 boards
               </h3>
-              <Link to="/boards" className="text-[10px] font-black text-accent hover:bg-accent hover:text-background px-3 py-1 border border-accent transition-all uppercase tracking-widest shadow-sm">
+              <Link to="/boards" className="retro-badge-pink hover:opacity-80 transition-opacity">
                 [view all]
               </Link>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
               {error && (
-                <div className="col-span-full p-4 border-2 border-red-500 bg-red-500/10 text-red-500 text-xs font-mono text-center">
+                <div className="p-4 border-2 border-red-500 bg-red-500/10 text-red-500 text-xs font-mono text-center">
                   {error.toUpperCase()}
                 </div>
               )}
@@ -415,18 +420,15 @@ export function HomePage() {
                 <Link 
                   key={board.id} 
                   to={`/board/${board.slug}`}
-                  className="border-2 border-primary/20 p-4 hover:bg-primary/5 transition-all group shadow-sm hover:shadow-3d-sm hover:border-primary/40 bg-black"
+                  className="retro-card flex justify-between items-center group py-6 px-6"
                 >
-                  <div className="flex justify-between items-start mb-2">
-                    <span className="text-lg font-black text-primary tracking-tighter uppercase">/{board.slug}/</span>
-                    <div className="flex items-center gap-1 text-[9px] font-black px-1.5 py-0.5 bg-accent text-background uppercase tracking-widest shadow-sm">
-                      <TrendingUp size={10} />
-                      {Number(board.totalPow || 0).toLocaleString()}
-                    </div>
+                  <span className="text-4xl font-black text-primary tracking-tighter uppercase group-hover:scale-[1.02] transition-transform origin-left">
+                    /{board.slug}/
+                  </span>
+                  <div className="retro-tag-pink group-hover:bg-accent group-hover:text-black transition-all">
+                    <TrendingUp size={14} />
+                    <span className="text-sm">{Number(board.totalPow || 0).toLocaleString()}</span>
                   </div>
-                  <p className="text-[10px] line-clamp-2 opacity-70 group-hover:opacity-100 transition-opacity">
-                    {board.description}
-                  </p>
                 </Link>
               ))}
               
@@ -473,36 +475,35 @@ export function HomePage() {
         {/* Right Column - System Stats */}
         <div className="lg:col-span-4 space-y-6">
           {/* Site Statistics */}
-          <div className="border-2 border-primary/20 p-4 bg-black border-l-4 border-primary shadow-3d-sm">
-            <h3 className="text-xs font-black uppercase tracking-widest mb-4 flex items-center gap-2 border-b border-primary/20 pb-2 text-primary">
-              <Database className="w-3 h-3" />
-              system stats
-            </h3>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-[10px] uppercase opacity-60 font-bold tracking-tight">Total Registered Users</span>
-                <span className="text-xs font-black">{totalUsers}</span>
+          <div className="border-2 border-primary/40 bg-black shadow-sm">
+            <div className="retro-section-header mb-0 border-x-0 border-t-0">
+              <h3 className="text-xs font-black uppercase tracking-widest flex items-center gap-2 text-primary">
+                <Database className="w-3 h-3" />
+                system stats
+              </h3>
+            </div>
+            <div className="p-4 space-y-6">
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] uppercase opacity-60 font-black tracking-widest">Total Registered Users</span>
+                  <span className="text-xs font-black">{totalUsers}</span>
+                </div>
+                <div className="w-full bg-primary/10 h-1 overflow-hidden">
+                  <div 
+                    className="bg-primary h-full transition-all duration-1000" 
+                    style={{ width: `${Math.min(100, (totalUsers / MAX_USERS) * 100)}%` }}
+                  />
+                </div>
               </div>
-              <div className="w-full bg-primary/10 h-1.5 overflow-hidden border border-primary/10">
-                <div 
-                  className="bg-primary h-full transition-all duration-1000" 
-                  style={{ width: `${(totalUsers / MAX_USERS) * 100}%` }}
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4 pt-2">
+              <div className="grid grid-cols-2 gap-8">
                 <div>
-                  <div className="text-[9px] uppercase opacity-50 mb-1 font-bold">Active Boards</div>
-                  <div className="text-sm font-black text-primary">{boards.length}</div>
+                  <div className="text-[9px] uppercase opacity-50 mb-1 font-black tracking-widest">Active Boards</div>
+                  <div className="text-2xl font-black text-primary leading-none">{boards.length}</div>
                 </div>
                 <div>
-                  <div className="text-[9px] uppercase opacity-50 mb-1 font-bold">Users Online</div>
-                  <div className="text-sm font-black flex items-center gap-2">
+                  <div className="text-[9px] uppercase opacity-50 mb-1 font-black tracking-widest">Users Online</div>
+                  <div className="text-2xl font-black flex items-center gap-2 leading-none">
                     {onlineUsers.length}
-                    {onlineUsers.length === 1 && (
-                      <span className="text-[8px] px-1 bg-primary text-background uppercase font-black animate-pulse">
-                        Sole User
-                      </span>
-                    )}
                   </div>
                 </div>
               </div>

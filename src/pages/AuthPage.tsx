@@ -16,6 +16,7 @@ import { validateUsername, sanitizeUsername } from '../lib/username-validation'
 import { MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH } from '../lib/constants'
 import { getCurrentPublicInviteCode, isPublicInviteActive, getTimeRemaining, getPublicInviteMessage } from '../lib/public-invite-codes'
 import { useAuth } from '../contexts/AuthContext'
+import { initiateOrbLogin } from '../lib/orb-auth'
 
 export function AuthPage() {
   const [activeTab, setActiveTab] = useState('login')
@@ -757,6 +758,27 @@ Generated: ${new Date().toISOString()}
                     {loading ? 'Logging in...' : 'Login'}
                   </Button>
                 </form>
+
+                <div className="mt-6 pt-6 border-t border-primary/20 space-y-4">
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t border-primary/20" />
+                    </div>
+                    <div className="relative flex justify-center text-[10px] uppercase font-black">
+                      <span className="bg-card px-2 text-primary opacity-60">Federated Identity</span>
+                    </div>
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={initiateOrbLogin}
+                    className="w-full rounded-none border-primary/50 hover:bg-primary/10 flex items-center justify-center space-x-2 h-12"
+                  >
+                    <div className="w-5 h-5 bg-primary text-background rounded-full flex items-center justify-center font-bold text-[10px]">O</div>
+                    <span className="font-black uppercase tracking-widest text-[10px]">Access via Orb</span>
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
