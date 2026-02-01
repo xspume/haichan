@@ -183,14 +183,19 @@ export function MainLayout() {
       )}
 
       {/* Header */}
-      <header className="h-16 border-b-2 border-primary bg-black sticky top-8 lg:top-10 z-50 flex items-center px-4 justify-between shadow-sm">
-        <div className="flex items-center gap-4">
-          <Link to="/" className="flex items-center justify-center w-10 h-10 bg-background border-2 border-primary shadow-3d-sm">
-            <Glasses className="w-6 h-6 text-primary" />
+      <header className="h-20 border-b-2 border-primary bg-black sticky top-8 lg:top-10 z-50 flex items-center px-4 justify-between">
+        <div className="flex items-center gap-6">
+          <Link to="/" className="flex items-center justify-center w-12 h-12 bg-black border-2 border-primary shadow-[4px_4px_0px_hsl(var(--primary))] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all">
+            <Glasses className="w-8 h-8 text-primary" />
           </Link>
           
-          <div className="hidden lg:flex items-center gap-2">
-            {/* Toolbars moved to top fixed bar */}
+          <div className="hidden lg:flex items-center gap-4">
+            <Link to="/mine" className="retro-button text-xs">
+              Start Mining
+            </Link>
+            <Link to="/chat" className="retro-button text-xs">
+              Global Chat
+            </Link>
           </div>
         </div>
 
@@ -199,14 +204,14 @@ export function MainLayout() {
           <button
             onClick={toggle3D}
             className={cn(
-              "p-1.5 transition-all duration-200 border-2 no-3d bg-background shadow-sm",
+              "w-10 h-10 flex items-center justify-center border-2 transition-all duration-200 no-3d bg-black",
               is3DEnabled
-                ? "btn-3d-toggle active border-primary"
-                : "border-primary/20 hover:border-primary text-primary hover:bg-primary/10"
+                ? "border-primary shadow-[2px_2px_0px_hsl(var(--primary))] text-primary"
+                : "border-primary/40 hover:border-primary text-primary/60 hover:text-primary"
             )}
             title={is3DEnabled ? "Disable 3D Mode" : "Enable 3D Mode (Red/Cyan Glasses)"}
           >
-            <Glasses className="w-4 h-4" />
+            <Glasses className="w-5 h-5" />
           </button>
 
           {user ? (

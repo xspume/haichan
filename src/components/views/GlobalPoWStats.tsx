@@ -80,8 +80,7 @@ export function GlobalPoWStats() {
           () => withRateLimit(
             () => publicDb.db.users.list({ 
               limit: 5, 
-              orderBy: { totalPowPoints: 'desc' },
-              where: { totalPowPoints: { '>': 0 } }
+              orderBy: { totalPowPoints: 'desc' }
             }),
             { maxRetries: 5, initialDelayMs: 300, timeoutMs: 20000 }
           ),
@@ -125,8 +124,7 @@ export function GlobalPoWStats() {
               () => publicDb.db.users.list({ 
                 limit: 120, 
                 orderBy: { totalPowPoints: 'desc' },
-                select: ['totalPowPoints'],
-                where: { totalPowPoints: { '>': 0 } }
+                select: ['totalPowPoints']
               }),
               { maxRetries: 5, initialDelayMs: 300, timeoutMs: 20000 }
             ) as any[];
