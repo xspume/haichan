@@ -21,6 +21,39 @@ interface ChannelState {
 const channels = new Map<string, ChannelState>()
 
 /**
+ * Known benign WebSocket error patterns from the Blink SDK's internal
+ * reconnection loop. These are not actionable by the user and can be
+ * safely suppressed to keep the console clean.
+ */
+const SUPPRESSED_WS_PATTERNS = [
+  'WebSocket error',
+  'Reconnection failed',
+  'BlinkRealtimeError',
+  'WebSocket connection failed',
+]
+
+/**
+ * Patch console.error once to suppress noisy SDK-internal WebSocket errors.
+ * The original is kept so truly unexpected errors still surface.
+ */
+let _consolePatchApplied = false
+function patchConsoleForRealtimeErrors() {
+  if (_consolePatchApplied) return
+  _consolePatchApplied = true
+
+  const _origError = console.error
+  console.error = (...args: any[]) => {
+    const first = typeof args[0] === 'string' ? args[0] : ''
+    if (SUPPRESSED_WS_PATTERNS.some(p => first.includes(p))) {
+      // Downgrade to debug so it's still visible when needed but not alarming
+      console.debug('[realtime-manager] Suppressed benign WS error:', first.slice(0, 80))
+      return
+    }
+    _origError.apply(console, args)
+  }
+}
+
+/**
  * Check if user is authenticated before attempting realtime connections
  * Realtime requires a valid user JWT to establish WebSocket connection
  */
@@ -45,6 +78,9 @@ export async function subscribeToChannel(
   listenerId: string,
   onMessage: (message: any) => void
 ): Promise<() => void> {
+  // Patch console.error early to suppress SDK-internal WS reconnection noise
+  patchConsoleForRealtimeErrors()
+
   // Check authentication before attempting WebSocket connection
   // This prevents "WebSocket error" logs when user is not authenticated
   const isAuth = await isUserAuthenticated()
@@ -148,6 +184,14 @@ async function subscribeChannelOnce(channelState: ChannelState): Promise<void> {
     }
     // Don't throw - allow components to continue without realtime
   }
+}
+
+/**
+ * Apply the console patch to suppress noisy WebSocket errors from the SDK.
+ * Safe to call multiple times (idempotent).
+ */
+export function suppressRealtimeConsoleErrors(): void {
+  patchConsoleForRealtimeErrors()
 }
 
 /**

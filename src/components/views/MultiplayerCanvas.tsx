@@ -673,6 +673,12 @@ export function MultiplayerCanvas() {
 
   const setupRealtimeChannel = async (currentUser: any, sessionId: string) => {
     try {
+      // Verify auth before attempting WebSocket connection
+      if (!db.auth.isAuthenticated()) {
+        toast('Real-time sync unavailable. Sign in for live collaboration.')
+        return
+      }
+
       // Use session-scoped channel
       const channel = db.realtime.channel(`canvas-${sessionId}`)
       channelRef.current = channel

@@ -1,9 +1,9 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { Award, Crown } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import db from '../../lib/db-client'
 import { requestCache } from '../../lib/request-cache'
-import type { RealtimeChannel } from '@blinkdotnew/sdk'
+import { subscribeToChannel } from '../../lib/realtime-manager'
 import { cn } from '../../lib/utils'
 
 interface Achievement {
@@ -16,42 +16,28 @@ export function DiamondHashDisplay() {
   const { authState } = useAuth()
   const [user, setUser] = useState<any>(null)
   const [achievements, setAchievements] = useState<Achievement[]>([])
-  const channelRef = useRef<RealtimeChannel | null>(null)
 
   useEffect(() => {
     if (!user?.id) return
 
-    let channel: RealtimeChannel | null = null
+    let unsubscribe: (() => void) | null = null
     let isMounted = true
 
     const initRealtime = async () => {
       try {
-        // Subscribe to mining updates channel
-        channel = db.realtime.channel('mining-updates')
-        await channel.subscribe({ userId: user.id })
-
-        if (!isMounted) {
-          channel?.unsubscribe()
-          return
-        }
-
-        // Listen for mining completion events
-        channel.onMessage((message) => {
-          if (isMounted && message.type === 'mining-complete' && message.userId === user.id) {
-            console.log('Mining completion received via realtime:', message.data)
-            // Reload user data when mining completes
-            loadUserData()
+        // Use managed subscribeToChannel which handles auth checks
+        unsubscribe = await subscribeToChannel(
+          'mining-updates',
+          `diamond-hash-${user.id}`,
+          (message) => {
+            if (isMounted && message.type === 'mining-complete' && message.userId === user.id) {
+              console.log('Mining completion received via realtime:', message.data)
+              loadUserData()
+            }
           }
-        })
-
-        channelRef.current = channel
+        )
       } catch (error: any) {
-        // Handle subscription timeout gracefully - realtime is non-critical
-        if (error?.name === 'BlinkRealtimeError' && error?.message?.includes('timeout')) {
-          console.warn('Mining updates realtime subscription timeout (non-critical)')
-        } else {
-          console.warn('Mining updates realtime subscription failed (non-critical):', error?.message || error)
-        }
+        // Non-critical - silently ignore
       }
     }
 
@@ -59,7 +45,7 @@ export function DiamondHashDisplay() {
 
     return () => {
       isMounted = false
-      channel?.unsubscribe()
+      unsubscribe?.()
     }
   }, [user?.id])
 

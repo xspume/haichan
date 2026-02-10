@@ -5,6 +5,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
+// Suppress benign SDK WebSocket reconnection errors early
+import { suppressRealtimeConsoleErrors } from './lib/realtime-manager'
+suppressRealtimeConsoleErrors()
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
