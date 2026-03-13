@@ -117,7 +117,7 @@ export function NewReplyPage() {
       if (image) {
         const fileName = `${Date.now()}-${image instanceof File ? image.name : 'canvas-upload.png'}`
         const result = await db.storage.upload(image, `posts/${fileName}`)
-        imageUrl = result.url
+        imageUrl = result.publicUrl
       }
 
       // 2. Securely validate and create post (Fix 3 & 5)
