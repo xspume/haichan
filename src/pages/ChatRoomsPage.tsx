@@ -8,7 +8,7 @@ import { Textarea } from '../components/ui/textarea'
 import { Badge } from '../components/ui/badge'
 import { Switch } from '../components/ui/switch'
 import { Plus, Users, Link2, Copy, Trash2, Settings } from 'lucide-react'
-import db from '../lib/db-client'
+import db, { publicDb } from '../lib/db-client'
 import toast from 'react-hot-toast'
 import { useAuth } from '../contexts/AuthContext'
 
