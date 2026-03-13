@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Reply, MessageSquare, Loader2 } from 'lucide-react'
+import { ArrowLeft, Reply, MessageSquare } from 'lucide-react'
 import { Button } from '../components/ui/button'
 import db, { publicDb } from '../lib/db-client'
 import { useAuth } from '../contexts/AuthContext'
@@ -20,34 +20,34 @@ export function ThreadDetailPage() {
   const [replyTo, setReplyTo] = useState<string | undefined>(undefined)
   const { dedicatedSession, startDedicatedMining, stopDedicatedMining } = useMining()
 
-  useEffect(() => {
-    async function loadThread() {
-      try {
-        if (!threadId) return
+  const loadThread = useCallback(async () => {
+    try {
+      if (!threadId) return
 
-        const threads = await publicDb.db.threads.list({
-          where: { id: threadId },
-          limit: 1
+      const threads = await publicDb.db.threads.list({
+        where: { id: threadId },
+        limit: 1
+      })
+
+      if (threads && threads.length > 0) {
+        setThread(threads[0])
+
+        const threadPosts = await publicDb.db.posts.list({
+          where: { threadId },
+          limit: 500
         })
-
-        if (threads && threads.length > 0) {
-          setThread(threads[0])
-
-          const threadPosts = await publicDb.db.posts.list({
-            where: { threadId },
-            limit: 500
-          })
-          setPosts(threadPosts || [])
-        }
-      } catch (error) {
-        console.error('Failed to load thread:', error)
-      } finally {
-        setLoading(false)
+        setPosts(threadPosts || [])
       }
+    } catch (error) {
+      console.error('Failed to load thread:', error)
+    } finally {
+      setLoading(false)
     }
-
-    loadThread()
   }, [threadId])
+
+  useEffect(() => {
+    loadThread()
+  }, [loadThread])
 
   const handlePostNumberClick = (num: string | number) => {
     setReplyTo(num.toString())
@@ -82,8 +82,8 @@ export function ThreadDetailPage() {
     }
   }
 
-  const handleModPost = async (id: string, reason: string) => {
-    toast.info(`Flagged: ${reason}`)
+  const handleModPost = async (_id: string, reason: string) => {
+    toast(`Flagged: ${reason}`)
   }
 
   if (loading) {

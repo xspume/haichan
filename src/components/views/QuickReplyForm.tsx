@@ -181,7 +181,7 @@ export function QuickReplyForm({ boardSlug, threadId, replyTo, onClose, onSucces
           `posts/${Date.now()}-${randomId}.${extension}`,
           { upsert: true }
         )
-        publicUrl = uploadResult.url
+        publicUrl = uploadResult.publicUrl
         await saveToImageLibrary(publicUrl, imageFile instanceof File ? imageFile.name : 'canvas-upload.png', imageFile.size, user.id)
       }
 
