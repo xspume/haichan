@@ -9,6 +9,7 @@ Haichan is a black and white, 90s-styled imageboard where all posting and chat a
 - **Proof-of-Work Economy**: Every action (posting, replying, chatting) requires valid hashes starting with the `21e8` prefix.
 - **90s Aesthetic**: Minimalist black-and-white design with 3D shadows, grain overlays, and dithered image processing.
 - **Cryptographic Identity**: Register with invite codes and authenticate using passwords or **secp256k1 keys** (Bitcoin private keys).
+- **Orb OAuth Callback Handling**: `/auth/orb/callback` now safely handles missing/error callback states and returns users to auth.
 - **Ranking by Work**: Threads and posts are ranked based on the total PoW points they've accumulated.
 - **Talky AI Bot**: A built-in AI assistant (@talky) that participates in chat and remembers conversations.
 - **Personal Blogs**: Customizable blogs with unique fonts, themes, and PoW-backed publishing.
