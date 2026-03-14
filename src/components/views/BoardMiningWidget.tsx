@@ -4,7 +4,6 @@ import { Button } from '../ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { useMouseoverMining, useMining } from '../../hooks/use-mining'
 import { MiningProgressBadge } from '../ui/mining-progress-badge'
-import db from '../../lib/db-client'
 import { invokeFunction } from '../../lib/functions-utils'
 import toast from 'react-hot-toast'
 import { useAuth } from '../../contexts/AuthContext'
@@ -57,46 +56,30 @@ export function BoardMiningWidget({ board, onMineComplete }: BoardMiningWidgetPr
     try {
       setIsSubmitting(true)
       
-      // Use MiningManager/Engine to get the full last result if possible, 
-      // or we rely on the session data. 
-      // The session.currentProgress has { hash, nonce, points, trailingZeros, attempts, hashRate }
-      // We also need the challenge and prefix.
-      
       const progress = mouseoverSession?.currentProgress
       if (!progress || progress.hash !== minedHash) {
-         // Should not happen if state is synced, but safety check
-         throw new Error('Mining session state mismatch. Please try again.')
+        // Should not happen if state is synced, but safety check
+        throw new Error('Mining session state mismatch. Please try again.')
       }
 
-      // We need the challenge used. 
-      // MiningManager -> MiningEngine stores lastChallenge? 
-      // Actually, we can just use the hash and nonce? 
-      // No, validate-pow needs challenge to verify hash = sha256(challenge + nonce).
-      // We need to expose challenge from MiningSession or Engine.
-      // For now, let's assume we can get it from the MiningManager singleton or we assume 
-      // the worker uses a challenge we can retrieve.
-      
-      // HACK: We need to get the challenge. 
-      // Let's import MiningManager to get it.
       const { MiningManager } = await import('../../lib/mining/MiningManager')
       const manager = MiningManager.getInstance()
-      // We need a way to get the challenge for the current session.
-      // We'll update MiningManager/Engine to expose it better, or use what's available.
-      // MiningEngine has getCurrentChallenge()
-      // But we need the challenge that generated THIS hash.
-      // If the challenge rotated, we might be out of luck.
-      // However, challenge usually stays stable per session.
-      
-      // @ts-ignore - Accessing internal engine for challenge
-      const challenge = manager.engine.getCurrentChallenge()
+
+      // Prefer the challenge attached to progress (from worker), fallback to current manager challenge.
+      const challenge = progress.challenge || manager.getCurrentChallenge()
+      if (!challenge) {
+        throw new Error('Missing PoW challenge. Keep mining for a fresh share and retry.')
+      }
+
+      const submittedPoints = progress.points || minedPoints
 
       // Submit via Edge Function
       const { data, error } = await invokeFunction('validate-pow', {
         body: {
-          challenge: challenge,
+          challenge,
           nonce: progress.nonce,
           hash: minedHash,
-          points: minedPoints,
+          points: submittedPoints,
           trailingZeros: progress.trailingZeros,
           targetType: 'board',
           targetId: board.id,
@@ -112,19 +95,19 @@ export function BoardMiningWidget({ board, onMineComplete }: BoardMiningWidgetPr
         throw new Error(data.error || 'Invalid PoW')
       }
 
-      toast.success(`✓ Mined ${minedPoints} PoW for /${board.slug}/!`)
-      
+      toast.success(`✓ Mined ${submittedPoints} PoW for /${board.slug}/!`)
+
       // Update optimistic PoW
-      setOptimisticPow(prev => prev + minedPoints)
-      
+      setOptimisticPow(prev => prev + submittedPoints)
+
       setMinedHash(null)
       setMinedPoints(0)
-      
+
       // Force restart of mining session to find new hash
       setRemountKey(prev => prev + 1)
-      
+
       if (onMineComplete) {
-        onMineComplete(minedPoints)
+        onMineComplete(submittedPoints)
       }
     } catch (error: any) {
       console.error('Failed to submit mining result:', error)
