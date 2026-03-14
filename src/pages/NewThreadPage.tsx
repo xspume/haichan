@@ -73,7 +73,7 @@ export function NewThreadPage() {
       if (image) {
         const fileName = `${Date.now()}-${image.name}`
         const result = await db.storage.upload(image, `threads/${fileName}`)
-        imageUrl = result.url
+        imageUrl = result.publicUrl
       }
 
       // 2. Get board ID
