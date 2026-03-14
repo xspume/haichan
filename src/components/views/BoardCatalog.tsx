@@ -23,7 +23,7 @@ const ThreadCard = memo(function ThreadCard({
   isMining
 }: ThreadCardProps) {
   const { useAttachTo } = useMouseoverMining('thread', thread.id)
-  const elementRef = useRef<HTMLDivElement>(null)
+  const elementRef = useRef<HTMLAnchorElement>(null)
 
   const truncate = useCallback((text: string, maxLength: number) => {
     if (!text) return ''
